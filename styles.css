@@ -1,0 +1,47 @@
+/* sunsup-pages — undeployed offline skeleton */
+:root {
+  --bg: #f6f1ea;
+  --ink: #1c1917;
+  --muted: #57534e;
+  --line: #e7e0d6;
+  --accent: #2f5d50;
+  --card: #fffdf9;
+  --max: 40rem;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+}
+a { color: var(--accent); }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+header.site {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: 1rem 0 1.5rem; border-bottom: 1px solid var(--line);
+}
+.mark { font-weight: 700; letter-spacing: 0.04em; text-decoration: none; color: var(--ink); }
+nav a { margin-left: 1rem; text-decoration: none; color: var(--muted); font-size: 0.95rem; }
+nav a:hover { color: var(--ink); }
+.kicker { font-size: 0.75rem; letter-spacing: 0.12em; color: var(--muted); text-transform: none; }
+h1 { font-size: 1.75rem; line-height: 1.35; font-weight: 700; margin: 0.35rem 0 0.75rem; }
+.lead { font-size: 1.05rem; color: var(--muted); margin: 0 0 1.5rem; }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 1.25rem; margin: 1.5rem 0;
+}
+.card h2 { margin: 0.25rem 0 0.5rem; font-size: 1.2rem; }
+.cta {
+  display: inline-block; margin-top: 0.75rem; padding: 0.65rem 1.1rem;
+  background: var(--accent); color: #fff; text-decoration: none; border-radius: 999px; font-weight: 600;
+}
+.section { margin: 2rem 0; }
+.section h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+footer.site {
+  margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--line);
+  font-size: 0.85rem; color: var(--muted);
+}
+.axes { display: grid; gap: 0.75rem; margin: 1rem 0 0; }
+.axes div { padding: 0.75rem 0; border-top: 1px solid var(--line); }
