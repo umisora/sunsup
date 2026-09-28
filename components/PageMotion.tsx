@@ -81,22 +81,13 @@ function playIntro(scope: HTMLElement) {
   }
 }
 
-function inView(element: Element): boolean {
-  return element.getBoundingClientRect().top < window.innerHeight * 0.92;
-}
-
 function revealRises(scope: HTMLElement) {
   scope.querySelectorAll<HTMLElement>(".rise").forEach((element) => {
-    if (inView(element)) {
-      gsap.from(element, { y: 16, duration: 0.8, ease: "power2.out", clearProps: "transform" });
-      return;
-    }
-
     gsap.from(element, {
-      y: 22,
-      opacity: 0,
+      y: 28,
       duration: 0.9,
       ease: "power2.out",
+      immediateRender: false,
       scrollTrigger: {
         trigger: element,
         start: "top 88%",
@@ -113,23 +104,12 @@ function revealAxes(scope: HTMLElement) {
     return;
   }
 
-  if (inView(axes)) {
-    gsap.from(items, {
-      y: 14,
-      duration: 0.7,
-      stagger: 0.08,
-      ease: "power2.out",
-      clearProps: "transform",
-    });
-    return;
-  }
-
   gsap.from(items, {
-    y: 18,
-    opacity: 0,
-    duration: 0.7,
+    y: 20,
+    duration: 0.75,
     stagger: 0.08,
     ease: "power2.out",
+    immediateRender: false,
     scrollTrigger: {
       trigger: axes,
       start: "top 86%",
@@ -150,7 +130,7 @@ function animateKind(kind: MotionKind, scope: HTMLElement) {
     case "shell": {
       const scene = scope.querySelector(".hero-scene");
       if (scene) {
-        gsap.from(scene, { opacity: 0, duration: 1.15, ease: "power1.out" });
+        gsap.from(scene, { y: 18, duration: 1.05, ease: "power2.out", clearProps: "transform" });
       }
       scrubGlass(scope, -10);
       return;
@@ -188,16 +168,6 @@ function playCtaBand(scope: HTMLElement) {
     return;
   }
 
-  if (inView(band)) {
-    gsap.from(band, { y: 16, duration: 0.85, ease: "power2.out", clearProps: "transform" });
-    gsap.fromTo(
-      rule,
-      { scaleX: 0 },
-      { scaleX: 1, duration: 0.65, ease: "power2.out", transformOrigin: "left center" },
-    );
-    return;
-  }
-
   const timeline = gsap.timeline({
     scrollTrigger: {
       trigger: band,
@@ -207,7 +177,7 @@ function playCtaBand(scope: HTMLElement) {
   });
 
   timeline
-    .fromTo(band, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.85, ease: "power2.out" })
+    .from(band, { y: 24, duration: 0.85, ease: "power2.out", immediateRender: false })
     .fromTo(
       rule,
       { scaleX: 0 },
