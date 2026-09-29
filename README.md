@@ -42,7 +42,9 @@ Framework preset は Next.js（Static HTML Export）か、None のまま出力�
 | `/drink/shell` | 一杯の殻。商品名はまだ置かない |
 | `/about` | 運営と紹介の開示 |
 
-## 写真とフォント
+## デザインシステム
 
-- 写真は `public/images/` の webp。`components/Photo.tsx` が幅ごとの `srcset` を組む
+見た目はすべて `design-system/`（トークン、コンポーネント、モーション）にある。ページは `@/design-system` を組むだけで、ページ固有の CSS は持たない。トークン・コンポーネント・使い方は [`docs/design-system.md`](docs/design-system.md)。
+
+- 写真は `public/images/` の webp。`design-system/components/StillLife/photos.ts` が一覧
 - 和文フォントはサイトで使う文字だけのサブセットを `fonts/` に置いている。コピーに新しい漢字を足したら `npm run fonts` で作り直す（ネット接続が要る）
