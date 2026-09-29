@@ -20,7 +20,7 @@ export function SiteHeader() {
 
   return (
     <header className="site-header">
-      <div className="site-header__bar">
+      <div className="wrap site-header__bar">
         <Link href="/" className="mark" aria-current={pathname === "/" ? "page" : undefined}>
           sunsup
         </Link>

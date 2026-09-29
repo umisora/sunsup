@@ -1,17 +1,20 @@
-type StoreRole = "acquire" | "nearby" | "read";
-
-type StorePlaceholder = {
-  role: StoreRole;
-  label: string;
-  shops: readonly string[];
-};
-
-const PLACEHOLDERS: readonly StorePlaceholder[] = [
-  { role: "acquire", label: "手に入れる", shops: ["Amazon", "楽天"] },
-  { role: "nearby", label: "近く", shops: ["カクヤス"] },
-  { role: "read", label: "読む", shops: ["ヨドバシ"] },
-];
+const ROWS = [
+  { role: "acquire", label: "手に入れる" },
+  { role: "nearby", label: "近く" },
+  { role: "read", label: "読む" },
+] as const;
 
 export function StoreRowSlot() {
-  return <div id="store-row" hidden data-slot="store-row" data-rows={PLACEHOLDERS.length} />;
+  return (
+    <section id="store-row" className="store-row" hidden aria-label="手に入れる">
+      <dl>
+        {ROWS.map((row) => (
+          <div key={row.role} className="store-row__line" data-role={row.role}>
+            <dt>{row.label}</dt>
+            <dd />
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
 }

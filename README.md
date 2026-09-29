@@ -41,3 +41,8 @@ Framework preset は Next.js（Static HTML Export）か、None のまま出力�
 | `/ba/office` | オフィスのオープンな飲み会 |
 | `/drink/shell` | 一杯の殻。商品名はまだ置かない |
 | `/about` | 運営と紹介の開示 |
+
+## 写真とフォント
+
+- 写真は `public/images/` の webp。`components/Photo.tsx` が幅ごとの `srcset` を組む
+- 和文フォントはサイトで使う文字だけのサブセットを `fonts/` に置いている。コピーに新しい漢字を足したら `npm run fonts` で作り直す（ネット接続が要る）

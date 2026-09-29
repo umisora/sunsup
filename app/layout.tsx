@@ -5,9 +5,10 @@ import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
 const mark = localFont({
-  src: "../fonts/cormorant-garamond-500.woff2",
-  weight: "500",
-  style: "normal",
+  src: [
+    { path: "../fonts/cormorant-garamond-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/cormorant-garamond-500-italic.woff2", weight: "500", style: "italic" },
+  ],
   variable: "--font-mark",
   display: "swap",
 });
@@ -44,13 +45,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip" href="#main">
           本文へ
         </a>
-        <div className="frame">
-          <SiteHeader />
-          <main id="main">{children}</main>
-          <SiteFooter />
-        </div>
+        <SiteHeader />
+        <main id="main">{children}</main>
+        <SiteFooter />
         <noscript>
-          <style>{`.brass-rule{transform:none !important}`}</style>
+          <style>{`[data-intro],[data-line],[data-reveal],[data-stagger-item]{visibility:visible !important}[data-intro-media]{clip-path:none !important}`}</style>
         </noscript>
       </body>
     </html>
