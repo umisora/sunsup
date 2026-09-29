@@ -1,20 +1,36 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+type Tone = "solid" | "ghost";
+
 function Inner({ children }: { children: ReactNode }) {
   return (
     <>
-      <span>{children}</span>
-      <svg className="cta__arrow" viewBox="0 0 24 12" aria-hidden="true">
-        <path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.2" />
-      </svg>
+      <span className="cta__label">{children}</span>
+      <span className="cta__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 12">
+          <path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+        </svg>
+      </span>
     </>
   );
 }
 
-export function JourneyLink({ href, children }: { href: string; children: ReactNode }) {
+function ctaClass(tone: Tone): string {
+  return tone === "ghost" ? "cta cta--ghost" : "cta";
+}
+
+export function JourneyLink({
+  href,
+  tone = "solid",
+  children,
+}: {
+  href: string;
+  tone?: Tone;
+  children: ReactNode;
+}) {
   return (
-    <Link href={href} className="cta">
+    <Link href={href} className={ctaClass(tone)}>
       <Inner>{children}</Inner>
     </Link>
   );

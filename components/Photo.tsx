@@ -1,4 +1,4 @@
-type PhotoName = "table" | "place" | "office" | "detail" | "peak";
+type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide";
 
 type PhotoSpec = {
   widths: readonly number[];
@@ -38,29 +38,54 @@ const PHOTOS: Record<PhotoName, PhotoSpec> = {
     height: 1152,
     alt: "窓の光が落ちるリネンの上、緑のガラス瓶と、グレープフルーツを添えた炭酸のグラス。",
   },
+  "peak-wide": {
+    widths: [960, 1280],
+    width: 1280,
+    height: 720,
+    alt: "窓の光が落ちるリネンの卓。緑のガラス瓶と、グレープフルーツを添えた炭酸のグラス、真鍮の栓抜き。",
+  },
 };
+
+function srcSet(name: PhotoName): string {
+  return PHOTOS[name].widths.map((w) => `/images/${name}-${w}.webp ${w}w`).join(", ");
+}
 
 type PhotoProps = {
   name: PhotoName;
   sizes: string;
   priority?: boolean;
+  decorative?: boolean;
+  position?: string;
+  narrow?: PhotoName;
 };
 
-export function Photo({ name, sizes, priority = false }: PhotoProps) {
+export function Photo({ name, sizes, priority = false, decorative = false, position, narrow }: PhotoProps) {
   const spec = PHOTOS[name];
   const largest = spec.widths[spec.widths.length - 1];
 
-  return (
+  const image = (
     <img
       src={`/images/${name}-${largest}.webp`}
-      srcSet={spec.widths.map((w) => `/images/${name}-${w}.webp ${w}w`).join(", ")}
+      srcSet={srcSet(name)}
       sizes={sizes}
       width={spec.width}
       height={spec.height}
-      alt={spec.alt}
+      alt={decorative ? "" : spec.alt}
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : undefined}
       decoding="async"
+      style={position ? { objectPosition: position } : undefined}
     />
+  );
+
+  if (!narrow) {
+    return image;
+  }
+
+  return (
+    <picture>
+      <source media="(max-width: 699px)" srcSet={srcSet(narrow)} sizes="100vw" />
+      {image}
+    </picture>
   );
 }

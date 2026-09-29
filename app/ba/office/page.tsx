@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { FillText } from "@/components/FillText";
 import { JourneyLink } from "@/components/JourneyLink";
+import { JourneySteps } from "@/components/JourneySteps";
 import { PageMotion } from "@/components/PageMotion";
 import { Photo } from "@/components/Photo";
 
@@ -30,6 +32,7 @@ export default function OfficePage() {
     <PageMotion kind="office">
       <section className="wrap split-hero" aria-labelledby="office-title">
         <div className="split-hero__copy">
+          <JourneySteps current="ba" />
           <p className="folio" data-intro>
             No. 01
           </p>
@@ -49,22 +52,22 @@ export default function OfficePage() {
           </p>
         </div>
         <div className="split-hero__media media" data-intro-media data-parallax>
-          <Photo name="office" sizes="(min-width: 960px) 720px, calc(100vw - 40px)" priority />
+          <Photo name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" priority />
         </div>
       </section>
 
       <section className="wrap scene" aria-labelledby="scene-title">
-        <p id="scene-title" className="kicker" data-reveal>
+        <p id="scene-title" className="kicker">
           この場
         </p>
-        <div className="scene__text" data-reveal>
-          <p>ITの会社の、開いた飲み会です。会議テーブル、立ち話。窓の外はまだ昼に近い。</p>
-          <p>卓は、次の日のデスクと、長いテーブルです。</p>
-        </div>
+        <FillText
+          className="scene__text"
+          lines={["ITの会社の、開いた飲み会です。", "会議テーブル、立ち話。窓の外はまだ昼に近い。", "卓は、次の日のデスクと、長いテーブルです。"]}
+        />
       </section>
 
       <section className="wrap criteria" aria-label="この場での選び方">
-        <ol className="criteria__list" data-stagger>
+        <ol className="criteria__list">
           {CRITERIA.map((item) => (
             <li key={item.no} className="criterion" data-stagger-item>
               <span className="numeral" aria-hidden="true">
@@ -79,12 +82,12 @@ export default function OfficePage() {
         </ol>
       </section>
 
-      <section className="wrap invite" aria-labelledby="invite-title">
+      <section className="invite" aria-labelledby="invite-title">
         <div className="invite__media media" data-parallax>
-          <Photo name="detail" sizes="(min-width: 960px) 600px, calc(100vw - 40px)" />
+          <Photo name="detail" sizes="100vw" />
         </div>
-        <div className="invite__body" data-rise>
-          <div className="rule" data-rule aria-hidden="true" />
+        <div className="invite__card" data-rise>
+          <p className="kicker">次へ</p>
           <p className="invite__note">美味いブドウのジュースを、卓の中央に置ける。</p>
           <h2 id="invite-title" className="invite__desire">
             この空気で、

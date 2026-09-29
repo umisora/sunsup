@@ -6,7 +6,7 @@ export default function NotFound() {
       <header className="about__head">
         <p className="kicker">sunsup</p>
         <h1 className="statement">このページはありません。</h1>
-        <p className="back">
+        <p className="lead">
           <Link href="/" className="text-link">
             入口へ
           </Link>

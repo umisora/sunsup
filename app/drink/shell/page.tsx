@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { JourneyLink } from "@/components/JourneyLink";
+import { JourneySteps } from "@/components/JourneySteps";
 import { PageMotion } from "@/components/PageMotion";
 import { Photo } from "@/components/Photo";
 import { StoreRowSlot } from "@/components/StoreRowSlot";
@@ -22,69 +23,77 @@ const AXES = [
 export default function DrinkShellPage() {
   return (
     <PageMotion kind="shell">
-      <section className="wrap peak" aria-labelledby="shell-title">
-        <div className="peak__media media" data-intro-media>
-          <Photo name="peak" sizes="(min-width: 960px) 560px, calc(100vw - 40px)" priority />
+      <section className="wrap shell-head" aria-labelledby="shell-title">
+        <div>
+          <JourneySteps current="drink" />
+          <p className="kicker" data-intro>
+            一杯
+          </p>
+          <h1 id="shell-title" className="display">
+            <span className="line">
+              <span data-line>この卓の一杯</span>
+            </span>
+          </h1>
         </div>
+        <div className="shell-head__aside">
+          <p className="lead" data-intro>
+            午後の卓の、一本。
+          </p>
+          <p className="sublead" data-intro>
+            ラベルより先に、置いたときの空気で選ぶ。
+          </p>
+        </div>
+      </section>
 
-        <div className="peak__copy">
-          <div className="peak__intro">
-            <p className="kicker" data-intro>
-              一杯
-            </p>
-            <h1 id="shell-title" className="display">
-              <span className="line">
-                <span data-line>この卓の一杯</span>
-              </span>
-            </h1>
-            <p className="lead" data-intro>
-              午後の卓の、一本。
-            </p>
-            <p className="sublead" data-intro>
-              ラベルより先に、置いたときの空気で選ぶ。
-            </p>
-          </div>
-
-          <p className="peak__desire" data-reveal>
+      <section className="peak-stage" aria-labelledby="peak-title" data-peak-stage>
+        <div className="peak-stage__frame media" data-peak-frame>
+          <Photo name="peak-wide" narrow="peak" sizes="100vw" priority />
+        </div>
+        <div className="peak-stage__copy" data-peak-copy>
+          <p className="folio">No. 02</p>
+          <h2 id="peak-title" className="peak-stage__line">
             次の飲み会に、
             <br />
             これを置く。
-          </p>
-
-          <ol className="peak__axes" data-stagger>
-            {AXES.map((axis) => (
-              <li key={axis.no} className="peak__axis" data-stagger-item>
-                <span className="numeral" aria-hidden="true">
-                  {axis.no}
-                </span>
-                <div>
-                  <h2>{axis.title}</h2>
-                  {axis.lines.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
-                </div>
-              </li>
-            ))}
-          </ol>
+          </h2>
         </div>
+      </section>
+
+      <section className="wrap shell-axes" aria-label="この一杯の選び方">
+        <div className="shell-axes__media media" data-parallax>
+          <Photo name="office" sizes="(min-width: 960px) 520px, calc(100vw - 32px)" position="78% 50%" decorative />
+        </div>
+        <ol className="shell-axes__list">
+          {AXES.map((axis) => (
+            <li key={axis.no} className="shell-axis" data-stagger-item>
+              <span className="numeral" aria-hidden="true">
+                {axis.no}
+              </span>
+              <h3>{axis.title}</h3>
+              {axis.lines.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </li>
+          ))}
+        </ol>
       </section>
 
       <section className="wrap close" aria-labelledby="close-title">
         <div className="close__panel" data-rise>
-          <div className="rule rule--light" aria-hidden="true" />
+          <p className="kicker kicker--light">次の飲み会</p>
           <h2 id="close-title" className="close__line">
-            次回これにしよ、
+            <span className="nb">次回これにしよ、</span>
             <br />
-            が立てばいい。
+            <span className="nb">が立てばいい。</span>
           </h2>
           <p className="close__sub">家で届いてから、お試しして持っていってもよい。</p>
+          <div className="close__actions">
+            <JourneyLink href="/ba/office" tone="ghost">
+              場へ戻る
+            </JourneyLink>
+          </div>
         </div>
         <StoreRowSlot />
-        <p className="back">
-          <Link href="/ba/office" className="text-link">
-            場へ戻る
-          </Link>
-        </p>
       </section>
     </PageMotion>
   );
