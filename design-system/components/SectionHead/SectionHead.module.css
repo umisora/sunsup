@@ -1,0 +1,7 @@
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 44em;
+  margin-bottom: clamp(32px, 4vw, 56px);
+}

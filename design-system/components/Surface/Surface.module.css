@@ -1,0 +1,76 @@
+.surface {
+  position: relative;
+}
+
+.raised {
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+}
+
+.frost {
+  border: 1px solid var(--border-frost);
+  background: var(--surface-frost);
+  box-shadow: var(--shadow-raised);
+  backdrop-filter: var(--blur-frost);
+}
+
+.inverse {
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 90% at 88% -10%, color-mix(in srgb, var(--palette-linen) 18%, transparent), transparent 70%),
+    radial-gradient(ellipse 40% 60% at 0% 110%, color-mix(in srgb, var(--palette-brass) 22%, transparent), transparent 70%),
+    var(--surface-inverse);
+  box-shadow: var(--shadow-inverse);
+  color: var(--text-inverse);
+}
+
+/* soft window-light beams */
+.inverse::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 18%, color-mix(in srgb, var(--palette-linen) 5%, transparent) 28%, transparent 40%),
+    linear-gradient(115deg, transparent 46%, color-mix(in srgb, var(--palette-linen) 3%, transparent) 54%, transparent 64%);
+  pointer-events: none;
+}
+
+.inverse > * {
+  position: relative;
+}
+
+.elevated {
+  box-shadow: var(--shadow-raised);
+}
+
+.padMd {
+  padding: clamp(var(--space-5), 2.8vw, 40px);
+}
+
+.padLg {
+  padding: clamp(28px, 3.6vw, 56px);
+}
+
+.padXl {
+  padding: clamp(56px, 9vw, 136px) clamp(28px, 7vw, 120px);
+}
+
+.radiusMd {
+  border-radius: var(--radius-md);
+}
+
+.radiusLg {
+  border-radius: var(--radius-lg);
+}
+
+.fill {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@media (forced-colors: active) {
+  .surface {
+    border: 1px solid CanvasText;
+  }
+}

@@ -1,0 +1,33 @@
+.intro {
+  padding-top: clamp(40px, 5vw, 72px);
+}
+
+.withMedia {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+}
+
+.titleOnly {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: end;
+  gap: clamp(24px, 4vw, 64px);
+  padding-bottom: clamp(40px, 5vw, 64px);
+}
+
+.media {
+  max-height: 80vh;
+}
+
+@media (max-width: 959px) {
+  .withMedia,
+  .titleOnly {
+    grid-template-columns: 1fr;
+  }
+
+  .media {
+    order: -1;
+  }
+}

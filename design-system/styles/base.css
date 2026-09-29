@@ -1,0 +1,97 @@
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  ol,
+  ul,
+  dl,
+  dd,
+  figure {
+    margin: 0;
+  }
+
+  ol,
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  img,
+  svg,
+  picture {
+    display: block;
+    max-width: 100%;
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+@layer base {
+  html {
+    scroll-padding-top: calc(var(--layout-header-height) + var(--space-5));
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: clip;
+    background-color: var(--surface-page);
+    background-image:
+      radial-gradient(ellipse 70% 40% at 12% -4%, color-mix(in srgb, var(--palette-linen) 90%, transparent), transparent 70%),
+      radial-gradient(ellipse 50% 30% at 100% 30%, color-mix(in srgb, var(--palette-sage) 45%, transparent), transparent 70%);
+    background-repeat: no-repeat;
+    color: var(--text-primary);
+    font-family: var(--font-text);
+    font-size: var(--step-0);
+    font-weight: 400;
+    font-synthesis: none;
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-body);
+    text-wrap: pretty;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* paper grain over everything */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-grain);
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .17 0 0 0 0 .15 0 0 0 0 .12 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--palette-brass) 28%, var(--palette-linen));
+    color: var(--text-primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--action-focus);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 500;
+    font-synthesis: none;
+    text-wrap: balance;
+  }
+
+  main {
+    display: block;
+  }
+}

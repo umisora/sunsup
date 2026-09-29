@@ -1,0 +1,134 @@
+/*
+  sunsup design tokens.
+  Base palette is LOCKED (daylight office table). Everything else derives from it.
+  Components read semantic tokens (--surface-*, --text-*, --action-*), never raw hex.
+*/
+
+@layer tokens {
+  :root {
+    /* palette — locked */
+    --palette-paper: #f3ebdd;
+    --palette-linen: #fff8ee;
+    --palette-brass: #a57b32;
+    --palette-glass: #3f6b56;
+    --palette-ink: #2c281f;
+
+    /* palette — derived */
+    --palette-sand: #e2d4c2;
+    --palette-mist: #7a7368;
+    --palette-brass-deep: #8a6a38;
+    --palette-brass-soft: color-mix(in srgb, var(--palette-brass) 55%, var(--palette-linen));
+    --palette-glass-deep: color-mix(in srgb, var(--palette-glass) 84%, var(--palette-ink));
+    --palette-sage: #e5f0ea;
+
+    /* surfaces */
+    --surface-page: var(--palette-paper);
+    --surface-raised: var(--palette-linen);
+    --surface-frost: color-mix(in srgb, var(--palette-linen) 74%, transparent);
+    --surface-inverse: var(--palette-glass);
+    --surface-sunken: color-mix(in srgb, var(--palette-paper) 80%, var(--palette-sand));
+
+    /* text */
+    --text-primary: var(--palette-ink);
+    --text-secondary: color-mix(in srgb, var(--palette-ink) 78%, var(--palette-mist));
+    --text-muted: var(--palette-mist);
+    --text-accent: var(--palette-brass);
+    --text-accent-deep: var(--palette-brass-deep);
+    --text-inverse: var(--palette-linen);
+    --text-inverse-muted: color-mix(in srgb, var(--palette-linen) 82%, var(--palette-glass));
+    --text-link: var(--palette-glass);
+
+    /* borders */
+    --border-subtle: color-mix(in srgb, var(--palette-sand) 70%, transparent);
+    --border-default: var(--palette-sand);
+    --border-frost: color-mix(in srgb, var(--palette-linen) 70%, transparent);
+    --border-inverse: color-mix(in srgb, var(--palette-linen) 45%, transparent);
+
+    /* actions */
+    --action-primary: var(--palette-glass);
+    --action-primary-hover: var(--palette-glass-deep);
+    --action-accent: var(--palette-brass);
+    --action-accent-hover: color-mix(in srgb, var(--palette-brass) 88%, var(--palette-linen));
+    --action-focus: var(--palette-brass);
+
+    /* type families (next/font variables are set on <html>) */
+    --font-display: var(--font-shippori), "Hiragino Mincho ProN", "Yu Mincho", serif;
+    --font-text: var(--font-zen), "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    --font-mark: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+
+    /* type scale (fluid) */
+    --step--2: 11px;
+    --step--1: 13px;
+    --step-small: 15px;
+    --step-0: 16px;
+    --step-1: clamp(16px, 1.4vw, 19px);
+    --step-2: clamp(20px, 1.9vw, 26px);
+    --step-3: clamp(24px, 2.6vw, 34px);
+    --step-4: clamp(28px, 3.4vw, 46px);
+    --step-5: clamp(34px, 3.8vw, 56px);
+    --step-6: clamp(34px, 5.2vw, 76px);
+    --step-mark: clamp(64px, 11vw, 160px);
+
+    --leading-tight: 1.3;
+    --leading-snug: 1.45;
+    --leading-relaxed: 1.7;
+    --leading-body: 1.85;
+
+    --tracking-display: 0.03em;
+    --tracking-heading: 0.05em;
+    --tracking-body: 0.03em;
+    --tracking-label: 0.24em;
+    --tracking-mark: 0.26em;
+
+    /* space (4px base) */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+    --space-9: clamp(64px, 8vw, 112px);
+    --space-section: clamp(96px, 12vw, 176px);
+
+    /* layout */
+    --layout-wrap: 1280px;
+    --layout-gutter: clamp(16px, 4.4vw, 56px);
+    --layout-bleed-inset: 12px;
+    --layout-grid-gap: clamp(12px, 1.4vw, 20px);
+    --layout-header-height: 72px;
+
+    /* radius */
+    --radius-sm: 14px;
+    --radius-md: clamp(16px, 1.8vw, 24px);
+    --radius-lg: clamp(20px, 2.4vw, 32px);
+    --radius-pill: 999px;
+
+    /* elevation */
+    --shadow-float: 0 14px 40px -28px rgb(44 40 31 / 0.45);
+    --shadow-raised: 0 24px 60px -32px rgb(44 40 31 / 0.35);
+    --shadow-lifted: 0 32px 70px -30px rgb(44 40 31 / 0.45);
+    --shadow-action: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 18px 34px -20px color-mix(in srgb, var(--palette-glass) 80%, transparent);
+    --shadow-inverse: 0 40px 80px -40px color-mix(in srgb, var(--palette-glass) 90%, transparent);
+    --shadow-text-on-photo: 0 2px 18px color-mix(in srgb, var(--palette-ink) 35%, transparent);
+    --scrim-photo:
+      linear-gradient(to top, color-mix(in srgb, var(--palette-ink) 28%, transparent), transparent 42%),
+      linear-gradient(to right, color-mix(in srgb, var(--palette-paper) 18%, transparent), transparent 50%);
+    --blur-frost: blur(20px) saturate(1.25);
+
+    /* motion (CSS side; GSAP side lives in design-system/motion.ts) */
+    --duration-fast: 160ms;
+    --duration-base: 240ms;
+    --duration-slow: 1200ms;
+    --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ease-standard: ease;
+
+    /* layers */
+    --z-header: 40;
+    --z-grain: 50;
+    --z-skip: 60;
+
+    color-scheme: light;
+  }
+}

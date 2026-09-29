@@ -1,7 +1,7 @@
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 
-const SOURCE_DIRS = ["app", "components"];
+const SOURCE_DIRS = ["app", "design-system"];
 const LATIN =
   " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 const USER_AGENT =
