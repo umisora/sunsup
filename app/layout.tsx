@@ -1,32 +1,32 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
-import "./globals.css";
+import type { ReactNode } from "react";
+import { SiteFooter, SiteHeader, SkipLink } from "@/design-system";
+import "@/design-system/styles/index.css";
 
-const mark = localFont({
+const cormorant = localFont({
   src: [
     { path: "../fonts/cormorant-garamond-500.woff2", weight: "500", style: "normal" },
     { path: "../fonts/cormorant-garamond-500-italic.woff2", weight: "500", style: "italic" },
   ],
-  variable: "--font-mark",
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-const display = localFont({
+const shippori = localFont({
   src: "../fonts/shippori-mincho-500.woff2",
   weight: "500",
   style: "normal",
-  variable: "--font-display",
+  variable: "--font-shippori",
   display: "swap",
 });
 
-const sans = localFont({
+const zen = localFont({
   src: [
     { path: "../fonts/zen-kaku-gothic-new-400.woff2", weight: "400", style: "normal" },
     { path: "../fonts/zen-kaku-gothic-new-500.woff2", weight: "500", style: "normal" },
   ],
-  variable: "--font-sans",
+  variable: "--font-zen",
   display: "swap",
 });
 
@@ -38,13 +38,11 @@ export const metadata: Metadata = {
   description: "飲み会でも、おしゃれに美味しく飲めるノンアルを届ける",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ja" className={`${mark.variable} ${display.variable} ${sans.variable} js`}>
+    <html lang="ja" className={`${cormorant.variable} ${shippori.variable} ${zen.variable} js`}>
       <body>
-        <a className="skip" href="#main">
-          本文へ
-        </a>
+        <SkipLink target="main" />
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />

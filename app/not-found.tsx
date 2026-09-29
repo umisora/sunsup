@@ -1,17 +1,17 @@
-import Link from "next/link";
+import { Eyebrow, Section, Stack, Text, TextLink } from "@/design-system";
 
 export default function NotFound() {
   return (
-    <section className="wrap about">
-      <header className="about__head">
-        <p className="kicker">sunsup</p>
-        <h1 className="statement">このページはありません。</h1>
-        <p className="lead">
-          <Link href="/" className="text-link">
-            入口へ
-          </Link>
-        </p>
-      </header>
-    </section>
+    <Section space="md" labelledBy="not-found-title">
+      <Stack gap={5}>
+        <Eyebrow>sunsup</Eyebrow>
+        <Text as="h1" id="not-found-title" variant="headline">
+          このページはありません。
+        </Text>
+        <Text variant="lead">
+          <TextLink href="/">入口へ</TextLink>
+        </Text>
+      </Stack>
+    </Section>
   );
 }

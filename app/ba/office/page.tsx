@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
-import { FillText } from "@/components/FillText";
-import { JourneyLink } from "@/components/JourneyLink";
-import { JourneySteps } from "@/components/JourneySteps";
-import { PageMotion } from "@/components/PageMotion";
-import { Photo } from "@/components/Photo";
+import {
+  Eyebrow,
+  FillText,
+  Grid,
+  JourneyCta,
+  MediaPanel,
+  Motion,
+  PageIntro,
+  Photo,
+  Section,
+  Stack,
+  Text,
+  Tile,
+} from "@/design-system";
 
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
@@ -29,74 +38,51 @@ const CRITERIA = [
 
 export default function OfficePage() {
   return (
-    <PageMotion kind="office">
-      <section className="wrap split-hero" aria-labelledby="office-title">
-        <div className="split-hero__copy">
-          <JourneySteps current="ba" />
-          <p className="folio" data-intro>
-            No. 01
-          </p>
-          <p className="kicker" data-intro>
-            場
-          </p>
-          <h1 id="office-title" className="display">
-            <span className="line">
-              <span data-line>オフィスの</span>
-            </span>
-            <span className="line">
-              <span data-line>オープンな飲み会</span>
-            </span>
-          </h1>
-          <p className="lead" data-intro>
-            次にデスクが卓になる午後。
-          </p>
-        </div>
-        <div className="split-hero__media media" data-intro-media data-parallax>
-          <Photo name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" priority />
-        </div>
-      </section>
+    <Motion>
+      <PageIntro
+        id="office-title"
+        step="ba"
+        folio="No. 01"
+        eyebrow="場"
+        title={["オフィスの", "オープンな飲み会"]}
+        lead="次にデスクが卓になる午後。"
+        media={<Photo name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" position="68% 50%" priority />}
+      />
 
-      <section className="wrap scene" aria-labelledby="scene-title">
-        <p id="scene-title" className="kicker">
-          この場
-        </p>
-        <FillText
-          className="scene__text"
-          lines={["ITの会社の、開いた飲み会です。", "会議テーブル、立ち話。窓の外はまだ昼に近い。", "卓は、次の日のデスクと、長いテーブルです。"]}
-        />
-      </section>
+      <Section labelledBy="scene-title">
+        <Grid columns="aside" gap="wide">
+          <Eyebrow id="scene-title">この場</Eyebrow>
+          <FillText
+            variant="prose"
+            lines={["ITの会社の、開いた飲み会です。", "会議テーブル、立ち話。窓の外はまだ昼に近い。", "卓は、次の日のデスクと、長いテーブルです。"]}
+          />
+        </Grid>
+      </Section>
 
-      <section className="wrap criteria" aria-label="この場での選び方">
-        <ol className="criteria__list">
+      <Section space="md" label="この場での選び方">
+        <Grid as="ol" columns="thirds">
           {CRITERIA.map((item) => (
-            <li key={item.no} className="criterion" data-stagger-item>
-              <span className="numeral" aria-hidden="true">
-                {item.no}
-              </span>
-              <h2>{item.title}</h2>
-              {item.lines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </li>
+            <Tile key={item.no} no={item.no} title={item.title} titleAs="h2" lines={item.lines} />
           ))}
-        </ol>
-      </section>
+        </Grid>
+      </Section>
 
-      <section className="invite" aria-labelledby="invite-title">
-        <div className="invite__media media" data-parallax>
-          <Photo name="detail" sizes="100vw" />
-        </div>
-        <div className="invite__card" data-rise>
-          <p className="kicker">次へ</p>
-          <p className="invite__note">美味いブドウのジュースを、卓の中央に置ける。</p>
-          <h2 id="invite-title" className="invite__desire">
-            この空気で、
-            <br />
-            一杯を決める。
-          </h2>
-          <JourneyLink href="/drink/shell">一杯へ</JourneyLink>
-        </div>
-      </section>
-    </PageMotion>
+      <Section width="full" labelledBy="invite-title">
+        <MediaPanel media={<Photo name="detail" sizes="100vw" position="30% 50%" />}>
+          <Stack gap={4}>
+            <Eyebrow>次へ</Eyebrow>
+            <Text variant="small" tone="muted">
+              美味いブドウのジュースを、卓の中央に置ける。
+            </Text>
+            <Text as="h2" id="invite-title" variant="headline">
+              この空気で、
+              <br />
+              一杯を決める。
+            </Text>
+            <JourneyCta to="drink">一杯へ</JourneyCta>
+          </Stack>
+        </MediaPanel>
+      </Section>
+    </Motion>
   );
 }

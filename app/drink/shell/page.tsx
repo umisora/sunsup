@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
-import { JourneyLink } from "@/components/JourneyLink";
-import { JourneySteps } from "@/components/JourneySteps";
-import { PageMotion } from "@/components/PageMotion";
-import { Photo } from "@/components/Photo";
-import { StoreRowSlot } from "@/components/StoreRowSlot";
+import {
+  ClosingPanel,
+  Grid,
+  JourneyCta,
+  Motion,
+  PageIntro,
+  PeakStage,
+  Photo,
+  Phrase,
+  Section,
+  StillLife,
+  StoreSlot,
+  Tile,
+} from "@/design-system";
 
 export const metadata: Metadata = {
   title: "この卓の一杯",
@@ -22,79 +31,61 @@ const AXES = [
 
 export default function DrinkShellPage() {
   return (
-    <PageMotion kind="shell">
-      <section className="wrap shell-head" aria-labelledby="shell-title">
-        <div>
-          <JourneySteps current="drink" />
-          <p className="kicker" data-intro>
-            一杯
-          </p>
-          <h1 id="shell-title" className="display">
-            <span className="line">
-              <span data-line>この卓の一杯</span>
-            </span>
-          </h1>
-        </div>
-        <div className="shell-head__aside">
-          <p className="lead" data-intro>
-            午後の卓の、一本。
-          </p>
-          <p className="sublead" data-intro>
-            ラベルより先に、置いたときの空気で選ぶ。
-          </p>
-        </div>
-      </section>
+    <Motion>
+      <PageIntro
+        id="shell-title"
+        step="drink"
+        eyebrow="一杯"
+        title={["この卓の一杯"]}
+        lead="午後の卓の、一本。"
+        sublead="ラベルより先に、置いたときの空気で選ぶ。"
+      />
 
-      <section className="peak-stage" aria-labelledby="peak-title" data-peak-stage>
-        <div className="peak-stage__frame media" data-peak-frame>
-          <Photo name="peak-wide" narrow="peak" sizes="100vw" priority />
-        </div>
-        <div className="peak-stage__copy" data-peak-copy>
-          <p className="folio">No. 02</p>
-          <h2 id="peak-title" className="peak-stage__line">
-            次の飲み会に、
-            <br />
-            これを置く。
-          </h2>
-        </div>
-      </section>
+      <PeakStage id="peak-title" folio="No. 02" media={<Photo name="peak-wide" narrow="peak" sizes="100vw" priority />}>
+        次の飲み会に、
+        <br />
+        これを置く。
+      </PeakStage>
 
-      <section className="wrap shell-axes" aria-label="この一杯の選び方">
-        <div className="shell-axes__media media" data-parallax>
-          <Photo name="office" sizes="(min-width: 960px) 520px, calc(100vw - 32px)" position="78% 50%" decorative />
-        </div>
-        <ol className="shell-axes__list">
-          {AXES.map((axis) => (
-            <li key={axis.no} className="shell-axis" data-stagger-item>
-              <span className="numeral" aria-hidden="true">
-                {axis.no}
-              </span>
-              <h3>{axis.title}</h3>
-              {axis.lines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </li>
-          ))}
-        </ol>
-      </section>
+      <Section label="この一杯の選び方">
+        <Grid columns="split">
+          <StillLife ratio="4:3" radius="md" parallax>
+            <Photo name="office" sizes="(min-width: 960px) 520px, calc(100vw - 32px)" position="78% 50%" decorative />
+          </StillLife>
+          <Grid as="ol" columns="halves">
+            {AXES.map((axis) => (
+              <Tile key={axis.no} no={axis.no} title={axis.title} lines={axis.lines} />
+            ))}
+          </Grid>
+        </Grid>
+      </Section>
 
-      <section className="wrap close" aria-labelledby="close-title">
-        <div className="close__panel" data-rise>
-          <p className="kicker kicker--light">次の飲み会</p>
-          <h2 id="close-title" className="close__line">
-            <span className="nb">次回これにしよ、</span>
-            <br />
-            <span className="nb">が立てばいい。</span>
-          </h2>
-          <p className="close__sub">家で届いてから、お試しして持っていってもよい。</p>
-          <div className="close__actions">
-            <JourneyLink href="/ba/office" tone="ghost">
+      <Section labelledBy="close-title">
+        <ClosingPanel
+          id="close-title"
+          eyebrow="次の飲み会"
+          title={
+            <>
+              <Phrase>次回これにしよ、</Phrase>
+              <br />
+              <Phrase>が立てばいい。</Phrase>
+            </>
+          }
+          sub={
+            <>
+              <Phrase>家で届いてから、</Phrase>
+              <Phrase>お試しして</Phrase>
+              <Phrase>持っていってもよい。</Phrase>
+            </>
+          }
+          actions={
+            <JourneyCta to="ba" direction="back" surface="inverse">
               場へ戻る
-            </JourneyLink>
-          </div>
-        </div>
-        <StoreRowSlot />
-      </section>
-    </PageMotion>
+            </JourneyCta>
+          }
+        />
+        <StoreSlot />
+      </Section>
+    </Motion>
   );
 }
