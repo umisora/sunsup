@@ -35,6 +35,7 @@ export default function DrinkShellPage() {
       <PageIntro
         id="shell-title"
         step="drink"
+        compact
         eyebrow="一杯"
         title={["この卓の一杯"]}
         lead="午後の卓の、一本。"
@@ -73,9 +74,8 @@ export default function DrinkShellPage() {
           }
           sub={
             <>
-              <Phrase>家で届いてから、</Phrase>
-              <Phrase>お試しして</Phrase>
-              <Phrase>持っていってもよい。</Phrase>
+              <Phrase>家で冷えてから、</Phrase>
+              <Phrase>次の卓の中央へ。</Phrase>
             </>
           }
           actions={

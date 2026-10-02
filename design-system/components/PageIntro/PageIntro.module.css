@@ -21,6 +21,14 @@
   max-height: 80vh;
 }
 
+.compact {
+  padding-top: var(--space-4);
+}
+
+.titleOnly.compact {
+  padding-bottom: var(--space-4);
+}
+
 @media (max-width: 959px) {
   .withMedia,
   .titleOnly {

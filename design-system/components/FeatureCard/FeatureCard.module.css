@@ -15,6 +15,11 @@
   box-shadow: var(--shadow-lifted);
 }
 
+.card:focus-visible {
+  outline: 2px solid var(--action-focus);
+  outline-offset: -4px;
+}
+
 .media {
   position: relative;
   min-height: 320px;

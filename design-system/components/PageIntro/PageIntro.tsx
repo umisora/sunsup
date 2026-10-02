@@ -18,10 +18,12 @@ type PageIntroProps = {
   sublead?: ReactNode;
   /** A priority <Photo>. With media the intro is a split hero; without, title and lead sit side by side. */
   media?: ReactNode;
+  /** Less padding, so a following full-viewport stage still fits in the first screen. */
+  compact?: boolean;
 };
 
 /** Top of every inner page: journey position, eyebrow, masked title, lead. */
-export function PageIntro({ id, step, folio, eyebrow, title, lead, sublead, media }: PageIntroProps) {
+export function PageIntro({ id, step, folio, eyebrow, title, lead, sublead, media, compact = false }: PageIntroProps) {
   const heading = (
     <Stack gap={5}>
       {step ? <JourneySteps current={step} /> : null}
@@ -53,7 +55,7 @@ export function PageIntro({ id, step, folio, eyebrow, title, lead, sublead, medi
 
   if (media) {
     return (
-      <section className={cx(layout.wrap, styles.intro, styles.withMedia)} aria-labelledby={id}>
+      <section className={cx(layout.wrap, styles.intro, styles.withMedia, compact && styles.compact)} aria-labelledby={id}>
         <Stack gap={5}>
           {heading}
           {leads}
@@ -68,7 +70,7 @@ export function PageIntro({ id, step, folio, eyebrow, title, lead, sublead, medi
   }
 
   return (
-    <section className={cx(layout.wrap, styles.intro, styles.titleOnly)} aria-labelledby={id}>
+    <section className={cx(layout.wrap, styles.intro, styles.titleOnly, compact && styles.compact)} aria-labelledby={id}>
       {heading}
       {leads}
     </section>

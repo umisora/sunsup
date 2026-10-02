@@ -59,7 +59,7 @@ export default function HomePage() {
 
       <Section space="md" label="最初の場">
         <FeatureCard
-          href="/ba/office"
+          href="/ba/office/"
           media={<Photo name="place" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />}
           folio="No. 01"
           eyebrow="場"

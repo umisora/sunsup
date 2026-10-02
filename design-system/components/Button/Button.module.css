@@ -39,9 +39,10 @@
 }
 
 .inverse {
-  background: transparent;
-  box-shadow: inset 0 0 0 1px var(--border-inverse);
-  color: var(--text-inverse);
+  min-width: min(100%, 280px);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-raised);
+  color: var(--text-primary);
 }
 
 .primary:hover,
@@ -55,7 +56,8 @@
 }
 
 .inverse:hover {
-  background: color-mix(in srgb, var(--palette-linen) 10%, transparent);
+  background: var(--palette-sand);
+  box-shadow: var(--shadow-lifted);
 }
 
 /* icon disc */

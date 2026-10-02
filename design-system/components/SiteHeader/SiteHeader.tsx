@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import styles from "./SiteHeader.module.css";
 
 const NAV = [
-  { href: "/ba/office", label: "場" },
-  { href: "/about", label: "運営" },
+  { href: "/ba/office/", label: "場" },
+  { href: "/about/", label: "運営" },
 ] as const;
 
 function normalize(path: string): string {
@@ -31,7 +31,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={styles.link}
-              aria-current={pathname === item.href ? "page" : undefined}
+              aria-current={pathname === normalize(item.href) ? "page" : undefined}
             >
               {item.label}
             </Link>

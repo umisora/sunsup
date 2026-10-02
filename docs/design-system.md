@@ -60,12 +60,12 @@ design-system/
 | `Photo` | Still life image from the catalog (`components/StillLife/photos.ts`). | `name`, `sizes`, `priority` (one per page), `decorative`, `position`, `narrow` art-directed crop |
 | `StillLife` | Frame for a `Photo`. | `ratio` 16:9 · 4:3 · 4:5 · 3:4 · fill, `radius`, `parallax`, `intro`, `hoverZoom`, `overlay` |
 | `HeroStage` | Home hero: full-bleed rounded still life under the header, frosted headline card, corner aside. | `media`, `aside`, children |
-| `PageIntro` | Inner page top: steps, folio, eyebrow, masked title, lead. Split hero with `media`. | `step`, `folio`, `eyebrow`, `title`, `lead`, `sublead`, `media` |
+| `PageIntro` | Inner page top: steps, folio, eyebrow, masked title, lead. Split hero with `media`. `compact` drops padding so a following full-viewport stage stays in the first screen. | `step`, `folio`, `eyebrow`, `title`, `lead`, `sublead`, `media`, `compact` |
 | `SectionHead` | Eyebrow + section heading. | `eyebrow`, `title`, `size` |
 | `FeatureCard` | Whole-card link to the next step. | `href`, `media`, `folio`, `eyebrow`, `title`, `body`, `action` |
 | `Tile` | Bento unit, photo or text. Place in `<Grid as="ol">`. | `no`, `title`, `lines`, `media` |
 | `MediaPanel` | Full-bleed still life with a frosted card. Place in `<Section width="full">`. | `media`, `cardSide` |
-| `PeakStage` | Desire peak: pinned photo opening to full bleed with the headline on the calm side. | `folio`, `media` (wide + `narrow`) |
+| `PeakStage` | Desire peak: pinned photo opening to full bleed. Headline sits in the upper calm side, clear of the sticky header, so it is whole in the first viewport. | `folio`, `media` (wide + `narrow`) |
 | `ClosingPanel` | Glass-green close with actions. | `eyebrow`, `title`, `sub`, `actions` |
 | `InfoRow` | Title + text card, for plain information. | `title`, `muted` |
 | `StoreSlot` | Hidden, empty 手に入れる / 近く / 読む structure. No store names or affiliate IDs. | — |
@@ -92,5 +92,5 @@ design-system/
 
 - `/`: `HeroStage` → `Section` + `FillText` → `Section` + `FeatureCard` → `Section` + `SectionHead` + `Grid quarters offset` of photo `Tile`s
 - `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of `Tile`s → `Section full` + `MediaPanel` with `JourneyCta to="drink"`
-- `/drink/shell`: `PageIntro` → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot`
-- `/about`: `Section` + `DisplayLines mark` → `Stack` of `InfoRow`s
+- `/drink/shell`: `PageIntro` (`compact`) → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot`
+- `/about`: `Section` + `Grid splitWide` (mark title + `Photo`) → `Stack` of `InfoRow`s

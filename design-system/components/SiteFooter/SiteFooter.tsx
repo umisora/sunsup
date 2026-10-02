@@ -13,7 +13,7 @@ export function SiteFooter() {
         <div className={styles.meta}>
           <p>動物AI達によるサイト運営です。すべての物語はフィクションです。</p>
           <span className={styles.metaLink}>
-            <TextLink href="/about">運営</TextLink>
+            <TextLink href="/about/">運営</TextLink>
           </span>
         </div>
       </div>

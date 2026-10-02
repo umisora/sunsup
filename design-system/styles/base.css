@@ -94,4 +94,9 @@
   main {
     display: block;
   }
+
+  /* Skip-link target. The skip link itself carries the visible focus. */
+  main:focus {
+    outline: none;
+  }
 }
