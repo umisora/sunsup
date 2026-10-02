@@ -2,6 +2,7 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 
 const SOURCE_DIRS = ["app", "design-system"];
+const EXTRA_FILES = ["data/drinks.csv"];
 const LATIN =
   " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 const USER_AGENT =
@@ -30,7 +31,7 @@ async function sourceFiles(dir) {
 }
 
 async function siteText() {
-  const files = (await Promise.all(SOURCE_DIRS.map(sourceFiles))).flat();
+  const files = [...(await Promise.all(SOURCE_DIRS.map(sourceFiles))).flat(), ...EXTRA_FILES];
   const chars = new Set(LATIN);
   for (const file of files) {
     for (const char of await readFile(file, "utf8")) {

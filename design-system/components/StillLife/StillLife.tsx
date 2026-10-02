@@ -50,6 +50,27 @@ export function Photo({ name, sizes, priority = false, decorative = false, posit
   );
 }
 
+type ExternalPhotoProps = {
+  src: string;
+  alt: string;
+  /** The LCP image of the page. Only one per page. */
+  priority?: boolean;
+};
+
+/** A still life that is not in the local photo catalog. Use for a drink's 静物URL. */
+export function ExternalPhoto({ src, alt, priority = false }: ExternalPhotoProps) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : undefined}
+      decoding="async"
+      referrerPolicy="no-referrer"
+    />
+  );
+}
+
 type Ratio = "16:9" | "4:3" | "4:5" | "3:4" | "fill";
 
 const RATIO: Record<Ratio, string> = {
@@ -73,7 +94,7 @@ type StillLifeProps = {
   children: ReactNode;
 };
 
-/** Frame for a photographic still life. Children is a <Photo>. */
+/** Frame for a photographic still life. Children is a <Photo> or <ExternalPhoto>. */
 export function StillLife({ ratio = "4:3", radius = "md", parallax = false, intro = false, hoverZoom = false, overlay, children }: StillLifeProps) {
   return (
     <div

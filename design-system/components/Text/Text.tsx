@@ -113,7 +113,15 @@ export function Phrase({ children }: { children: ReactNode }) {
   return <span className={styles.phrase}>{children}</span>;
 }
 
-export function TextLink({ href, children }: { href: string; children: ReactNode }) {
+export function TextLink({ href, external = false, children }: { href: string; external?: boolean; children: ReactNode }) {
+  if (external) {
+    return (
+      <a href={href} className={styles.link} rel="noreferrer">
+        {children}
+      </a>
+    );
+  }
+
   return (
     <Link href={href} className={styles.link}>
       {children}

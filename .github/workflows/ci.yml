@@ -30,7 +30,7 @@ jobs:
         run: npm run build
 
       - name: Check static export
-        run: test -f out/index.html
+        run: node scripts/check-export.mjs
 
       - name: Upload static export
         uses: actions/upload-artifact@v4
@@ -79,7 +79,7 @@ jobs:
           path: out
 
       - name: Check downloaded export
-        run: test -f out/index.html
+        run: node scripts/check-export.mjs
 
       - name: Ensure Pages project
         env:

@@ -58,6 +58,7 @@ design-system/
 | `Chip` / `ChipList` | Small pill labels. | `tone` raised · frost, `folio` |
 | `Surface` | Card background. | `tone` raised · frost · inverse, `padding` md · lg · xl, `radius`, `rise` / `reveal` / `staggerItem` |
 | `Photo` | Still life image from the catalog (`components/StillLife/photos.ts`). | `name`, `sizes`, `priority` (one per page), `decorative`, `position`, `narrow` art-directed crop |
+| `ExternalPhoto` | Still life from a URL outside the catalog, for a drink's 静物URL. | `src`, `alt`, `priority` |
 | `StillLife` | Frame for a `Photo`. | `ratio` 16:9 · 4:3 · 4:5 · 3:4 · fill, `radius`, `parallax`, `intro`, `hoverZoom`, `overlay` |
 | `HeroStage` | Home hero: full-bleed rounded still life under the header, frosted headline card, corner aside. | `media`, `aside`, children |
 | `PageIntro` | Inner page top: steps, folio, eyebrow, masked title, lead. Split hero with `media`. `compact` drops padding so a following full-viewport stage stays in the first screen. | `step`, `folio`, `eyebrow`, `title`, `lead`, `sublead`, `media`, `compact` |
@@ -68,7 +69,7 @@ design-system/
 | `PeakStage` | Desire peak: pinned photo opening to full bleed. Headline sits in the upper calm side, clear of the sticky header, so it is whole in the first viewport. | `folio`, `media` (wide + `narrow`) |
 | `ClosingPanel` | Glass-green close with actions. | `eyebrow`, `title`, `sub`, `actions` |
 | `InfoRow` | Title + text card, for plain information. | `title`, `muted` |
-| `StoreSlot` | Hidden, empty 手に入れる / 近く / 読む structure. No store names or affiliate IDs. | — |
+| `StoreSlot` | Store rows, or the shell's hidden empty 手に入れる / 近く / 読む structure. No affiliate IDs. | `rows` (`label`, `href`, `text`). Omit `rows` on the shell |
 | `Motion` | Wrap each page once. | — |
 
 ## Motion contract
@@ -92,5 +93,6 @@ design-system/
 
 - `/`: `HeroStage` → `Section` + `FillText` → `Section` + `FeatureCard` → `Section` + `SectionHead` + `Grid quarters offset` of photo `Tile`s
 - `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of `Tile`s → `Section full` + `MediaPanel` with `JourneyCta to="drink"`
-- `/drink/shell`: `PageIntro` (`compact`) → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot`
+- `/drink/shell`: `PageIntro` (`compact`) → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot` (no rows)
+- `/drink/[slug]`: optional `ExternalPhoto` in `StillLife` → category `Chip` + product name → `InfoRow`s for 場／見た目／サイズ／味 → `ClosingPanel` (fixed close, no second button) → `StoreSlot` rows for 公式 / Amazon / 楽天 when URLs exist
 - `/about`: `Section` + `Grid splitWide` (mark title + `Photo`) → `Stack` of `InfoRow`s
