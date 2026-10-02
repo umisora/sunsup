@@ -110,7 +110,7 @@ function openPeak(scope: HTMLElement, wide: boolean) {
   timeline
     .fromTo(frame, { clipPath: inset }, { clipPath: "inset(0% 0% 0% 0% round 0px)" }, 0)
     .fromTo(image, { scale: 1.16 }, { scale: 1 }, 0)
-    .fromTo(copy, { y: motion.distance.rise }, { y: 0 }, 0.1);
+    .fromTo(copy, { y: motion.distance.intro }, { y: 0 }, 0.1);
 }
 
 function driftMedia(scope: HTMLElement) {

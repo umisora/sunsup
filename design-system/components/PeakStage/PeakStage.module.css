@@ -15,12 +15,13 @@
 
 .copy {
   position: absolute;
-  top: 50%;
+  /* Clear of the sticky header. Centering this block puts the line on the fold. */
+  top: calc(var(--layout-header-height) + var(--space-5));
   inset-inline-start: max(var(--layout-gutter), (100% - var(--layout-wrap)) / 2);
-  translate: 0 -50%;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  text-shadow: var(--shadow-text-on-photo);
 }
 
 .line {
@@ -45,8 +46,8 @@
 
   .copy {
     position: static;
-    translate: none;
     gap: 14px;
     padding: var(--space-6) var(--layout-gutter) 0;
+    text-shadow: none;
   }
 }

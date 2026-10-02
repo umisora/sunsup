@@ -21,7 +21,7 @@ export function Button({ variant = "primary", icon = "forward", href, intro = fa
   const className = cx(
     styles.button,
     styles[variant],
-    variant === "primary" && styles.block,
+    (variant === "primary" || variant === "inverse") && styles.block,
     icon === "back" && styles.back,
     icon === "none" && styles.noIcon,
   );

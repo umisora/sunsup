@@ -44,7 +44,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <SkipLink target="main" />
         <SiteHeader />
-        <main id="main">{children}</main>
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
         <SiteFooter />
         <noscript>
           <style>{`[data-intro],[data-line],[data-reveal],[data-stagger-item]{visibility:visible !important}[data-intro-media]{clip-path:none !important}`}</style>
