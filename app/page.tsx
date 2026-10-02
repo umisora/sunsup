@@ -1,0 +1,103 @@
+import type { Metadata } from "next";
+import {
+  Chip,
+  ChipList,
+  DisplayLines,
+  Eyebrow,
+  FeatureCard,
+  FillText,
+  Grid,
+  HeroStage,
+  JourneyCta,
+  Motion,
+  Photo,
+  Phrase,
+  Section,
+  SectionHead,
+  Stack,
+  Text,
+  Tile,
+} from "@/design-system";
+
+export const metadata: Metadata = {
+  title: { absolute: "sunsup" },
+};
+
+const AXES = [
+  { no: "01", title: "場", line: "次のオフィスの午後。", photo: "place", position: "46% 50%" },
+  { no: "02", title: "見た目", line: "卓に馴染むか。", photo: "peak", position: "38% 50%" },
+  { no: "03", title: "サイズ", line: "一人が飲み切る。", photo: "office", position: "80% 50%" },
+  { no: "04", title: "味", line: "果実、炭酸、苦み。", photo: "detail", position: "28% 62%" },
+] as const;
+
+export default function HomePage() {
+  return (
+    <Motion>
+      <HeroStage
+        labelledBy="home-title"
+        media={<Photo name="table" sizes="100vw" priority />}
+        aside={<ChipList tone="frost" label="選ぶ軸" items={AXES.map((axis) => axis.title)} intro />}
+      >
+        <Stack gap={5}>
+          <Chip intro>コンセプトサイト</Chip>
+          <DisplayLines id="home-title" lines={["飲み会でも、", "おしゃれに美味しく。"]} />
+          <Text variant="lead" intro>
+            次のオフィスの卓に、何を置くか。
+          </Text>
+          <JourneyCta to="ba" intro>
+            次の卓の場を見る
+          </JourneyCta>
+        </Stack>
+      </HeroStage>
+
+      <Section labelledBy="entry-title">
+        <Stack gap={5}>
+          <Eyebrow>入口</Eyebrow>
+          <FillText as="h2" id="entry-title" lines={["次の卓のために。", "次の飲み会に、", "何を置くか。"]} />
+        </Stack>
+      </Section>
+
+      <Section space="md" label="最初の場">
+        <FeatureCard
+          href="/ba/office"
+          media={<Photo name="place" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />}
+          folio="No. 01"
+          eyebrow="場"
+          title={
+            <>
+              <Phrase>オフィスの</Phrase>
+              <Phrase>オープンな飲み会</Phrase>
+            </>
+          }
+          body="デスクが卓になる。窓のあるITの会社。"
+          action="次の卓の場を見る"
+        />
+      </Section>
+
+      <Section labelledBy="choose-title">
+        <SectionHead
+          id="choose-title"
+          eyebrow="選ぶ"
+          title={
+            <>
+              <Phrase>場、見た目、</Phrase>
+              <Phrase>サイズ、味。</Phrase>
+            </>
+          }
+        />
+        <Grid as="ol" columns="quarters" offset>
+          {AXES.map((axis) => (
+            <Tile
+              key={axis.no}
+              no={axis.no}
+              title={axis.title}
+              titleAs="p"
+              lines={[axis.line]}
+              media={<Photo name={axis.photo} sizes="(min-width: 960px) 300px, 45vw" position={axis.position} decorative />}
+            />
+          ))}
+        </Grid>
+      </Section>
+    </Motion>
+  );
+}

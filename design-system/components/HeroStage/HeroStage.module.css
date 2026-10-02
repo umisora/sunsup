@@ -1,0 +1,59 @@
+.hero {
+  position: relative;
+  margin-top: calc(-1 * var(--layout-header-height));
+  padding: var(--layout-bleed-inset) var(--layout-bleed-inset) 0;
+}
+
+.stage {
+  position: relative;
+  height: clamp(620px, 100svh - 2 * var(--layout-bleed-inset), 1000px);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--scrim-photo);
+  pointer-events: none;
+}
+
+.card {
+  position: absolute;
+  inset-inline-start: calc(var(--layout-bleed-inset) + clamp(16px, 4vw, 64px));
+  bottom: clamp(28px, 5vw, 72px);
+  z-index: 1;
+  width: min(620px, 100% - 56px);
+}
+
+.aside {
+  position: absolute;
+  inset-inline-end: calc(var(--layout-bleed-inset) + clamp(16px, 3vw, 48px));
+  bottom: clamp(28px, 5vw, 72px);
+  z-index: 1;
+}
+
+@media (max-width: 959px) {
+  .stage {
+    height: min(62svh, 620px);
+    min-height: 440px;
+  }
+
+  .stage img {
+    object-position: 40% 50%;
+  }
+
+  .card {
+    position: relative;
+    inset: auto;
+    width: auto;
+    margin: -148px var(--layout-bleed-inset) 0;
+  }
+
+  .aside {
+    top: calc(var(--layout-header-height) + var(--space-5));
+    bottom: auto;
+    inset-inline: calc(var(--layout-bleed-inset) + var(--space-3)) auto;
+  }
+}

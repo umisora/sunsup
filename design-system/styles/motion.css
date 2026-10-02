@@ -1,0 +1,20 @@
+/*
+  Pre-hide states for the motion attributes GSAP animates (see design-system/motion.ts).
+  Only applies when JS is on and the user accepts motion; <noscript> in the layout undoes it.
+  Journey CTAs use [data-rise] instead, which is never hidden.
+*/
+
+@layer motion {
+  @media (prefers-reduced-motion: no-preference) {
+    html.js [data-intro],
+    html.js [data-line],
+    html.js [data-reveal],
+    html.js [data-stagger-item] {
+      visibility: hidden;
+    }
+
+    html.js [data-intro-media] {
+      clip-path: inset(0% 0% 100% 0%);
+    }
+  }
+}

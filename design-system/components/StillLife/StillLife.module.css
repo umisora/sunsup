@@ -1,0 +1,64 @@
+.frame {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: var(--surface-raised);
+}
+
+.frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.parallax img {
+  inset: -6% 0;
+  height: 112%;
+  will-change: transform;
+}
+
+.r16x9 {
+  aspect-ratio: 16 / 9;
+}
+
+.r4x3 {
+  aspect-ratio: 4 / 3;
+}
+
+.r4x5 {
+  aspect-ratio: 4 / 5;
+}
+
+.r3x4 {
+  aspect-ratio: 3 / 4;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+}
+
+.radiusMd {
+  border-radius: var(--radius-md);
+}
+
+.radiusLg {
+  border-radius: var(--radius-lg);
+}
+
+.overlay {
+  position: absolute;
+  top: var(--space-4);
+  inset-inline-start: var(--space-4);
+  z-index: 1;
+}
+
+.hoverZoom img {
+  transition: scale var(--duration-slow) var(--ease-out);
+}
+
+:global(a):hover .hoverZoom img {
+  scale: 1.04;
+}

@@ -1,0 +1,52 @@
+.stage {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+}
+
+.frame img {
+  object-position: 62% 50%;
+}
+
+.copy {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: max(var(--layout-gutter), (100% - var(--layout-wrap)) / 2);
+  translate: 0 -50%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.line {
+  white-space: nowrap;
+}
+
+@media (max-width: 959px) {
+  .stage {
+    height: auto;
+    min-height: 0;
+  }
+
+  .frame {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    max-height: 88svh;
+  }
+
+  .frame img {
+    object-position: 50% 50%;
+  }
+
+  .copy {
+    position: static;
+    translate: none;
+    gap: 14px;
+    padding: var(--space-6) var(--layout-gutter) 0;
+  }
+}

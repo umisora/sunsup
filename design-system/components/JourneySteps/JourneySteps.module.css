@@ -1,0 +1,41 @@
+.steps {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--surface-raised) 70%, transparent);
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding-inline: var(--space-4) 18px;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-base) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.item:hover {
+  color: var(--text-primary);
+}
+
+.item[aria-current="step"] {
+  background: var(--action-primary);
+  color: var(--text-inverse);
+}
+
+.no {
+  font-family: var(--font-mark);
+  font-size: 16px;
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
