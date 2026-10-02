@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Check static export
+        run: test -f out/index.html
+
+      - name: Upload static export
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-out
+          path: out
+          if-no-files-found: error
+          retention-days: 1
+
+  check-secrets:
+    name: Check Cloudflare secrets
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.gate.outputs.ready }}
+    steps:
+      - name: Require both Pages secrets
+        id: gate
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Pages deploy skipped::Set repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID to deploy out/ to the sunsup Pages project. See README."
+          fi
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: [build, check-secrets]
+    if: needs.build.result == 'success' && needs.check-secrets.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Download static export
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-out
+          path: out
+
+      - name: Check downloaded export
+        run: test -f out/index.html
+
+      - name: Ensure Pages project
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/ensure-pages-project.mjs
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=sunsup --branch=main --commit-dirty=true
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
