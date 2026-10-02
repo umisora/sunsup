@@ -2,7 +2,7 @@
 
 飲み会でも、おしゃれに美味しく飲めるノンアルを届ける。コンセプトサイト。
 
-旅は `/` → `/ba/office` → `/drink/shell`。運営は `/about`。
+旅は `/` → `/ba/office` → `/drink/shell`。一杯の商品は `/drink/[slug]`。運営は `/about`。
 
 静的 HTML は Next.js（App Router）に置き換えた。ビルドは静的書き出しで、Cloudflare Pages にそのまま置ける。
 
@@ -68,12 +68,21 @@ secret を置かず、Workers & Pages → Create → Pages → Connect to Git �
 |---|---|
 | `/` | 世界観。場への入口 |
 | `/ba/office` | オフィスのオープンな飲み会 |
-| `/drink/shell` | 一杯の殻。商品名はまだ置かない |
+| `/drink/shell` | 一杯の殻。商品名も店のリンクも置かない |
+| `/drink/[slug]` | CSVの一杯。`data/drinks.csv` から静的生成 |
 | `/about` | 運営と紹介の開示 |
+
+## 一杯のページ
+
+`npm run build` が `data/drinks.csv` を読む。品名、場、見た目、サイズ、味が揃った行だけ `/drink/[slug]/` になる。欠けた行は警告して出さない。
+
+ページの順は、静物（静物URLがあるときだけ）、品名、場／見た目／サイズ／味、締め「次の飲み会に、これを置く。」、末尾の店。店は公式、Amazon、楽天の順で、URLが空の行は出さない。リンクはCSVのURLをそのまま使う。アフィリエイトIDは付けない。
+
+`/ba/office` の「一杯へ」は殻 `/drink/shell` のまま。殻は見本導線で、商品ページではない。
 
 ## デザインシステム
 
 見た目はすべて `design-system/`（トークン、コンポーネント、モーション）にある。ページは `@/design-system` を組むだけで、ページ固有の CSS は持たない。トークン・コンポーネント・使い方は [`docs/design-system.md`](docs/design-system.md)。
 
 - 写真は `public/images/` の webp。`design-system/components/StillLife/photos.ts` が一覧
-- 和文フォントはサイトで使う文字だけのサブセットを `fonts/` に置いている。コピーに新しい漢字を足したら `npm run fonts` で作り直す（ネット接続が要る）
+- 和文フォントはサイトで使う文字だけのサブセットを `fonts/` に置いている。コピーや `data/drinks.csv` に新しい漢字を足したら `npm run fonts` で作り直す（ネット接続が要る）

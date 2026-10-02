@@ -14,7 +14,7 @@ export { SectionHead } from "./components/SectionHead/SectionHead";
 export { SiteFooter } from "./components/SiteFooter/SiteFooter";
 export { SiteHeader } from "./components/SiteHeader/SiteHeader";
 export { SkipLink } from "./components/SkipLink/SkipLink";
-export { Photo, StillLife } from "./components/StillLife/StillLife";
+export { ExternalPhoto, Photo, StillLife } from "./components/StillLife/StillLife";
 export { StoreSlot } from "./components/StoreSlot/StoreSlot";
 export { Surface, type SurfaceTone } from "./components/Surface/Surface";
 export { Tile } from "./components/Tile/Tile";
