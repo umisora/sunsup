@@ -23,7 +23,7 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.bar}>
         <Link href="/" className={styles.mark} aria-current={pathname === "/" ? "page" : undefined}>
-          sunsup
+          drinkup
         </Link>
         <nav className={styles.nav} aria-label="サイト">
           {NAV.map((item) => (

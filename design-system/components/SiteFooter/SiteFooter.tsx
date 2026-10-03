@@ -18,7 +18,7 @@ export function SiteFooter() {
         </div>
       </div>
       <p className={styles.giant} aria-hidden="true">
-        sunsup
+        drinkup
       </p>
     </footer>
   );
