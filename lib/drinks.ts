@@ -102,6 +102,20 @@ function isHttp(value: string): boolean {
   }
 }
 
+/** A still shipped with the site at public/drinks/{name}.webp. */
+const SITE_STILL = /^\/drinks\/[a-z0-9]+(?:-[a-z0-9]+)*\.webp$/;
+
+function stillOrEmpty(value: string, slug: string): string {
+  if (!value) {
+    return "";
+  }
+  if (isHttp(value) || SITE_STILL.test(value)) {
+    return value;
+  }
+  console.warn(`[drinks] ${slug}: ignore 静物URL`);
+  return "";
+}
+
 function httpOrEmpty(value: string, slug: string, column: string): string {
   if (!value) {
     return "";
@@ -143,17 +157,11 @@ export function parseDrinks(text: string): Drink[] {
     }
 
     seen.add(slug);
-    const stillRaw = cell(row, "静物URL");
-    const stillUrl = stillRaw && isHttp(stillRaw) ? stillRaw : "";
-    if (stillRaw && !stillUrl) {
-      console.warn(`[drinks] ${slug}: ignore 静物URL`);
-    }
-
     drinks.push({
       slug,
       name: cell(row, "品名"),
       category: cell(row, "カテゴリ"),
-      stillUrl,
+      stillUrl: stillOrEmpty(cell(row, "静物URL"), slug),
       place: cell(row, "場"),
       look: cell(row, "見た目"),
       size: cell(row, "サイズ"),

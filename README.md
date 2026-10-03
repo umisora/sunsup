@@ -78,6 +78,8 @@ secret を置かず、Workers & Pages → Create → Pages → Connect to Git �
 
 ページの順は、静物（静物URLがあるときだけ）、品名、場／見た目／サイズ／味、締め「次の飲み会に、これを置く。」、末尾の店。店は公式、Amazon、楽天の順で、URLが空の行は出さない。リンクはCSVのURLをそのまま使う。アフィリエイトIDは付けない。
 
+静物URLは `http://` または `https://` の画像か、`/drinks/` 配下の `.webp`（`public/drinks/` に置いたファイル）。それ以外は警告して出さない。写真の出典は [`data/photo-credits.json`](data/photo-credits.json)。ページには出さない。
+
 `/ba/office` の「一杯へ」は殻 `/drink/shell` のまま。殻は見本導線で、商品ページではない。
 
 ## デザインシステム

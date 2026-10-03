@@ -132,6 +132,19 @@ for (const drink of drinks) {
   if (html.includes("tag=") || html.includes("rel=\"sponsored\"")) {
     fail(`${drink.slug} includes an affiliate marker`);
   }
+  const still = drink["静物URL"];
+  if (still.startsWith("/")) {
+    const marker = `src="${still}"`;
+    if (!html.includes(marker)) {
+      fail(`${drink.slug} is missing ${marker}`);
+    }
+    const asset = join("out", still.slice(1));
+    if (!existsSync(asset)) {
+      fail(`${drink.slug} still is missing from the export: ${asset}`);
+    }
+  } else if (still && !html.includes(`src="${still}"`)) {
+    fail(`${drink.slug} is missing its still`);
+  }
 }
 
 if (failures.length > 0) {
