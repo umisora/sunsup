@@ -68,8 +68,11 @@ function parseCsv(text) {
   return rows;
 }
 
-read("index.html");
+const home = read("index.html");
 read("ba/office/index.html");
+if (!home.includes("<title>sunsup</title>") || home.includes("drinkup") || home.includes("Drinkup")) {
+  fail("home no longer uses the sunsup name");
+}
 read("about/index.html");
 const shell = read("drink/shell/index.html");
 const office = read("ba/office/index.html");
@@ -80,13 +83,53 @@ if (shell.includes("amazon.co.jp") || shell.includes("rakuten.co.jp") || shell.i
 if (shell.includes("KIMINO") || shell.includes("クラノオト")) {
   fail("shell includes a product name");
 }
-if (!office.includes("/drink/shell/")) {
-  fail("office no longer links to the drink shell");
+const cup = office.match(/<a\b[^>]*href="([^"]*)"[^>]*>\s*<span>一杯へ<\/span>/);
+if (!cup || cup[1] !== "/drink/kimino-yuzu/") {
+  fail(`office 一杯へ links to ${cup ? cup[1] : "nothing"}`);
+}
+if (office.includes('href="/drink/shell/"')) {
+  fail("office links to the drink shell");
+}
+if (office.includes("drinkup") || office.includes("Drinkup") || !office.includes("sunsup")) {
+  fail("office no longer uses the sunsup name");
+}
+
+const OFFICE_ENTRIES = [
+  "kimino-yuzu",
+  "kuranooto-koshu",
+  "fujiya-nectar-peach",
+  "suntory-oolong-340",
+  "kitayama-jabarush",
+  "sanpellegrino-aranciata",
+];
+for (const slug of OFFICE_ENTRIES) {
+  if (!office.includes(`href="/drink/${slug}/"`)) {
+    fail(`office is missing /drink/${slug}/`);
+  }
+}
+
+function categoryKey(category) {
+  if (category === "クラフト・瓶もの" || category === "クラフト／瓶もの") {
+    return "クラフト・瓶";
+  }
+  return category;
 }
 
 const table = parseCsv(readFileSync(join("data", "drinks.csv"), "utf8"));
 const header = table[0];
 const drinks = table.slice(1).map((row) => Object.fromEntries(header.map((column, index) => [column, (row[index] ?? "").trim()])));
+const craftLabels = new Set(drinks.map((drink) => drink["カテゴリ"]).filter((label) => categoryKey(label) === "クラフト・瓶"));
+if (!craftLabels.has("クラフト・瓶もの") || !craftLabels.has("クラフト／瓶もの")) {
+  fail("craft bottle category is missing one of its two labels");
+}
+const entryKeys = OFFICE_ENTRIES.map((slug) => {
+  const drink = drinks.find((row) => row.slug === slug);
+  return drink ? categoryKey(drink["カテゴリ"]) : "";
+});
+if (entryKeys.some((key) => key === "") || new Set(entryKeys).size !== OFFICE_ENTRIES.length) {
+  fail("office entries are not one drink per category");
+}
+
 const slugs = drinks.map((drink) => drink.slug);
 const pages = readdirSync(join("out", "drink"), { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && entry.name !== "shell")
@@ -111,6 +154,30 @@ for (const drink of drinks) {
   if (!html.includes(drink["品名"])) {
     fail(`${drink.slug} is missing its name`);
   }
+  if (!html.includes(`<title>${drink["品名"]}｜sunsup</title>`)) {
+    fail(`${drink.slug} is missing its title`);
+  }
+  if (!html.includes(`<meta name="description" content="${drink["場"]}"/>`)) {
+    fail(`${drink.slug} is missing its description`);
+  }
+  if (!html.includes(`<meta property="og:title" content="${drink["品名"]}｜sunsup"/>`)) {
+    fail(`${drink.slug} is missing its Open Graph title`);
+  }
+  if (!html.includes(`<meta property="og:description" content="${drink["場"]}"/>`)) {
+    fail(`${drink.slug} is missing its Open Graph description`);
+  }
+  if (html.includes("drinkup") || html.includes("Drinkup")) {
+    fail(`${drink.slug} renames the site`);
+  }
+  const still = drink["静物URL"];
+  if (still.startsWith("/") || still.startsWith("http://") || still.startsWith("https://")) {
+    const image = still.startsWith("/") ? `https://sunsup-dv4.pages.dev${still}` : still;
+    if (!html.includes(`<meta property="og:image" content="${image}"/>`)) {
+      fail(`${drink.slug} is missing its Open Graph image`);
+    }
+  } else if (html.includes('property="og:image"')) {
+    fail(`${drink.slug} has an Open Graph image without a still`);
+  }
   if (!html.includes("次の飲み会に、") || !html.includes("これを置く。")) {
     fail(`${drink.slug} is missing the close line`);
   }
@@ -132,7 +199,6 @@ for (const drink of drinks) {
   if (html.includes("tag=") || html.includes("rel=\"sponsored\"")) {
     fail(`${drink.slug} includes an affiliate marker`);
   }
-  const still = drink["静物URL"];
   if (still.startsWith("/")) {
     const marker = `src="${still}"`;
     if (!html.includes(marker)) {

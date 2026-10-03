@@ -2,7 +2,7 @@
 
 飲み会でも、おしゃれに美味しく飲めるノンアルを届ける。コンセプトサイト。
 
-旅は `/` → `/ba/office` → `/drink/shell`。一杯の商品は `/drink/[slug]`。運営は `/about`。
+旅は `/` → `/ba/office` → `/drink/kimino-yuzu`。場のページから、カテゴリごとに一杯を開ける。殻は `/drink/shell`。運営は `/about`。
 
 静的 HTML は Next.js（App Router）に置き換えた。ビルドは静的書き出しで、Cloudflare Pages にそのまま置ける。
 
@@ -80,7 +80,7 @@ secret を置かず、Workers & Pages → Create → Pages → Connect to Git �
 
 静物URLは `http://` または `https://` の画像か、`/drinks/` 配下の `.webp`（`public/drinks/` に置いたファイル）。それ以外は警告して出さない。写真の出典は [`data/photo-credits.json`](data/photo-credits.json)。ページには出さない。
 
-`/ba/office` の「一杯へ」は殻 `/drink/shell` のまま。殻は見本導線で、商品ページではない。
+`/ba/office` の「一杯へ」は `/drink/kimino-yuzu/`。同じページから、カテゴリごとに一杯を開ける。殻 `/drink/shell` は商品ページではなく、店のリンクも置かない。
 
 ## デザインシステム
 

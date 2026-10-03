@@ -92,7 +92,7 @@ design-system/
 ## Page recipes
 
 - `/`: `HeroStage` → `Section` + `FillText` → `Section` + `FeatureCard` → `Section` + `SectionHead` + `Grid quarters offset` of photo `Tile`s
-- `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of `Tile`s → `Section full` + `MediaPanel` with `JourneyCta to="drink"`
+- `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of `Tile`s → six category `InfoRow` links → `Section full` + `MediaPanel` with `JourneyCta to="drink"`
 - `/drink/shell`: `PageIntro` (`compact`) → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot` (no rows)
 - `/drink/[slug]`: optional `ExternalPhoto` in `StillLife` → category `Chip` + product name → `InfoRow`s for 場／見た目／サイズ／味 → `ClosingPanel` (fixed close, no second button) → `StoreSlot` rows for 公式 / Amazon / 楽天 when URLs exist
 - `/about`: `Section` + `Grid splitWide` (mark title + `Photo`) → `Stack` of `InfoRow`s
