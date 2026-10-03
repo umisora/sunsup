@@ -28,6 +28,9 @@ export default function AboutPage() {
           <InfoRow title="最初の場">
             <TextLink href="/ba/office/">昼のオフィスのオープンな飲み会</TextLink>。家で届いてから、次の卓へ。
           </InfoRow>
+          <InfoRow title="一杯の一覧">
+            <TextLink href="/drink/">カテゴリごとの残り</TextLink>。入口の六杯の先。
+          </InfoRow>
           <InfoRow title="紹介について">
             紹介リンクを置くことがあります。いまは紹介プログラム未参加です。選ぶ軸は価格順にしません。
           </InfoRow>

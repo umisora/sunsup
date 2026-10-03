@@ -16,6 +16,7 @@ import {
   SectionHead,
   Stack,
   Text,
+  TextLink,
   Tile,
 } from "@/design-system";
 
@@ -72,6 +73,15 @@ export default function HomePage() {
           body="デスクが卓になる。窓のあるITの会社。"
           action="次の卓の場を見る"
         />
+      </Section>
+
+      <Section space="md" labelledBy="more-title">
+        <Stack gap={4}>
+          <SectionHead id="more-title" eyebrow="一覧" title={<Phrase>ほかの一杯</Phrase>} />
+          <Text variant="body">
+            入口はカテゴリごとに一杯。<TextLink href="/drink/">一覧</TextLink>に、残りがある。
+          </Text>
+        </Stack>
       </Section>
 
       <Section labelledBy="choose-title">

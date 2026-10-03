@@ -8,12 +8,14 @@ import {
   Motion,
   Phrase,
   Section,
+  SectionHead,
   Stack,
   StillLife,
   StoreSlot,
   Text,
+  TextLink,
 } from "@/design-system";
-import { getDrink, loadDrinks, shareImage, storeRows } from "@/lib/drinks";
+import { drinkDescription, drinkTitle, getDrink, loadDrinks, relatedDrinks, shareImage, storeRows } from "@/lib/drinks";
 
 type DrinkPageProps = {
   params: Promise<{ slug: string }>;
@@ -38,15 +40,20 @@ export async function generateMetadata({ params }: DrinkPageProps): Promise<Meta
   if (!drink) {
     return { title: "このページはありません" };
   }
-  const description = drink.place;
+  const title = drinkTitle(drink);
+  const description = drinkDescription(drink);
   const image = shareImage(drink);
   return {
-    title: drink.name,
+    title,
     description,
+    alternates: { canonical: `/drink/${drink.slug}/` },
     openGraph: {
-      title: `${drink.name}｜sunsup`,
+      title: `${title}｜sunsup`,
       description,
+      url: `/drink/${drink.slug}/`,
       siteName: "sunsup",
+      locale: "ja_JP",
+      type: "article",
       ...(image ? { images: [image] } : {}),
     },
   };
@@ -60,6 +67,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
   }
 
   const rows = storeRows(drink);
+  const related = relatedDrinks(drink);
 
   return (
     <Motion>
@@ -89,6 +97,24 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
           ))}
         </Stack>
       </Section>
+
+      {related.length > 0 ? (
+        <Section space="md" labelledBy="related-title">
+          <Stack gap={4}>
+            <SectionHead id="related-title" eyebrow={drink.category} title={<Phrase>同じカテゴリ</Phrase>} />
+            <Stack gap={3} align="stretch">
+              {related.map((other) => (
+                <InfoRow key={other.slug} title={<TextLink href={`/drink/${other.slug}/`}>{other.name}</TextLink>}>
+                  {other.size}
+                </InfoRow>
+              ))}
+            </Stack>
+            <Text variant="small">
+              <TextLink href="/drink/">一覧</TextLink>
+            </Text>
+          </Stack>
+        </Section>
+      ) : null}
 
       <Section labelledBy="close-title">
         <ClosingPanel

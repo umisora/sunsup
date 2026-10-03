@@ -14,10 +14,12 @@ type ButtonProps = {
   href?: string;
   /** Motion: enters with the page intro. */
   intro?: boolean;
+  /** The one store call to action on a drink page. */
+  storePrimary?: boolean;
   children: ReactNode;
 };
 
-export function Button({ variant = "primary", icon = "forward", href, intro = false, children }: ButtonProps) {
+export function Button({ variant = "primary", icon = "forward", href, intro = false, storePrimary = false, children }: ButtonProps) {
   const className = cx(
     styles.button,
     styles[variant],
@@ -39,16 +41,26 @@ export function Button({ variant = "primary", icon = "forward", href, intro = fa
     </>
   );
 
+  const storeMark = storePrimary ? ({ "data-store-primary": "true" } as const) : {};
+
   if (!href) {
     return (
-      <span className={className} data-intro={intro || undefined}>
+      <span className={className} data-intro={intro || undefined} {...storeMark}>
         {content}
       </span>
     );
   }
 
+  if (href.startsWith("https://") || href.startsWith("http://")) {
+    return (
+      <a href={href} className={className} rel="noreferrer" data-intro={intro || undefined} {...storeMark}>
+        {content}
+      </a>
+    );
+  }
+
   return (
-    <Link href={href} className={className} data-intro={intro || undefined}>
+    <Link href={href} className={className} data-intro={intro || undefined} {...storeMark}>
       {content}
     </Link>
   );

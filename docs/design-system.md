@@ -68,8 +68,8 @@ design-system/
 | `MediaPanel` | Full-bleed still life with a frosted card. Place in `<Section width="full">`. | `media`, `cardSide` |
 | `PeakStage` | Desire peak: pinned photo opening to full bleed. Headline sits in the upper calm side, clear of the sticky header, so it is whole in the first viewport. | `folio`, `media` (wide + `narrow`) |
 | `ClosingPanel` | Glass-green close with actions. | `eyebrow`, `title`, `sub`, `actions` |
-| `InfoRow` | Title + text card, for plain information. | `title`, `muted` |
-| `StoreSlot` | Store rows, or the shell's hidden empty 手に入れる / 近く / 読む structure. No affiliate IDs. | `rows` (`label`, `href`, `text`). Omit `rows` on the shell |
+| `InfoRow` | Title + text card, for plain information. Title may be a link. | `title`, `muted` |
+| `StoreSlot` | One primary store button, then any further product links. Shell keeps the hidden empty 手に入れる / 近く / 読む structure. No affiliate IDs, no search URLs. | `rows` (`label`, `href`, `text`). Omit `rows` on the shell |
 | `Motion` | Wrap each page once. | — |
 
 ## Motion contract
@@ -94,5 +94,6 @@ design-system/
 - `/`: `HeroStage` → `Section` + `FillText` → `Section` + `FeatureCard` → `Section` + `SectionHead` + `Grid quarters offset` of photo `Tile`s
 - `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of `Tile`s → six category `InfoRow` links → `Section full` + `MediaPanel` with `JourneyCta to="drink"`
 - `/drink/shell`: `PageIntro` (`compact`) → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot` (no rows)
-- `/drink/[slug]`: optional `ExternalPhoto` in `StillLife` → category `Chip` + product name → `InfoRow`s for 場／見た目／サイズ／味 → `ClosingPanel` (fixed close, no second button) → `StoreSlot` rows for 公式 / Amazon / 楽天 when URLs exist
+- `/drink/`: `PageIntro` → one `Section` per category. A drink with its own still gets `ExternalPhoto`; a drink without a still is an `InfoRow` only. Real stills are listed first
+- `/drink/[slug]`: optional `ExternalPhoto` in `StillLife` (only that drink's still) → category `Chip` + product name → `InfoRow`s for 場／見た目／サイズ／味 → same-category links → `ClosingPanel` (fixed close, no second button) → `StoreSlot`: first product link is the primary button, 公式 / Amazon / 楽天 when each URL is a product page
 - `/about`: `Section` + `Grid splitWide` (mark title + `Photo`) → `Stack` of `InfoRow`s

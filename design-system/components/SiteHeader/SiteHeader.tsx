@@ -6,6 +6,7 @@ import styles from "./SiteHeader.module.css";
 
 const NAV = [
   { href: "/ba/office/", label: "場" },
+  { href: "/drink/", label: "一覧" },
   { href: "/about/", label: "運営" },
 ] as const;
 

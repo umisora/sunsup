@@ -1,3 +1,4 @@
+import { Button } from "../Button/Button";
 import { TextLink } from "../Text/Text";
 import styles from "./StoreSlot.module.css";
 
@@ -20,25 +21,36 @@ type StoreSlotProps = {
 
 /**
  * Where to get the drink.
- * Product pages pass 公式, Amazon, 楽天 — only the rows that have a URL.
- * The shell passes nothing: no store names, no affiliate IDs.
+ * Product pages pass 公式, Amazon, 楽天 — only real product URLs, in that order.
+ * The first row is the one primary action. The shell passes nothing.
  */
 export function StoreSlot({ rows }: StoreSlotProps = {}) {
   if (rows && rows.length > 0) {
+    const [primary, ...rest] = rows;
+    if (!primary) {
+      return null;
+    }
     return (
       <section id="store-row" className={styles.slot} aria-label="店">
-        <dl className={styles.list}>
-          {rows.map((row) => (
-            <div key={row.label} className={styles.row}>
-              <dt className={styles.label}>{row.label}</dt>
-              <dd>
-                <TextLink href={row.href} external>
-                  {row.text}
-                </TextLink>
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <div className={styles.primary}>
+          <Button variant="primary" href={primary.href} storePrimary>
+            {primary.text}
+          </Button>
+        </div>
+        {rest.length > 0 ? (
+          <dl className={styles.list}>
+            {rest.map((row) => (
+              <div key={row.label} className={styles.row}>
+                <dt className={styles.label}>{row.label}</dt>
+                <dd>
+                  <TextLink href={row.href} external>
+                    {row.text}
+                  </TextLink>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
       </section>
     );
   }
