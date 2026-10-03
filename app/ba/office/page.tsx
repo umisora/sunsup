@@ -3,16 +3,21 @@ import {
   Eyebrow,
   FillText,
   Grid,
+  InfoRow,
   JourneyCta,
   MediaPanel,
   Motion,
   PageIntro,
   Photo,
+  Phrase,
   Section,
+  SectionHead,
   Stack,
   Text,
+  TextLink,
   Tile,
 } from "@/design-system";
+import { officeEntries } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
@@ -65,6 +70,19 @@ export default function OfficePage() {
             <Tile key={item.no} no={item.no} title={item.title} titleAs="h2" lines={item.lines} />
           ))}
         </Grid>
+      </Section>
+
+      <Section space="md" labelledBy="entries-title">
+        <Stack gap={5}>
+          <SectionHead id="entries-title" eyebrow="一杯" title={<Phrase>この場の一杯</Phrase>} />
+          <Stack gap={3} align="stretch">
+            {officeEntries().map((drink) => (
+              <InfoRow key={drink.slug} title={drink.category}>
+                <TextLink href={`/drink/${drink.slug}/`}>{drink.name}</TextLink>
+              </InfoRow>
+            ))}
+          </Stack>
+        </Stack>
       </Section>
 
       <Section width="full" labelledBy="invite-title">

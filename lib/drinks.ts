@@ -195,6 +195,52 @@ export function getDrink(slug: string): Drink | undefined {
   return loadDrinks().find((drink) => drink.slug === slug);
 }
 
+/** CSV splits this one category across two labels. Both are the craft bottle group. */
+const CRAFT_BOTTLE_LABELS = new Set(["クラフト・瓶もの", "クラフト／瓶もの"]);
+
+export function categoryKey(category: string): string {
+  if (CRAFT_BOTTLE_LABELS.has(category)) {
+    return "クラフト・瓶";
+  }
+  return category;
+}
+
+/** One real drink for each category, in the order the office page lists them. */
+export const OFFICE_ENTRY_SLUGS = [
+  "kimino-yuzu",
+  "kuranooto-koshu",
+  "fujiya-nectar-peach",
+  "suntory-oolong-340",
+  "kitayama-jabarush",
+  "sanpellegrino-aranciata",
+] as const;
+
+export function officeEntries(): Drink[] {
+  const entries = OFFICE_ENTRY_SLUGS.map((slug) => {
+    const drink = getDrink(slug);
+    if (!drink) {
+      throw new Error(`office entry missing: ${slug}`);
+    }
+    return drink;
+  });
+  const keys = entries.map((drink) => categoryKey(drink.category));
+  if (new Set(keys).size !== entries.length) {
+    throw new Error("office entries must be one drink per category");
+  }
+  return entries;
+}
+
+const SHARE_ORIGIN = "https://sunsup-dv4.pages.dev";
+
+/** Absolute still for Open Graph. Empty when the row has no real still. */
+export function shareImage(drink: Drink): { url: string; alt: string } | undefined {
+  if (!drink.stillUrl) {
+    return undefined;
+  }
+  const url = drink.stillUrl.startsWith("/") ? `${SHARE_ORIGIN}${drink.stillUrl}` : drink.stillUrl;
+  return { url, alt: drink.name };
+}
+
 export function storeRows(drink: Drink): StoreRow[] {
   const rows: StoreRow[] = [];
   if (drink.officialUrl) {

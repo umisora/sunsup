@@ -13,7 +13,7 @@ import {
   StoreSlot,
   Text,
 } from "@/design-system";
-import { getDrink, loadDrinks, storeRows } from "@/lib/drinks";
+import { getDrink, loadDrinks, shareImage, storeRows } from "@/lib/drinks";
 
 type DrinkPageProps = {
   params: Promise<{ slug: string }>;
@@ -38,9 +38,17 @@ export async function generateMetadata({ params }: DrinkPageProps): Promise<Meta
   if (!drink) {
     return { title: "このページはありません" };
   }
+  const description = drink.place;
+  const image = shareImage(drink);
   return {
     title: drink.name,
-    description: drink.place,
+    description,
+    openGraph: {
+      title: `${drink.name}｜sunsup`,
+      description,
+      siteName: "sunsup",
+      ...(image ? { images: [image] } : {}),
+    },
   };
 }
 
