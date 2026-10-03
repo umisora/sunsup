@@ -12,7 +12,7 @@ export default function AboutPage() {
         <Grid columns="splitWide" align="center">
           <Stack gap={5}>
             <Eyebrow intro>運営</Eyebrow>
-            <DisplayLines id="about-title" variant="mark" lines={["sunsup"]} />
+            <DisplayLines id="about-title" variant="mark" lines={["drinkup"]} />
             <Text variant="lead" intro>
               次のオフィス飲み会に何を置くかを、場・見た目・サイズ・味から選ぶためのサイトです。
             </Text>

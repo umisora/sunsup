@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <Section space="md" labelledBy="not-found-title">
       <Stack gap={5}>
-        <Eyebrow>sunsup</Eyebrow>
+        <Eyebrow>drinkup</Eyebrow>
         <Text as="h1" id="not-found-title" variant="headline">
           このページはありません。
         </Text>
