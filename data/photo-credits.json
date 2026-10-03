@@ -2,6 +2,7 @@
   "real_product_photos": [
     "afternoon-milk-tea",
     "bayarys-orange-245",
+    "bireleys-orange",
     "cc-lemon-can",
     "cc-lemon-pet",
     "coca-cola-can350",
@@ -30,6 +31,7 @@
     "meiji-banana",
     "mitsuyacider-can250",
     "mitsuyacider-lemon",
+    "pepsi-can340",
     "pokka-kireto-lemon",
     "pom-juice-280",
     "qoo-grape",
@@ -40,6 +42,7 @@
     "suntory-oolong-340",
     "swan-cider",
     "tomomasu-mango",
+    "twining-earl-grey",
     "wilkinson-ginger-can",
     "wilkinson-tansan-lemon"
   ],
@@ -60,7 +63,7 @@
     "suntory-iyemon-350 is Iyemon 澄みきるブレンド茶 (Wikimedia).",
     "wilkinson-ginger-can is a crop of a vintage Wilkinson ginger-ale bottle photo; the beer glass was removed.",
     "sanpellegrino-aranciata and kitayama-jabarush and suntory-oolong-340 are retailer packshots of the actual SKU.",
-    "wilkinson-tansan-lemon, pom-juice-280, dole-pineapple-200, itoen-jasmine-500, swan-cider, tomomasu-mango, sanpellegrino-limonata, and bayarys-orange-245 are packshots of those SKUs. sanpellegrino-limonata-pet has no still and does not reuse the limonata can.",
+    "wilkinson-tansan-lemon, pom-juice-280, dole-pineapple-200, itoen-jasmine-500, swan-cider, tomomasu-mango, sanpellegrino-limonata, bayarys-orange-245, pepsi-can340, bireleys-orange, and twining-earl-grey are packshots of those SKUs. bireleys-orange is the 280ml PET, not the can. twining-earl-grey is the 1L paper carton. sanpellegrino-limonata-pet and lipton-lemon-470 have no still.",
     "Category fallback files remain in public/drinks but are not linked. An empty 静物URL means no photo frame. Do not reuse one still across products."
   ]
 }
