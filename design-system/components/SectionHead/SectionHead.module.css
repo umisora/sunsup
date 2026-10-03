@@ -5,3 +5,8 @@
   max-width: 44em;
   margin-bottom: clamp(32px, 4vw, 56px);
 }
+
+.compact {
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}

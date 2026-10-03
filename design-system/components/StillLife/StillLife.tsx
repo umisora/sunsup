@@ -55,15 +55,18 @@ type ExternalPhotoProps = {
   alt: string;
   /** The LCP image of the page. Only one per page. */
   priority?: boolean;
+  /** Defer the download until the still is near the viewport. Ignored on the priority image. */
+  lazy?: boolean;
 };
 
 /** A still life that is not in the local photo catalog. Use for a drink's 静物URL. */
-export function ExternalPhoto({ src, alt, priority = false }: ExternalPhotoProps) {
+export function ExternalPhoto({ src, alt, priority = false, lazy = true }: ExternalPhotoProps) {
+  const eager = priority || !lazy;
   return (
     <img
       src={src}
       alt={alt}
-      loading={priority ? "eager" : "lazy"}
+      loading={eager ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : undefined}
       decoding="async"
       referrerPolicy="no-referrer"
@@ -83,7 +86,9 @@ const RATIO: Record<Ratio, string> = {
 
 type StillLifeProps = {
   ratio?: Ratio;
-  radius?: "none" | "md" | "lg";
+  radius?: "none" | "sm" | "md" | "lg";
+  /** Cover crops to the frame. Contain keeps the whole still, used when the crop would cut a label. */
+  fit?: "cover" | "contain";
   /** Motion: image drifts against scroll. */
   parallax?: boolean;
   /** Motion: frame wipes open on page load. Use once per page, on the first frame. */
@@ -95,14 +100,25 @@ type StillLifeProps = {
 };
 
 /** Frame for a photographic still life. Children is a <Photo> or <ExternalPhoto>. */
-export function StillLife({ ratio = "4:3", radius = "md", parallax = false, intro = false, hoverZoom = false, overlay, children }: StillLifeProps) {
+export function StillLife({
+  ratio = "4:3",
+  radius = "md",
+  fit = "cover",
+  parallax = false,
+  intro = false,
+  hoverZoom = false,
+  overlay,
+  children,
+}: StillLifeProps) {
   return (
     <div
       className={cx(
         styles.frame,
         RATIO[ratio],
+        radius === "sm" && styles.radiusSm,
         radius === "md" && styles.radiusMd,
         radius === "lg" && styles.radiusLg,
+        fit === "contain" && styles.contain,
         parallax && styles.parallax,
         hoverZoom && styles.hoverZoom,
       )}

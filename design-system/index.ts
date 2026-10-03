@@ -1,6 +1,7 @@
 export { Button, JourneyCta, type ButtonVariant } from "./components/Button/Button";
 export { Chip, ChipList } from "./components/Chip/Chip";
 export { ClosingPanel } from "./components/ClosingPanel/ClosingPanel";
+export { DrinkShelf } from "./components/DrinkShelf/DrinkShelf";
 export { FeatureCard } from "./components/FeatureCard/FeatureCard";
 export { HeroStage } from "./components/HeroStage/HeroStage";
 export { InfoRow } from "./components/InfoRow/InfoRow";

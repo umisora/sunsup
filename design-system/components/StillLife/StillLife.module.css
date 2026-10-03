@@ -40,6 +40,10 @@
   inset: 0;
 }
 
+.radiusSm {
+  border-radius: var(--radius-sm);
+}
+
 .radiusMd {
   border-radius: var(--radius-md);
 }
@@ -53,6 +57,14 @@
   top: var(--space-4);
   inset-inline-start: var(--space-4);
   z-index: 1;
+}
+
+.contain {
+  background: transparent;
+}
+
+.contain img {
+  object-fit: contain;
 }
 
 .hoverZoom img {
