@@ -150,15 +150,15 @@ function drinkDescription(drink) {
 const table = parseCsv(readFileSync(join("data", "drinks.csv"), "utf8"));
 const header = table[0];
 const drinks = table.slice(1).map((row) => Object.fromEntries(header.map((column, index) => [column, (row[index] ?? "").trim()])));
-if (drinks.length !== 111) {
-  fail(`expected 111 drink rows, found ${drinks.length}`);
+if (drinks.length !== 157) {
+  fail(`expected 157 drink rows, found ${drinks.length}`);
 }
 if (drinks.some((drink) => drink["カテゴリ"] === "クラフト／瓶もの")) {
   fail("craft bottle category still uses the slash label");
 }
 const craftCount = drinks.filter((drink) => drink["カテゴリ"] === "クラフト・瓶もの").length;
-if (craftCount !== 18) {
-  fail(`expected 18 craft bottle rows, found ${craftCount}`);
+if (craftCount !== 25) {
+  fail(`expected 25 craft bottle rows, found ${craftCount}`);
 }
 const descriptions = drinks.map((drink) => drinkDescription(drink));
 if (new Set(descriptions).size !== drinks.length || new Set(drinks.map((drink) => drinkTitle(drink))).size !== drinks.length) {
