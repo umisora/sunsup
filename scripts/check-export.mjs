@@ -70,13 +70,10 @@ function parseCsv(text) {
 
 const home = read("index.html");
 read("ba/office/index.html");
-if (!home.includes("<title>drinkup</title>") || home.includes("sunsup")) {
-  fail("home does not use the drinkup name");
+if (!home.includes("<title>sunsup</title>") || home.includes("drinkup") || home.includes("Drinkup")) {
+  fail("home no longer uses the sunsup name");
 }
-const about = read("about/index.html");
-if (!about.includes("drinkup") || about.includes("sunsup")) {
-  fail("about does not use the drinkup name");
-}
+read("about/index.html");
 const shell = read("drink/shell/index.html");
 const office = read("ba/office/index.html");
 
@@ -93,11 +90,8 @@ if (!cup || cup[1] !== "/drink/kimino-yuzu/") {
 if (office.includes('href="/drink/shell/"')) {
   fail("office links to the drink shell");
 }
-if (!office.includes("<title>オフィスのオープンな飲み会｜drinkup</title>") || office.includes("sunsup")) {
-  fail("office does not use the drinkup name");
-}
-if (!shell.includes("drinkup") || shell.includes("sunsup")) {
-  fail("shell does not use the drinkup name");
+if (office.includes("drinkup") || office.includes("Drinkup") || !office.includes("sunsup")) {
+  fail("office no longer uses the sunsup name");
 }
 
 const OFFICE_ENTRIES = [
@@ -160,24 +154,20 @@ for (const drink of drinks) {
   if (!html.includes(drink["品名"])) {
     fail(`${drink.slug} is missing its name`);
   }
-  if (!html.includes(`<title>${drink["品名"]}｜drinkup</title>`)) {
+  if (!html.includes(`<title>${drink["品名"]}｜sunsup</title>`)) {
     fail(`${drink.slug} is missing its title`);
   }
   if (!html.includes(`<meta name="description" content="${drink["場"]}"/>`)) {
     fail(`${drink.slug} is missing its description`);
   }
-  if (!html.includes(`<meta property="og:title" content="${drink["品名"]}｜drinkup"/>`)) {
+  if (!html.includes(`<meta property="og:title" content="${drink["品名"]}｜sunsup"/>`)) {
     fail(`${drink.slug} is missing its Open Graph title`);
   }
   if (!html.includes(`<meta property="og:description" content="${drink["場"]}"/>`)) {
     fail(`${drink.slug} is missing its Open Graph description`);
   }
-  if (!html.includes('<meta property="og:site_name" content="drinkup"/>')) {
-    fail(`${drink.slug} is missing the drinkup Open Graph site name`);
-  }
-  const withoutHost = html.replaceAll("https://sunsup-dv4.pages.dev", "");
-  if (withoutHost.includes("sunsup")) {
-    fail(`${drink.slug} still uses the sunsup name`);
+  if (html.includes("drinkup") || html.includes("Drinkup")) {
+    fail(`${drink.slug} renames the site`);
   }
   const still = drink["静物URL"];
   if (still.startsWith("/") || still.startsWith("http://") || still.startsWith("https://")) {

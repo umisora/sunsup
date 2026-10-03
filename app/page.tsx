@@ -20,7 +20,7 @@ import {
 } from "@/design-system";
 
 export const metadata: Metadata = {
-  title: { absolute: "drinkup" },
+  title: { absolute: "sunsup" },
 };
 
 const AXES = [

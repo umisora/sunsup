@@ -44,9 +44,9 @@ export async function generateMetadata({ params }: DrinkPageProps): Promise<Meta
     title: drink.name,
     description,
     openGraph: {
-      title: `${drink.name}｜drinkup`,
+      title: `${drink.name}｜sunsup`,
       description,
-      siteName: "drinkup",
+      siteName: "sunsup",
       ...(image ? { images: [image] } : {}),
     },
   };
