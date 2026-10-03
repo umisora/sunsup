@@ -32,13 +32,10 @@ const zen = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "drinkup",
-    template: "%s｜drinkup",
+    default: "sunsup",
+    template: "%s｜sunsup",
   },
   description: "飲み会でも、おしゃれに美味しく飲めるノンアルを届ける",
-  openGraph: {
-    siteName: "drinkup",
-  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
