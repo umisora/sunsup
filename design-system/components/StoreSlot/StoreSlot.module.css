@@ -1,5 +1,12 @@
 .slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-grid-gap);
   margin-top: var(--layout-grid-gap);
+}
+
+.primary {
+  align-self: flex-start;
 }
 
 .slot[hidden] {
@@ -10,6 +17,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--layout-grid-gap);
+  width: 100%;
 }
 
 .row {

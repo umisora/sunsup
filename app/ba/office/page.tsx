@@ -82,6 +82,9 @@ export default function OfficePage() {
               </InfoRow>
             ))}
           </Stack>
+          <Text variant="body">
+            同じカテゴリの残りは、<TextLink href="/drink/">一覧</TextLink>にある。
+          </Text>
         </Stack>
       </Section>
 

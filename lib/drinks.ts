@@ -105,8 +105,54 @@ function isHttp(value: string): boolean {
 /** A still shipped with the site at public/drinks/{name}.webp. */
 const SITE_STILL = /^\/drinks\/[a-z0-9]+(?:-[a-z0-9]+)*\.webp$/;
 
+/** Shared category stand-in. Not a product photo, so it is not a still. */
+const FALLBACK_STILL = /^\/drinks\/fallback-[a-z0-9]+(?:-[a-z0-9]+)*\.webp$/;
+
+const AMAZON_PRODUCT = /^\/(?:dp|gp\/product|gp\/aw\/d)\/[A-Za-z0-9]{10}(?:\/|$)/;
+
+export const SITE_ORIGIN = "https://sunsup-dv4.pages.dev";
+
+export function hasRealStill(drink: Drink): boolean {
+  return drink.stillUrl !== "" && !FALLBACK_STILL.test(drink.stillUrl);
+}
+
+export function isAmazonProduct(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    return (host === "amazon.co.jp" || host === "www.amazon.co.jp") && AMAZON_PRODUCT.test(parsed.pathname);
+  } catch {
+    return false;
+  }
+}
+
+export function isRakutenProduct(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname.toLowerCase() !== "item.rakuten.co.jp") {
+      return false;
+    }
+    return parsed.pathname.split("/").filter(Boolean).length >= 2;
+  } catch {
+    return false;
+  }
+}
+
+/** Document title before the site-name template. */
+export function drinkTitle(drink: Drink): string {
+  return `${drink.name}｜${drink.category}`;
+}
+
+/** Unique per drink. Built from the row, not from shared marketing copy. */
+export function drinkDescription(drink: Drink): string {
+  return `${drink.name}。${drink.category}。${drink.place}`;
+}
+
 function stillOrEmpty(value: string, slug: string): string {
-  if (!value) {
+  if (!value || FALLBACK_STILL.test(value)) {
+    if (value) {
+      console.warn(`[drinks] ${slug}: ignore fallback still`);
+    }
     return "";
   }
   if (isHttp(value) || SITE_STILL.test(value)) {
@@ -125,6 +171,31 @@ function httpOrEmpty(value: string, slug: string, column: string): string {
     return "";
   }
   return value;
+}
+
+function productOrEmpty(value: string, slug: string, column: "AmazonURL" | "楽天URL"): string {
+  const url = httpOrEmpty(value, slug, column);
+  if (!url) {
+    return "";
+  }
+  let product = false;
+  switch (column) {
+    case "AmazonURL":
+      product = isAmazonProduct(url);
+      break;
+    case "楽天URL":
+      product = isRakutenProduct(url);
+      break;
+    default: {
+      const exhaustive: never = column;
+      return exhaustive;
+    }
+  }
+  if (!product) {
+    console.warn(`[drinks] ${slug}: ignore ${column} search`);
+    return "";
+  }
+  return url;
 }
 
 export function parseDrinks(text: string): Drink[] {
@@ -167,13 +238,28 @@ export function parseDrinks(text: string): Drink[] {
       size: cell(row, "サイズ"),
       taste: cell(row, "味"),
       officialUrl: httpOrEmpty(cell(row, "公式URL"), slug, "公式URL"),
-      amazonUrl: httpOrEmpty(cell(row, "AmazonURL"), slug, "AmazonURL"),
-      rakutenUrl: httpOrEmpty(cell(row, "楽天URL"), slug, "楽天URL"),
+      amazonUrl: productOrEmpty(cell(row, "AmazonURL"), slug, "AmazonURL"),
+      rakutenUrl: productOrEmpty(cell(row, "楽天URL"), slug, "楽天URL"),
     });
   });
 
   if (drinks.length === 0) {
     throw new Error("drinks.csv has no publishable rows");
+  }
+
+  const titles = new Set<string>();
+  const descriptions = new Set<string>();
+  for (const drink of drinks) {
+    const title = drinkTitle(drink);
+    const description = drinkDescription(drink);
+    if (titles.has(title)) {
+      throw new Error(`duplicate drink title: ${drink.slug}`);
+    }
+    if (descriptions.has(description)) {
+      throw new Error(`duplicate drink description: ${drink.slug}`);
+    }
+    titles.add(title);
+    descriptions.add(description);
   }
 
   console.log(`[drinks] ${drinks.length} pages`);
@@ -195,7 +281,7 @@ export function getDrink(slug: string): Drink | undefined {
   return loadDrinks().find((drink) => drink.slug === slug);
 }
 
-/** CSV splits this one category across two labels. Both are the craft bottle group. */
+/** Canonical label is クラフト・瓶もの. The slash form still groups, so a stray row cannot split the category. */
 const CRAFT_BOTTLE_LABELS = new Set(["クラフト・瓶もの", "クラフト／瓶もの"]);
 
 export function categoryKey(category: string): string {
@@ -230,15 +316,70 @@ export function officeEntries(): Drink[] {
   return entries;
 }
 
-const SHARE_ORIGIN = "https://sunsup-dv4.pages.dev";
-
-/** Absolute still for Open Graph. Empty when the row has no real still. */
+/** Absolute still for Open Graph. Only this drink's own still. Never a fallback or another product. */
 export function shareImage(drink: Drink): { url: string; alt: string } | undefined {
-  if (!drink.stillUrl) {
+  if (!hasRealStill(drink)) {
     return undefined;
   }
-  const url = drink.stillUrl.startsWith("/") ? `${SHARE_ORIGIN}${drink.stillUrl}` : drink.stillUrl;
+  const url = drink.stillUrl.startsWith("/") ? `${SITE_ORIGIN}${drink.stillUrl}` : drink.stillUrl;
   return { url, alt: drink.name };
+}
+
+const CATEGORY_IDS: Record<string, string> = {
+  "柑橘・炭酸": "citrus",
+  "ぶどう・ベリー": "grape",
+  "果汁・ネクター": "nectar",
+  "茶・ハーブ": "tea",
+  "クラフト・瓶": "craft",
+  "缶・パーティー向き": "party",
+};
+
+export type DrinkGroup = {
+  id: string;
+  category: string;
+  drinks: Drink[];
+};
+
+function discoveryRank(drink: Drink): number {
+  const entry = (OFFICE_ENTRY_SLUGS as readonly string[]).includes(drink.slug);
+  if (hasRealStill(drink) && entry) {
+    return 0;
+  }
+  if (hasRealStill(drink)) {
+    return 1;
+  }
+  return 2;
+}
+
+/** Categories in office-entry order. Real stills lead each group; rows without a still stay in the list. */
+export function drinkGroups(): DrinkGroup[] {
+  const drinks = loadDrinks();
+  const groups = officeEntries().map((entry) => {
+    const key = categoryKey(entry.category);
+    const id = CATEGORY_IDS[key];
+    if (!id) {
+      throw new Error(`no list anchor for ${key}`);
+    }
+    const members = drinks.filter((drink) => categoryKey(drink.category) === key);
+    const ranked = members
+      .map((drink, index) => ({ drink, index, rank: discoveryRank(drink) }))
+      .sort((a, b) => a.rank - b.rank || a.index - b.index)
+      .map((item) => item.drink);
+    return { id, category: entry.category, drinks: ranked };
+  });
+  const listed = groups.reduce((count, group) => count + group.drinks.length, 0);
+  if (listed !== drinks.length) {
+    throw new Error("drink groups dropped a row");
+  }
+  return groups;
+}
+
+export function relatedDrinks(drink: Drink): Drink[] {
+  const group = drinkGroups().find((item) => categoryKey(item.category) === categoryKey(drink.category));
+  if (!group) {
+    return [];
+  }
+  return group.drinks.filter((item) => item.slug !== drink.slug);
 }
 
 export function storeRows(drink: Drink): StoreRow[] {

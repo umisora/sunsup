@@ -31,6 +31,7 @@ const zen = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sunsup-dv4.pages.dev"),
   title: {
     default: "sunsup",
     template: "%s｜sunsup",

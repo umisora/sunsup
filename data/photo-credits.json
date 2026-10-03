@@ -49,6 +49,6 @@
     "suntory-iyemon-350 is Iyemon 澄みきるブレンド茶 (Wikimedia).",
     "wilkinson-ginger-can is a crop of a vintage Wilkinson ginger-ale bottle photo; the beer glass was removed.",
     "sanpellegrino-aranciata and kitayama-jabarush and suntory-oolong-340 are retailer packshots of the actual SKU.",
-    "Category fallbacks are the site's own unlabeled still lifes, reused per category. They are not fake brand packs."
+    "Category fallback files remain in public/drinks but are not linked. An empty 静物URL means no photo frame. Do not reuse one still across products."
   ]
 }

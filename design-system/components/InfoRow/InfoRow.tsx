@@ -4,7 +4,7 @@ import { Text } from "../Text/Text";
 import styles from "./InfoRow.module.css";
 
 type InfoRowProps = {
-  title: string;
+  title: ReactNode;
   muted?: boolean;
   children: ReactNode;
 };

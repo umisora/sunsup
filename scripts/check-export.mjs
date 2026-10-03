@@ -115,12 +115,54 @@ function categoryKey(category) {
   return category;
 }
 
+const AMAZON_PRODUCT = /^\/(?:dp|gp\/product|gp\/aw\/d)\/[A-Za-z0-9]{10}(?:\/|$)/;
+
+function isAmazonProduct(url) {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    return (host === "amazon.co.jp" || host === "www.amazon.co.jp") && AMAZON_PRODUCT.test(parsed.pathname);
+  } catch {
+    return false;
+  }
+}
+
+function isRakutenProduct(url) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname.toLowerCase() !== "item.rakuten.co.jp") {
+      return false;
+    }
+    return parsed.pathname.split("/").filter(Boolean).length >= 2;
+  } catch {
+    return false;
+  }
+}
+
+function drinkTitle(drink) {
+  return `${drink["品名"]}｜${drink["カテゴリ"]}｜sunsup`;
+}
+
+function drinkDescription(drink) {
+  return `${drink["品名"]}。${drink["カテゴリ"]}。${drink["場"]}`;
+}
+
 const table = parseCsv(readFileSync(join("data", "drinks.csv"), "utf8"));
 const header = table[0];
 const drinks = table.slice(1).map((row) => Object.fromEntries(header.map((column, index) => [column, (row[index] ?? "").trim()])));
-const craftLabels = new Set(drinks.map((drink) => drink["カテゴリ"]).filter((label) => categoryKey(label) === "クラフト・瓶"));
-if (!craftLabels.has("クラフト・瓶もの") || !craftLabels.has("クラフト／瓶もの")) {
-  fail("craft bottle category is missing one of its two labels");
+if (drinks.length !== 60) {
+  fail(`expected 60 drink rows, found ${drinks.length}`);
+}
+if (drinks.some((drink) => drink["カテゴリ"] === "クラフト／瓶もの")) {
+  fail("craft bottle category still uses the slash label");
+}
+const craftCount = drinks.filter((drink) => drink["カテゴリ"] === "クラフト・瓶もの").length;
+if (craftCount !== 10) {
+  fail(`expected 10 craft bottle rows, found ${craftCount}`);
+}
+const descriptions = drinks.map((drink) => drinkDescription(drink));
+if (new Set(descriptions).size !== drinks.length || new Set(drinks.map((drink) => drinkTitle(drink))).size !== drinks.length) {
+  fail("drink titles or descriptions are not unique");
 }
 const entryKeys = OFFICE_ENTRIES.map((slug) => {
   const drink = drinks.find((row) => row.slug === slug);
@@ -154,29 +196,67 @@ for (const drink of drinks) {
   if (!html.includes(drink["品名"])) {
     fail(`${drink.slug} is missing its name`);
   }
-  if (!html.includes(`<title>${drink["品名"]}｜sunsup</title>`)) {
+  const title = drinkTitle(drink);
+  const description = drinkDescription(drink);
+  if (!html.includes(`<title>${title}</title>`)) {
     fail(`${drink.slug} is missing its title`);
   }
-  if (!html.includes(`<meta name="description" content="${drink["場"]}"/>`)) {
+  if (!html.includes(`<meta name="description" content="${description}"/>`)) {
     fail(`${drink.slug} is missing its description`);
   }
-  if (!html.includes(`<meta property="og:title" content="${drink["品名"]}｜sunsup"/>`)) {
+  if (!html.includes(`<meta property="og:title" content="${title}"/>`)) {
     fail(`${drink.slug} is missing its Open Graph title`);
   }
-  if (!html.includes(`<meta property="og:description" content="${drink["場"]}"/>`)) {
+  if (!html.includes(`<meta property="og:description" content="${description}"/>`)) {
     fail(`${drink.slug} is missing its Open Graph description`);
   }
   if (html.includes("drinkup") || html.includes("Drinkup")) {
     fail(`${drink.slug} renames the site`);
   }
+  if (html.includes("fallback-") || html.includes("search.rakuten.co.jp") || html.includes("/s?k=")) {
+    fail(`${drink.slug} publishes a fallback still or a search URL`);
+  }
+  const siblings = drinks.filter((other) => other.slug !== drink.slug && categoryKey(other["カテゴリ"]) === categoryKey(drink["カテゴリ"]));
+  if (siblings.length > 0 && !siblings.some((other) => html.includes(`href="/drink/${other.slug}/"`))) {
+    fail(`${drink.slug} does not link to another drink in its category`);
+  }
+  if (!html.includes('href="/drink/"')) {
+    fail(`${drink.slug} does not link to the drink list`);
+  }
   const still = drink["静物URL"];
-  if (still.startsWith("/") || still.startsWith("http://") || still.startsWith("https://")) {
+  if (still.includes("fallback-")) {
+    fail(`${drink.slug} still points at a fallback image`);
+  }
+  if (still.startsWith("/drinks/") || still.startsWith("http://") || still.startsWith("https://")) {
     const image = still.startsWith("/") ? `https://sunsup-dv4.pages.dev${still}` : still;
     if (!html.includes(`<meta property="og:image" content="${image}"/>`)) {
       fail(`${drink.slug} is missing its Open Graph image`);
     }
   } else if (html.includes('property="og:image"')) {
     fail(`${drink.slug} has an Open Graph image without a still`);
+  }
+  const amazon = drink["AmazonURL"];
+  const rakuten = drink["楽天URL"];
+  if (amazon && !isAmazonProduct(amazon)) {
+    fail(`${drink.slug} AmazonURL is not a product page`);
+  }
+  if (rakuten && !isRakutenProduct(rakuten)) {
+    fail(`${drink.slug} 楽天URL is not a product page`);
+  }
+  const primary = drink["公式URL"] || amazon || rakuten;
+  const primaryCount = html.split('data-store-primary="true"').length - 1;
+  if (primary) {
+    if (primaryCount !== 1) {
+      fail(`${drink.slug} should have one primary store CTA`);
+    }
+    const at = html.indexOf('data-store-primary="true"');
+    const slice = html.slice(Math.max(0, at - 1200), at + 400);
+    const encoded = primary.replaceAll("&", "&amp;");
+    if (!slice.includes(primary) && !slice.includes(encoded)) {
+      fail(`${drink.slug} primary CTA is not the first product link`);
+    }
+  } else if (primaryCount !== 0) {
+    fail(`${drink.slug} renders a store CTA without a product link`);
   }
   if (!html.includes("次の飲み会に、") || !html.includes("これを置く。")) {
     fail(`${drink.slug} is missing the close line`);
@@ -211,6 +291,42 @@ for (const drink of drinks) {
   } else if (still && !html.includes(`src="${still}"`)) {
     fail(`${drink.slug} is missing its still`);
   }
+}
+
+const list = read("drink/index.html");
+if (!list.includes("<title>一杯の一覧｜sunsup</title>")) {
+  fail("drink list is missing its title");
+}
+for (const slug of slugs) {
+  if (!list.includes(`href="/drink/${slug}/"`)) {
+    fail(`drink list is missing /drink/${slug}/`);
+  }
+}
+if (list.includes("fallback-") || list.includes("drinkup") || list.includes("Drinkup")) {
+  fail("drink list uses a fallback still or the wrong name");
+}
+if (!home.includes('href="/drink/"') || !office.includes('href="/drink/"')) {
+  fail("home or office does not link to the drink list");
+}
+if (shell.includes('data-store-primary="true"')) {
+  fail("shell has a store CTA");
+}
+
+const sitemap = read("sitemap.xml");
+const robots = read("robots.txt");
+if (!robots.includes("Sitemap: https://sunsup-dv4.pages.dev/sitemap.xml")) {
+  fail("robots.txt is missing the sitemap");
+}
+if (!sitemap.includes("<loc>https://sunsup-dv4.pages.dev/drink/</loc>")) {
+  fail("sitemap is missing the drink list");
+}
+for (const slug of slugs) {
+  if (!sitemap.includes(`<loc>https://sunsup-dv4.pages.dev/drink/${slug}/</loc>`)) {
+    fail(`sitemap is missing /drink/${slug}/`);
+  }
+}
+if (sitemap.includes("drinkup") || sitemap.includes("/drink/shell")) {
+  fail("sitemap names the wrong brand or the drink shell");
 }
 
 if (failures.length > 0) {

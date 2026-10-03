@@ -68,6 +68,7 @@ secret を置かず、Workers & Pages → Create → Pages → Connect to Git �
 |---|---|
 | `/` | 世界観。場への入口 |
 | `/ba/office` | オフィスのオープンな飲み会 |
+| `/drink/` | 一杯の一覧。カテゴリごと。写真のある一杯を先に並べる |
 | `/drink/shell` | 一杯の殻。商品名も店のリンクも置かない |
 | `/drink/[slug]` | CSVの一杯。`data/drinks.csv` から静的生成 |
 | `/about` | 運営と紹介の開示 |
@@ -76,9 +77,11 @@ secret を置かず、Workers & Pages → Create → Pages → Connect to Git �
 
 `npm run build` が `data/drinks.csv` を読む。品名、場、見た目、サイズ、味が揃った行だけ `/drink/[slug]/` になる。欠けた行は警告して出さない。
 
-ページの順は、静物（静物URLがあるときだけ）、品名、場／見た目／サイズ／味、締め「次の飲み会に、これを置く。」、末尾の店。店は公式、Amazon、楽天の順で、URLが空の行は出さない。リンクはCSVのURLをそのまま使う。アフィリエイトIDは付けない。
+ページの順は、静物（その一杯の静物URLがあるときだけ）、品名、場／見た目／サイズ／味、同じカテゴリのほかの一杯、締め「次の飲み会に、これを置く。」、末尾の店。店は公式、Amazonの商品ページ、楽天の商品ページの順。空のURL、検索URL、`/drinks/fallback-*.webp` は出さない。最初の一行だけが主ボタンになる。アフィリエイトIDは付けない。
 
-静物URLは `http://` または `https://` の画像か、`/drinks/` 配下の `.webp`（`public/drinks/` に置いたファイル）。それ以外は警告して出さない。写真の出典は [`data/photo-credits.json`](data/photo-credits.json)。ページには出さない。
+静物URLは `http://` または `https://` の画像か、`/drinks/` 配下のその一杯の `.webp`（`public/drinks/` に置いたファイル）。`fallback-` は静物にしない。それ以外は警告して出さない。写真の出典は [`data/photo-credits.json`](data/photo-credits.json)。ページには出さない。
+
+`/drink/` は六つのカテゴリを、場の入口と同じ順で並べる。各カテゴリでは静物のある一杯が先、静物のない一杯は文章だけが後ろに続く。行は消さない。`sitemap.xml` と `robots.txt` はビルドが書く。
 
 `/ba/office` の「一杯へ」は `/drink/kimino-yuzu/`。同じページから、カテゴリごとに一杯を開ける。殻 `/drink/shell` は商品ページではなく、店のリンクも置かない。
 
