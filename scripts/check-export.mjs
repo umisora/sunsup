@@ -147,6 +147,11 @@ function drinkDescription(drink) {
   return `${drink["品名"]}。${drink["カテゴリ"]}。${drink["場"]}`;
 }
 
+/** React escapes `&` in text and attributes. The catalog copy itself stays unchanged. */
+function htmlText(value) {
+  return value.replaceAll("&", "&amp;");
+}
+
 const table = parseCsv(readFileSync(join("data", "drinks.csv"), "utf8"));
 const header = table[0];
 const drinks = table.slice(1).map((row) => Object.fromEntries(header.map((column, index) => [column, (row[index] ?? "").trim()])));
@@ -193,11 +198,12 @@ for (const drink of drinks) {
   if (!html) {
     continue;
   }
-  if (!html.includes(drink["品名"])) {
+  const name = htmlText(drink["品名"]);
+  if (!html.includes(name)) {
     fail(`${drink.slug} is missing its name`);
   }
-  const title = drinkTitle(drink);
-  const description = drinkDescription(drink);
+  const title = htmlText(drinkTitle(drink));
+  const description = htmlText(drinkDescription(drink));
   if (!html.includes(`<title>${title}</title>`)) {
     fail(`${drink.slug} is missing its title`);
   }
