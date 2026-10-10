@@ -373,7 +373,7 @@ if (list.includes("fallback-") || list.includes("drinkup") || list.includes("Dri
 if (!home.includes('href="/drink/"') || !office.includes('href="/drink/"')) {
   fail("home or office does not link to the drink list");
 }
-if (!home.includes("544本") || home.includes("577本")) {
+if (!(home.includes("544本") || home.includes("544<!-- -->本")) || home.includes("577")) {
   fail("home count is not the public 544");
 }
 if (!list.includes("544本") || list.includes("577本")) {
