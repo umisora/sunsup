@@ -178,7 +178,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         />
       </Section>
 
-      <TableShelf exclude={drink.slug} />
+      <TableShelf exclude={drink.slug} known={loadDrinks().map((item) => item.slug)} />
 
       {primary ? <StoreDock name={drink.name} href={primary.href} action={storeAction(primary)} anchorId="store-row" /> : null}
     </Motion>

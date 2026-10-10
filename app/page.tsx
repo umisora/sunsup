@@ -73,7 +73,7 @@ export default function HomePage() {
         </Text>
       </HeroStage>
 
-      <TableShelf />
+      <TableShelf known={loadDrinks().map((drink) => drink.slug)} />
 
       <Section space="lg" labelledBy="season-title">
         <SectionHead id="season-title" eyebrow="季節の卓" glyph={season.label.charAt(0)} title={<Phrase>{season.label}</Phrase>}>

@@ -75,7 +75,14 @@ export function Button({
 
   if (href.startsWith("https://") || href.startsWith("http://")) {
     return (
-      <a href={href} className={className} rel="noreferrer" data-intro={intro || undefined} {...storeMark}>
+      <a
+        href={href}
+        className={className}
+        target="_blank"
+        rel="noopener nofollow"
+        data-intro={intro || undefined}
+        {...storeMark}
+      >
         {content}
       </a>
     );
