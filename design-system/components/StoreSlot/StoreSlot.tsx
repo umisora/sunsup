@@ -1,5 +1,4 @@
 import { Button } from "../Button/Button";
-import { TextLink } from "../Text/Text";
 import styles from "./StoreSlot.module.css";
 
 const PLACEHOLDER = [
@@ -19,6 +18,10 @@ type StoreSlotProps = {
   rows?: readonly StoreLink[];
 };
 
+export function storeAction(row: StoreLink): string {
+  return `${row.text}で見る`;
+}
+
 /**
  * Where to get the drink.
  * Product pages pass 公式, Amazon, 楽天 — only real product URLs, in that order.
@@ -32,24 +35,20 @@ export function StoreSlot({ rows }: StoreSlotProps = {}) {
     }
     return (
       <section id="store-row" className={styles.slot} aria-label="店">
-        <div className={styles.primary}>
-          <Button variant="primary" href={primary.href} storePrimary>
-            {primary.text}
-          </Button>
-        </div>
+        <p className={styles.label}>手に入れる</p>
+        <Button variant="primary" size="lg" icon="external" stretch href={primary.href} storePrimary>
+          {storeAction(primary)}
+        </Button>
         {rest.length > 0 ? (
-          <dl className={styles.list}>
+          <ul className={styles.more}>
             {rest.map((row) => (
-              <div key={row.label} className={styles.row}>
-                <dt className={styles.label}>{row.label}</dt>
-                <dd>
-                  <TextLink href={row.href} external>
-                    {row.text}
-                  </TextLink>
-                </dd>
-              </div>
+              <li key={row.label}>
+                <Button variant="secondary" icon="external" stretch href={row.href}>
+                  {storeAction(row)}
+                </Button>
+              </li>
             ))}
-          </dl>
+          </ul>
         ) : null}
       </section>
     );

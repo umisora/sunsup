@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import {
+  Button,
+  CategoryIndex,
   Chip,
   ChipList,
   DisplayLines,
+  DrinkShowcase,
   Eyebrow,
   FeatureCard,
   FillText,
@@ -16,9 +19,9 @@ import {
   SectionHead,
   Stack,
   Text,
-  TextLink,
   Tile,
 } from "@/design-system";
+import { categorySummaries, loadDrinks, officeEntries } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: { absolute: "sunsup" },
@@ -32,24 +35,65 @@ const AXES = [
 ] as const;
 
 export default function HomePage() {
+  const total = loadDrinks().length;
+
   return (
     <Motion>
       <HeroStage
         labelledBy="home-title"
-        media={<Photo name="table" sizes="100vw" priority />}
+        media={<Photo name="table" sizes="(min-width: 960px) 60vw, 100vw" priority />}
         aside={<ChipList tone="frost" label="選ぶ軸" items={AXES.map((axis) => axis.title)} intro />}
+        title={<DisplayLines id="home-title" variant="tate" lines={["飲み会でも、", "おしゃれに美味しく。"]} />}
+        actions={
+          <>
+            <JourneyCta to="ba" intro>
+              次の卓の場を見る
+            </JourneyCta>
+            <Button variant="secondary" href="/drink/" intro>
+              {total}本の一覧
+            </Button>
+          </>
+        }
       >
-        <Stack gap={5}>
-          <Chip intro>コンセプトサイト</Chip>
-          <DisplayLines id="home-title" lines={["飲み会でも、", "おしゃれに美味しく。"]} />
-          <Text variant="lead" intro>
-            次のオフィスの卓に、何を置くか。
-          </Text>
-          <JourneyCta to="ba" intro>
-            次の卓の場を見る
-          </JourneyCta>
-        </Stack>
+        <Chip intro>コンセプトサイト</Chip>
+        <Text variant="lead" intro>
+          <Phrase>次のオフィスの卓に、</Phrase>
+          <Phrase>何を置くか。</Phrase>
+        </Text>
       </HeroStage>
+
+      <Section space="lg" labelledBy="picks-title">
+        <SectionHead
+          id="picks-title"
+          eyebrow="入口の六杯"
+          title={
+            <>
+              <Phrase>カテゴリごとに、</Phrase>
+              <Phrase>まず一杯。</Phrase>
+            </>
+          }
+        />
+        <DrinkShowcase
+          label="入口の六杯"
+          drinks={officeEntries().map((drink) => ({ ...drink, label: drink.category }))}
+        />
+      </Section>
+
+      <Section band space="md" labelledBy="shelves-title">
+        <Stack gap={7} align="stretch">
+          <Stack gap={4}>
+            <Eyebrow tone="inverse">一覧</Eyebrow>
+            <Text as="h2" id="shelves-title" variant="headline">
+              <Phrase>六つの棚から、</Phrase>
+              <Phrase>次の一杯を。</Phrase>
+            </Text>
+            <Text variant="body" tone="inverseMuted">
+              全{total}本。写真のある一杯から並ぶ。
+            </Text>
+          </Stack>
+          <CategoryIndex categories={categorySummaries()} />
+        </Stack>
+      </Section>
 
       <Section labelledBy="entry-title">
         <Stack gap={5}>
@@ -73,15 +117,6 @@ export default function HomePage() {
           body="デスクが卓になる。窓のあるITの会社。"
           action="次の卓の場を見る"
         />
-      </Section>
-
-      <Section space="md" labelledBy="more-title">
-        <Stack gap={4}>
-          <SectionHead id="more-title" eyebrow="一覧" title={<Phrase>ほかの一杯</Phrase>} />
-          <Text variant="body">
-            入口はカテゴリごとに一杯。<TextLink href="/drink/">一覧</TextLink>に、残りがある。
-          </Text>
-        </Stack>
       </Section>
 
       <Section labelledBy="choose-title">

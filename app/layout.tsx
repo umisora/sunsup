@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { SiteFooter, SiteHeader, SkipLink } from "@/design-system";
+import { categorySummaries } from "@/lib/drinks";
 import "@/design-system/styles/index.css";
 
 const cormorant = localFont({
@@ -48,7 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main id="main" tabIndex={-1}>
           {children}
         </main>
-        <SiteFooter />
+        <SiteFooter categories={categorySummaries()} />
         <noscript>
           <style>{`[data-intro],[data-line],[data-reveal],[data-stagger-item]{visibility:visible !important}[data-intro-media]{clip-path:none !important}`}</style>
         </noscript>

@@ -62,7 +62,8 @@ export function Numeral({ size = "lg", tone = "accent", intro = false, decorativ
 type DisplayLinesProps = {
   as?: "h1" | "h2";
   id?: string;
-  variant?: "display" | "mark";
+  /** `tate` sets the lines vertically (縦書き), right to left. */
+  variant?: "display" | "mark" | "tate";
   lines: readonly string[];
 };
 

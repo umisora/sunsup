@@ -24,7 +24,7 @@ export default function AboutPage() {
       </Section>
 
       <Section space="md" label="運営について">
-        <Stack gap={3} align="stretch">
+        <Stack gap={0} align="stretch">
           <InfoRow title="最初の場">
             <TextLink href="/ba/office/">昼のオフィスのオープンな飲み会</TextLink>。家で届いてから、次の卓へ。
           </InfoRow>

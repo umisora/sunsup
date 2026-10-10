@@ -39,7 +39,7 @@
 
 @layer base {
   html {
-    scroll-padding-top: calc(var(--layout-header-height) + var(--space-5));
+    scroll-padding-top: calc(var(--layout-header-height) + var(--layout-subnav-height) + var(--space-5));
   }
 
   body {
@@ -88,7 +88,17 @@
   h4 {
     font-weight: 500;
     font-synthesis: none;
+    font-feature-settings: var(--features-display);
     text-wrap: balance;
+    /* break Japanese between phrases (文節), never inside a word */
+    word-break: auto-phrase;
+    line-break: strict;
+    /* a single long katakana phrase may still exceed the line; let it wrap rather than overflow */
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    line-break: strict;
   }
 
   main {

@@ -23,8 +23,9 @@ export function SiteHeader() {
   return (
     <header className={styles.header}>
       <div className={styles.bar}>
-        <Link href="/" className={styles.mark} aria-current={pathname === "/" ? "page" : undefined}>
-          sunsup
+        <Link href="/" className={styles.brand} aria-current={pathname === "/" ? "page" : undefined}>
+          <span className={styles.mark}>sunsup</span>
+          <span className={styles.tagline}>おしゃれに美味しく飲めるノンアル</span>
         </Link>
         <nav className={styles.nav} aria-label="サイト">
           {NAV.map((item) => (
@@ -32,7 +33,9 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={styles.link}
-              aria-current={pathname === normalize(item.href) ? "page" : undefined}
+              aria-current={
+                pathname === normalize(item.href) ? "page" : pathname.startsWith(`${normalize(item.href)}/`) ? "true" : undefined
+              }
             >
               {item.label}
             </Link>

@@ -374,6 +374,20 @@ export function drinkGroups(): DrinkGroup[] {
   return groups;
 }
 
+export type CategorySummary = {
+  id: string;
+  category: string;
+  count: number;
+};
+
+export function categorySummaries(): CategorySummary[] {
+  return drinkGroups().map((group) => ({ id: group.id, category: group.category, count: group.drinks.length }));
+}
+
+export function categoryId(drink: Drink): string {
+  return CATEGORY_IDS[categoryKey(drink.category)] ?? "";
+}
+
 export function relatedDrinks(drink: Drink): Drink[] {
   const group = drinkGroups().find((item) => categoryKey(item.category) === categoryKey(drink.category));
   if (!group) {

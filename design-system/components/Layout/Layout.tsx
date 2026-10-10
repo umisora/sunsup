@@ -21,14 +21,26 @@ const WIDTH: Record<SectionWidth, string> = {
 type SectionProps = {
   width?: SectionWidth;
   space?: SectionSpace;
+  /** In-page anchor, e.g. a category shelf on the list. */
+  id?: string;
   labelledBy?: string;
   label?: string;
+  /** Deep-green full-width band; content stays in the wrap. */
+  band?: boolean;
   children: ReactNode;
 };
 
-export function Section({ width = "wrap", space = "lg", labelledBy, label, children }: SectionProps) {
+export function Section({ width = "wrap", space = "lg", id, labelledBy, label, band = false, children }: SectionProps) {
+  if (band) {
+    return (
+      <section id={id} className={cx(styles.section, styles.band, SPACE[space])} aria-labelledby={labelledBy} aria-label={label}>
+        <div className={cx(styles.bandInner, WIDTH[width])}>{children}</div>
+      </section>
+    );
+  }
   return (
     <section
+      id={id}
       className={cx(styles.section, WIDTH[width], SPACE[space])}
       aria-labelledby={labelledBy}
       aria-label={label}
@@ -73,7 +85,7 @@ export function Grid({ columns, align = "stretch", gap = "grid", offset = false,
   );
 }
 
-type StackGap = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type StackGap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 type StackProps = {
   gap?: StackGap;
@@ -82,7 +94,7 @@ type StackProps = {
 };
 
 export function Stack({ gap = 4, align = "start", children }: StackProps) {
-  const style = { gap: `var(--space-${gap})` } satisfies CSSProperties;
+  const style = { gap: gap === 0 ? 0 : `var(--space-${gap})` } satisfies CSSProperties;
   return (
     <div className={cx(styles.stack, align === "stretch" && styles.stackStretch)} style={style}>
       {children}

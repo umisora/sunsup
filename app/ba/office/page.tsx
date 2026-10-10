@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import {
+  DrinkShowcase,
   Eyebrow,
   FillText,
   Grid,
-  InfoRow,
   JourneyCta,
   MediaPanel,
   Motion,
@@ -65,23 +65,17 @@ export default function OfficePage() {
       </Section>
 
       <Section space="md" label="この場での選び方">
-        <Grid as="ol" columns="thirds">
+        <Grid as="ol" columns="thirds" gap="wide">
           {CRITERIA.map((item) => (
             <Tile key={item.no} no={item.no} title={item.title} titleAs="h2" lines={item.lines} />
           ))}
         </Grid>
       </Section>
 
-      <Section space="md" labelledBy="entries-title">
-        <Stack gap={5}>
-          <SectionHead id="entries-title" eyebrow="一杯" title={<Phrase>この場の一杯</Phrase>} />
-          <Stack gap={3} align="stretch">
-            {officeEntries().map((drink) => (
-              <InfoRow key={drink.slug} title={drink.category}>
-                <TextLink href={`/drink/${drink.slug}/`}>{drink.name}</TextLink>
-              </InfoRow>
-            ))}
-          </Stack>
+      <Section labelledBy="entries-title">
+        <SectionHead id="entries-title" eyebrow="一杯" title={<Phrase>この場の一杯</Phrase>} />
+        <Stack gap={7} align="stretch">
+          <DrinkShowcase label="この場の一杯" drinks={officeEntries().map((drink) => ({ ...drink, label: drink.category }))} />
           <Text variant="body">
             同じカテゴリの残りは、<TextLink href="/drink/">一覧</TextLink>にある。
           </Text>
