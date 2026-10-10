@@ -22,10 +22,10 @@ import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drink
 
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
-  description: "次にデスクが卓になる午後。ITの会社の、開いた飲み会に置くノンアル。",
+  description: "デスクまわりで、気軽に集まる午後。IT企業の、誰でも寄れる飲み会に置くノンアル。",
   openGraph: {
     title: "オフィスのオープンな飲み会｜sunsup",
-    description: "次にデスクが卓になる午後。ITの会社の、開いた飲み会に置くノンアル。",
+    description: "デスクまわりで、気軽に集まる午後。IT企業の、誰でも寄れる飲み会に置くノンアル。",
     url: "/ba/office/",
     siteName: "sunsup",
     locale: "ja_JP",
@@ -38,17 +38,17 @@ const CRITERIA = [
   {
     no: "01",
     title: "見た目",
-    lines: ["卓に置いたとき、場の空気に合うものを選びます。", "緑のガラス。短い缶。ラベルが、午後の卓に馴染むもの。"],
+    lines: ["テーブルに置いたとき、場に合うものを選ぶ。", "緑のガラス瓶。小さめの缶。午後のテーブルに馴染むラベル。"],
   },
   {
     no: "02",
     title: "サイズ",
-    lines: ["一人が、その場で飲み切る量。", "卓で分けられる瓶。短い缶。"],
+    lines: ["一人が、その場で飲み切れる量。", "分けられる瓶と、小さめの缶。"],
   },
   {
     no: "03",
     title: "味",
-    lines: ["果実、炭酸、苦み。冷たいこと。", "乾杯の気泡は、炭酸の瓶で足ります。"],
+    lines: ["果実、炭酸、苦み。冷たいこと。", "乾杯の気泡は、炭酸の瓶で足りる。"],
   },
 ] as const;
 
@@ -63,7 +63,7 @@ export default function OfficePage() {
         folio="No. 01"
         eyebrow="場"
         title={["オフィスの", "オープンな飲み会"]}
-        lead="次にデスクが卓になる午後。"
+        lead="デスクまわりで、気軽に集まる午後。"
         media={<Photo name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" position="68% 50%" priority />}
       />
 
@@ -72,7 +72,7 @@ export default function OfficePage() {
           <Eyebrow id="scene-title">この場</Eyebrow>
           <FillText
             variant="prose"
-            lines={["ITの会社の、開いた飲み会です。", "会議テーブル、立ち話。窓の外はまだ昼に近い。", "卓は、次の日のデスクと、長いテーブルです。"]}
+            lines={["IT企業の、誰でも寄れる飲み会です。", "会議テーブルのまわりで立ち話。窓の外は、まだ昼に近い。", "翌日のデスクと、長いテーブルが、その場になります。"]}
           />
         </Grid>
       </Section>
@@ -90,7 +90,7 @@ export default function OfficePage() {
         <Stack gap={7} align="stretch">
           <DrinkShowcase label="この場の一杯" drinks={officeEntries().map((drink) => ({ ...drink, label: drink.category }))} />
           <Text variant="body">
-            同じカテゴリの残りは、<TextLink href="/drink/">一覧</TextLink>にある。
+            同じカテゴリの残りは、<TextLink href="/drink/">一覧</TextLink>にあります。
           </Text>
         </Stack>
       </Section>
@@ -119,15 +119,15 @@ export default function OfficePage() {
           <Stack gap={4}>
             <Eyebrow>次へ</Eyebrow>
             <Text variant="small" tone="muted">
-              美味いブドウのジュースを、卓の中央に置ける。
+              おいしいぶどうジュースを、テーブルの真ん中に置ける。
             </Text>
             <Text as="h2" id="invite-title" variant="headline">
-              この空気で、
+              この場に合う
               <br />
               一杯を決める。
             </Text>
             <JourneyCta to="drink">一杯へ</JourneyCta>
-            <ShareRow url={`${SITE_ORIGIN}/ba/office/`} text="オフィスのオープンな飲み会に置く、ノンアル。sunsup" />
+            <ShareRow url={`${SITE_ORIGIN}/ba/office/`} text="オフィスのオープンな飲み会に、ノンアルを。sunsup" />
           </Stack>
         </MediaPanel>
       </Section>

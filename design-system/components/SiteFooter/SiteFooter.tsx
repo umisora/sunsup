@@ -16,7 +16,7 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
         <p className={styles.oneliner}>
           <Phrase>飲み会でも、</Phrase>
           <Phrase>おしゃれに美味しく飲める</Phrase>
-          <Phrase>ノンアルを届ける</Phrase>
+          <Phrase>ノンアルを集めています。</Phrase>
         </p>
         <nav className={styles.columns} aria-label="フッター">
           <div className={styles.column}>
@@ -46,7 +46,7 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
           </div>
         </nav>
       </div>
-      <p className={styles.note}>動物AI達によるサイト運営です。すべての物語はフィクションです。</p>
+      <p className={styles.note}>掲載内容には、企画用のフィクションがあります。</p>
       <p className={styles.giant} aria-hidden="true">
         sunsup
       </p>

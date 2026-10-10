@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   title: { absolute: "sunsup" },
   openGraph: {
     title: "sunsup｜飲み会でも、おしゃれに美味しく。",
-    description: "次のオフィスの卓に、何を置くか。おしゃれに美味しく飲めるノンアルを、場・見た目・サイズ・味から。",
+    description: "次のオフィス飲み会、何を出そう。おしゃれに美味しく飲めるノンアルを、場・見た目・サイズ・味から選べます。",
     url: "/",
     siteName: "sunsup",
     locale: "ja_JP",
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
 };
 
 const AXES = [
-  { no: "01", title: "場", line: "次のオフィスの午後。", photo: "place", position: "46% 50%" },
-  { no: "02", title: "見た目", line: "卓に馴染むか。", photo: "peak", position: "38% 50%" },
-  { no: "03", title: "サイズ", line: "一人が飲み切る。", photo: "office", position: "80% 50%" },
+  { no: "01", title: "場", line: "次のオフィス飲み会。", photo: "place", position: "46% 50%" },
+  { no: "02", title: "見た目", line: "テーブルに置いて、場に合うか。", photo: "peak", position: "38% 50%" },
+  { no: "03", title: "サイズ", line: "一人で飲み切れる量。", photo: "office", position: "80% 50%" },
   { no: "04", title: "味", line: "果実、炭酸、苦み。", photo: "detail", position: "28% 62%" },
 ] as const;
 
@@ -53,12 +53,12 @@ export default function HomePage() {
       <HeroStage
         labelledBy="home-title"
         media={<Photo name="table" sizes="(min-width: 960px) 60vw, 100vw" priority />}
-        aside={<ChipList tone="frost" label="選ぶ軸" items={AXES.map((axis) => axis.title)} intro />}
+        aside={<ChipList tone="frost" label="選ぶときの軸" items={AXES.map((axis) => axis.title)} intro />}
         title={<DisplayLines id="home-title" variant="tate" lines={["飲み会でも、", "おしゃれに美味しく。"]} />}
         actions={
           <>
             <JourneyCta to="ba" intro>
-              次の卓の場を見る
+              オフィスの場を見る
             </JourneyCta>
             <Button variant="secondary" href="/drink/" intro>
               {total}本の一覧
@@ -66,10 +66,10 @@ export default function HomePage() {
           </>
         }
       >
-        <Chip intro>コンセプトサイト</Chip>
+        <Chip intro>ノンアルの案内</Chip>
         <Text variant="lead" intro>
-          <Phrase>次のオフィスの卓に、</Phrase>
-          <Phrase>何を置くか。</Phrase>
+          <Phrase>次のオフィス飲み会、</Phrase>
+          <Phrase>何を出そう。</Phrase>
         </Text>
       </HeroStage>
 
@@ -91,7 +91,7 @@ export default function HomePage() {
       <Section space="lg" labelledBy="picks-title">
         <SectionHead
           id="picks-title"
-          eyebrow="入口の六杯"
+          eyebrow="場の6杯"
           title={
             <>
               <Phrase>カテゴリごとに、</Phrase>
@@ -100,7 +100,7 @@ export default function HomePage() {
           }
         />
         <DrinkShowcase
-          label="入口の六杯"
+          label="場の6杯"
           drinks={officeEntries().map((drink) => ({ ...drink, label: drink.category }))}
         />
       </Section>
@@ -110,11 +110,11 @@ export default function HomePage() {
           <Stack gap={4}>
             <Eyebrow tone="inverse">一覧</Eyebrow>
             <Text as="h2" id="shelves-title" variant="headline">
-              <Phrase>六つの棚から、</Phrase>
+              <Phrase>6つのカテゴリから、</Phrase>
               <Phrase>次の一杯を。</Phrase>
             </Text>
             <Text variant="body" tone="inverseMuted">
-              全{total}本。写真のある一杯から並ぶ。
+              全{total}本。写真のある一杯から並んでいます。
             </Text>
           </Stack>
           <CategoryIndex categories={categorySummaries()} />
@@ -123,8 +123,8 @@ export default function HomePage() {
 
       <Section labelledBy="entry-title">
         <Stack gap={5}>
-          <Eyebrow>入口</Eyebrow>
-          <FillText as="h2" id="entry-title" lines={["次の卓のために。", "次の飲み会に、", "何を置くか。"]} />
+          <Eyebrow>まず場から</Eyebrow>
+          <FillText as="h2" id="entry-title" lines={["場が決まると、", "一杯も決まる。", "次の飲み会に何を置くか。"]} />
         </Stack>
       </Section>
 
@@ -140,15 +140,15 @@ export default function HomePage() {
               <Phrase>オープンな飲み会</Phrase>
             </>
           }
-          body="デスクが卓になる。窓のあるITの会社。"
-          action="次の卓の場を見る"
+          body="デスクまわりが、そのまま飲み会の場になる。窓のあるIT企業。"
+          action="この場を見る"
         />
       </Section>
 
       <Section labelledBy="choose-title">
         <SectionHead
           id="choose-title"
-          eyebrow="選ぶ"
+          eyebrow="選ぶとき"
           title={
             <>
               <Phrase>場、見た目、</Phrase>

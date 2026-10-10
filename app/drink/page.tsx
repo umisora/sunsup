@@ -4,11 +4,11 @@ import { drinkGroups } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: "一杯の一覧",
-  description: "オフィスの卓に置くノンアルを、カテゴリから開く。入口の六杯の先に、残りがある。",
+  description: "オフィスのテーブルに置くノンアルを、カテゴリから探せます。場で紹介した6杯の先に、残りがあります。",
   alternates: { canonical: "/drink/" },
   openGraph: {
     title: "一杯の一覧｜sunsup",
-    description: "オフィスの卓に置くノンアルを、カテゴリから開く。入口の六杯の先に、残りがある。",
+    description: "オフィスのテーブルに置くノンアルを、カテゴリから探せます。場で紹介した6杯の先に、残りがあります。",
     url: "/drink/",
     siteName: "sunsup",
     locale: "ja_JP",
@@ -29,8 +29,8 @@ export default function DrinkIndexPage() {
         compact
         eyebrow="一覧"
         title={["一杯の一覧"]}
-        lead="場の六杯は入口です。同じカテゴリの残りを、ここから開く。"
-        sublead={`全${total}本・六つのカテゴリ`}
+        lead="場では6杯だけ紹介しています。同じカテゴリの残りは、ここから開けます。"
+        sublead={`全${total}本、6つのカテゴリ`}
       />
       <CategoryNav categories={categories} total={total} />
       <TableShelf />
