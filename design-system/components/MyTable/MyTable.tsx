@@ -115,9 +115,11 @@ function Strip({ title, drinks, note }: { title: string; drinks: readonly TableD
 }
 
 /** わたしの卓 and 最近見た一杯, from this browser. Renders nothing for a first visit. */
-export function TableShelf({ exclude }: { exclude?: string }) {
-  const saved = useStored(SAVED);
-  const recent = useStored(RECENT).filter((item) => item.slug !== exclude);
+export function TableShelf({ exclude, known }: { exclude?: string; known?: readonly string[] }) {
+  const allowed = known ? new Set(known) : null;
+  const visible = (item: TableDrink) => !allowed || allowed.has(item.slug);
+  const saved = useStored(SAVED).filter(visible);
+  const recent = useStored(RECENT).filter((item) => item.slug !== exclude && visible(item));
   if (saved.length === 0 && recent.length === 0) {
     return null;
   }

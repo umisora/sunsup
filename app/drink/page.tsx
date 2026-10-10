@@ -33,7 +33,7 @@ export default function DrinkIndexPage() {
         sublead={`全${total}本、6つのカテゴリ`}
       />
       <CategoryNav categories={categories} total={total} />
-      <TableShelf />
+      <TableShelf known={groups.flatMap((group) => group.drinks.map((drink) => drink.slug))} />
       {groups.map((group, index) => (
         <Section key={group.id} id={group.id} space={index === 0 ? "sm" : "md"} labelledBy={`cat-${group.id}`}>
           <ShelfHead id={`cat-${group.id}`} index={index} title={<Phrase>{group.category}</Phrase>} count={group.drinks.length} />

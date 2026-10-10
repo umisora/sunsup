@@ -117,7 +117,7 @@ export function Phrase({ children }: { children: ReactNode }) {
 export function TextLink({ href, external = false, children }: { href: string; external?: boolean; children: ReactNode }) {
   if (external) {
     return (
-      <a href={href} className={styles.link} rel="noreferrer">
+      <a href={href} className={styles.link} target="_blank" rel="noopener nofollow">
         {children}
       </a>
     );

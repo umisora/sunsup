@@ -44,7 +44,7 @@ export function StoreDock({ name, href, action, anchorId }: StoreDockProps) {
   return (
     <div className={styles.dock} data-shown={shown || undefined} aria-hidden={!shown || undefined}>
       <p className={styles.name}>{name}</p>
-      <a href={href} className={styles.action} rel="noreferrer" tabIndex={shown ? undefined : -1}>
+      <a href={href} className={styles.action} target="_blank" rel="noopener nofollow" tabIndex={shown ? undefined : -1}>
         {action}
         <svg viewBox="0 0 12 12" aria-hidden="true">
           <path d="M1 11 11 1M3 1h8v8" fill="none" stroke="currentColor" strokeWidth="1.4" />

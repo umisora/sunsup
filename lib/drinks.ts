@@ -13,6 +13,9 @@ const COLUMNS = [
   "公式URL",
   "AmazonURL",
   "楽天URL",
+  "直販URL",
+  "その他URL",
+  "公開",
 ] as const;
 
 const REQUIRED = ["品名", "場", "見た目", "サイズ", "味"] as const;
@@ -32,13 +35,19 @@ export type Drink = {
   officialUrl: string;
   amazonUrl: string;
   rakutenUrl: string;
+  directUrl: string;
+  otherUrl: string;
 };
 
+export type StoreLabel = "Amazon" | "楽天" | "公式ショップ" | "その他の通販" | "公式";
+
 export type StoreRow = {
-  label: "公式" | "Amazon" | "楽天";
+  label: StoreLabel;
   href: string;
   text: string;
 };
+
+type KnownShop = "askul" | "rakuten" | "yahoo" | "yodobashi" | "monotaro" | "tanomail" | "yamada";
 
 type Column = (typeof COLUMNS)[number];
 
@@ -138,6 +147,68 @@ export function isRakutenProduct(url: string): boolean {
   }
 }
 
+function hostMatches(host: string, domain: string): boolean {
+  return host === domain || host.endsWith(`.${domain}`);
+}
+
+function shopFromHost(host: string): KnownShop | undefined {
+  const name = host.toLowerCase();
+  if (hostMatches(name, "askul.co.jp")) {
+    return "askul";
+  }
+  if (hostMatches(name, "rakuten.co.jp")) {
+    return "rakuten";
+  }
+  if (hostMatches(name, "shopping.yahoo.co.jp")) {
+    return "yahoo";
+  }
+  if (hostMatches(name, "yodobashi.com")) {
+    return "yodobashi";
+  }
+  if (hostMatches(name, "monotaro.com")) {
+    return "monotaro";
+  }
+  if (hostMatches(name, "tanomail.com")) {
+    return "tanomail";
+  }
+  if (hostMatches(name, "yamada-denkiweb.com")) {
+    return "yamada";
+  }
+  return undefined;
+}
+
+/** Visible label for その他URL. Known shops get their name; everything else stays generic. */
+export function otherStoreText(url: string): string {
+  try {
+    const shop = shopFromHost(new URL(url).hostname);
+    if (!shop) {
+      return "通販サイト";
+    }
+    switch (shop) {
+      case "askul":
+        return "アスクル";
+      case "rakuten":
+        return "楽天";
+      case "yahoo":
+        return "ヤフー";
+      case "yodobashi":
+        return "ヨドバシ";
+      case "monotaro":
+        return "モノタロウ";
+      case "tanomail":
+        return "たのめーる";
+      case "yamada":
+        return "ヤマダ";
+      default: {
+        const exhaustive: never = shop;
+        return exhaustive;
+      }
+    }
+  } catch {
+    return "通販サイト";
+  }
+}
+
 /** Document title before the site-name template. */
 export function drinkTitle(drink: Drink): string {
   return `${drink.name}｜${drink.category}`;
@@ -208,7 +279,8 @@ export function parseDrinks(text: string): Drink[] {
 
   const index = new Map<Column, number>(COLUMNS.map((column, columnIndex) => [column, columnIndex]));
   const cell = (row: string[], column: Column) => (row[index.get(column) ?? -1] ?? "").trim();
-  const drinks: Drink[] = [];
+  const catalog: Drink[] = [];
+  const published = new Set<string>();
   const seen = new Set<string>();
 
   table.slice(1).forEach((row, rowIndex) => {
@@ -228,7 +300,7 @@ export function parseDrinks(text: string): Drink[] {
     }
 
     seen.add(slug);
-    drinks.push({
+    catalog.push({
       slug,
       name: cell(row, "品名"),
       category: cell(row, "カテゴリ"),
@@ -240,16 +312,21 @@ export function parseDrinks(text: string): Drink[] {
       officialUrl: httpOrEmpty(cell(row, "公式URL"), slug, "公式URL"),
       amazonUrl: productOrEmpty(cell(row, "AmazonURL"), slug, "AmazonURL"),
       rakutenUrl: productOrEmpty(cell(row, "楽天URL"), slug, "楽天URL"),
+      directUrl: httpOrEmpty(cell(row, "直販URL"), slug, "直販URL"),
+      otherUrl: httpOrEmpty(cell(row, "その他URL"), slug, "その他URL"),
     });
+    if (cell(row, "公開") === "1") {
+      published.add(slug);
+    }
   });
 
-  if (drinks.length === 0) {
+  if (catalog.length === 0) {
     throw new Error("drinks.csv has no publishable rows");
   }
 
   const titles = new Set<string>();
   const descriptions = new Set<string>();
-  for (const drink of drinks) {
+  for (const drink of catalog) {
     const title = drinkTitle(drink);
     const description = drinkDescription(drink);
     if (titles.has(title)) {
@@ -260,6 +337,11 @@ export function parseDrinks(text: string): Drink[] {
     }
     titles.add(title);
     descriptions.add(description);
+  }
+
+  const drinks = catalog.filter((drink) => published.has(drink.slug));
+  if (drinks.length === 0) {
+    throw new Error("drinks.csv has no public rows");
   }
 
   console.log(`[drinks] ${drinks.length} pages`);
@@ -279,6 +361,14 @@ export function loadDrinks(): Drink[] {
 
 export function getDrink(slug: string): Drink | undefined {
   return loadDrinks().find((drink) => drink.slug === slug);
+}
+
+/** Public drinks for stored slugs. Hidden and unknown slugs are skipped. */
+export function drinksFromSlugs(slugs: readonly string[]): Drink[] {
+  return slugs.flatMap((slug) => {
+    const drink = getDrink(slug);
+    return drink ? [drink] : [];
+  });
 }
 
 /** Canonical label is クラフト・瓶もの. The slash form still groups, so a stray row cannot split the category. */
@@ -481,14 +571,20 @@ export function seasonalPicks(season: Season, count: number): { label: string; l
 
 export function storeRows(drink: Drink): StoreRow[] {
   const rows: StoreRow[] = [];
-  if (drink.officialUrl) {
-    rows.push({ label: "公式", href: drink.officialUrl, text: "公式サイト" });
-  }
   if (drink.amazonUrl) {
     rows.push({ label: "Amazon", href: drink.amazonUrl, text: "Amazon" });
   }
   if (drink.rakutenUrl) {
     rows.push({ label: "楽天", href: drink.rakutenUrl, text: "楽天" });
+  }
+  if (drink.directUrl) {
+    rows.push({ label: "公式ショップ", href: drink.directUrl, text: "公式ショップ" });
+  }
+  if (drink.otherUrl) {
+    rows.push({ label: "その他の通販", href: drink.otherUrl, text: otherStoreText(drink.otherUrl) });
+  }
+  if (drink.officialUrl) {
+    rows.push({ label: "公式", href: drink.officialUrl, text: "公式サイト" });
   }
   return rows;
 }
