@@ -38,6 +38,7 @@ export const metadata: Metadata = {
     template: "%s｜sunsup",
   },
   description: "飲み会でも、おしゃれに美味しく飲めるノンアルを届ける",
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

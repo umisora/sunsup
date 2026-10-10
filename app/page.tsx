@@ -18,13 +18,23 @@ import {
   Section,
   SectionHead,
   Stack,
+  TableShelf,
   Text,
   Tile,
 } from "@/design-system";
-import { categorySummaries, loadDrinks, officeEntries } from "@/lib/drinks";
+import { categorySummaries, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: { absolute: "sunsup" },
+  openGraph: {
+    title: "sunsup｜飲み会でも、おしゃれに美味しく。",
+    description: "次のオフィスの卓に、何を置くか。おしゃれに美味しく飲めるノンアルを、場・見た目・サイズ・味から。",
+    url: "/",
+    siteName: "sunsup",
+    locale: "ja_JP",
+    type: "website",
+    images: [{ url: "/og/home.jpg", width: 1200, height: 630, alt: "sunsup 飲み会でも、おしゃれに美味しく。" }],
+  },
 };
 
 const AXES = [
@@ -36,6 +46,7 @@ const AXES = [
 
 export default function HomePage() {
   const total = loadDrinks().length;
+  const season = seasonalPicks(seasonOf(new Date()), 8);
 
   return (
     <Motion>
@@ -61,6 +72,21 @@ export default function HomePage() {
           <Phrase>何を置くか。</Phrase>
         </Text>
       </HeroStage>
+
+      <TableShelf />
+
+      <Section space="lg" labelledBy="season-title">
+        <SectionHead id="season-title" eyebrow="季節の卓" glyph={season.label.charAt(0)} title={<Phrase>{season.label}</Phrase>}>
+          <Text variant="lead" tone="secondary">
+            {season.line}
+          </Text>
+        </SectionHead>
+        <DrinkShowcase
+          label={season.label}
+          columns={4}
+          drinks={season.drinks.map((drink) => ({ ...drink, label: drink.category }))}
+        />
+      </Section>
 
       <Section space="lg" labelledBy="picks-title">
         <SectionHead

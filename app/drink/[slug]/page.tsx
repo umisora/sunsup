@@ -2,29 +2,38 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   Button,
-  ClosingPanel,
   DrinkShowcase,
+  DrinkTrail,
   ExternalPhoto,
   FactList,
   Motion,
+  Photo,
   Phrase,
   ProductHero,
   Section,
   SectionHead,
+  ShareRow,
   Stack,
   StillLife,
   StoreDock,
   StoreSlot,
   storeAction,
+  TableCard,
+  TableShelf,
+  TableToggle,
+  VenueLink,
 } from "@/design-system";
 import {
+  catalogNumber,
   categoryId,
+  SITE_ORIGIN,
   drinkDescription,
   drinkTitle,
   getDrink,
   loadDrinks,
   relatedDrinks,
   shareImage,
+  shelfNeighbours,
   storeRows,
 } from "@/lib/drinks";
 
@@ -82,7 +91,15 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
   const rows = storeRows(drink);
   const [primary] = rows;
   const related = relatedDrinks(drink);
+  const neighbours = shelfNeighbours(drink);
   const shelf = `/drink/#${categoryId(drink)}`;
+  const folio = `No. ${String(catalogNumber(drink)).padStart(3, "0")} / ${loadDrinks().length}`;
+  const still = (priority: boolean) =>
+    drink.stillUrl ? (
+      <StillLife ratio="1:1" radius="lg" fit="plinth" intro={priority}>
+        <ExternalPhoto src={drink.stillUrl} alt={priority ? drink.name : ""} priority={priority} />
+      </StillLife>
+    ) : undefined;
 
   return (
     <Motion>
@@ -92,15 +109,11 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
           { href: "/drink/", label: "一覧" },
           { href: shelf, label: drink.category },
         ]}
+        folio={folio}
         title={drink.name}
         meta={drink.size}
-        media={
-          drink.stillUrl ? (
-            <StillLife ratio="1:1" radius="lg" fit="plinth" intro>
-              <ExternalPhoto src={drink.stillUrl} alt={drink.name} priority />
-            </StillLife>
-          ) : undefined
-        }
+        media={still(true)}
+        extra={<TableToggle drink={{ slug: drink.slug, name: drink.name, stillUrl: drink.stillUrl, category: drink.category }} />}
       >
         {rows.length > 0 ? <StoreSlot rows={rows} /> : null}
       </ProductHero>
@@ -112,28 +125,29 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         />
       </Section>
 
-      <Section space="md" labelledBy="close-title">
-        <div data-dock-cover>
-          <ClosingPanel
-            id="close-title"
-            eyebrow="次の飲み会"
-            title={
-              <>
-                <Phrase>次の飲み会に、</Phrase>
-                <Phrase>これを置く。</Phrase>
-              </>
-            }
-            sub={drink.name}
-            actions={
-              primary ? (
-                <Button variant="inverse" icon="external" href={primary.href}>
-                  {storeAction(primary)}
-                </Button>
-              ) : null
-            }
-          />
-        </div>
+      <Section space="md" label="この卓のカード">
+        <TableCard
+          id="close-title"
+          folio={folio}
+          category={drink.category}
+          name={drink.name}
+          media={still(false)}
+          actions={
+            primary ? (
+              <Button variant="inverse" icon="external" href={primary.href}>
+                {storeAction(primary)}
+              </Button>
+            ) : null
+          }
+          share={<ShareRow tone="inverse" url={`${SITE_ORIGIN}/drink/${drink.slug}/`} text={`次の飲み会に、これを置く。${drink.name}`} />}
+        />
       </Section>
+
+      {neighbours ? (
+        <Section space="md" label="棚の前後">
+          <DrinkTrail label={`${drink.category}の前後`} previous={neighbours.previous} next={neighbours.next} />
+        </Section>
+      ) : null}
 
       {related.length > 0 ? (
         <Section space="md" labelledBy="related-title">
@@ -148,6 +162,23 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
           </Stack>
         </Section>
       ) : null}
+
+      <Section space="md" label="この一杯の場">
+        <VenueLink
+          href="/ba/office/"
+          media={<Photo name="place" sizes="(min-width: 768px) 420px, 100vw" position="46% 50%" decorative />}
+          eyebrow="この一杯の場"
+          title={
+            <>
+              <Phrase>オフィスの</Phrase>
+              <Phrase>オープンな飲み会</Phrase>
+            </>
+          }
+          body="デスクが卓になる午後。この場の六杯へ。"
+        />
+      </Section>
+
+      <TableShelf exclude={drink.slug} />
 
       {primary ? <StoreDock name={drink.name} href={primary.href} action={storeAction(primary)} anchorId="store-row" /> : null}
     </Motion>

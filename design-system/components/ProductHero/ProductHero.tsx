@@ -12,29 +12,36 @@ type ProductHeroProps = {
   title: ReactNode;
   /** One quiet line under the name, e.g. the size. */
   meta?: ReactNode;
+  /** Collection number, set in the corner like a catalog plate. */
+  folio?: string;
   /** The drink's own still in a plinth <StillLife>. Omitted when the drink has none: the hero is type only. */
   media?: ReactNode;
   /** The store slot. */
   children?: ReactNode;
+  /** Quiet actions under the store, e.g. saving the drink. */
+  extra?: ReactNode;
 };
 
 /** Top of a drink page: the still on its plinth beside the name and the way to the store. */
-export function ProductHero({ id, crumbs, title, meta, media, children }: ProductHeroProps) {
+export function ProductHero({ id, crumbs, title, meta, folio, media, children, extra }: ProductHeroProps) {
   return (
     <section className={cx(layout.wrap, styles.hero, !media && styles.textOnly)} aria-labelledby={id}>
       {media ? <div className={styles.media}>{media}</div> : null}
       <div className={styles.body}>
-        <nav aria-label="現在地">
-          <ol className={styles.crumbs} data-intro>
-            {crumbs.map((crumb) => (
-              <li key={crumb.href}>
-                <Link href={crumb.href} className={styles.crumb}>
-                  {crumb.label}
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </nav>
+        <div className={styles.top} data-intro>
+          <nav aria-label="現在地">
+            <ol className={styles.crumbs}>
+              {crumbs.map((crumb) => (
+                <li key={crumb.href}>
+                  <Link href={crumb.href} className={styles.crumb}>
+                    {crumb.label}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </nav>
+          {folio ? <p className={styles.folio}>{folio}</p> : null}
+        </div>
         <h1 id={id} className={styles.title} data-intro>
           {title}
         </h1>
@@ -44,6 +51,7 @@ export function ProductHero({ id, crumbs, title, meta, media, children }: Produc
           </p>
         ) : null}
         {children ? <div className={styles.action}>{children}</div> : null}
+        {extra ? <div className={styles.extra}>{extra}</div> : null}
       </div>
     </section>
   );

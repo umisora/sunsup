@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead } from "@/design-system";
+import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead, TableShelf } from "@/design-system";
 import { drinkGroups } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: "一杯の一覧",
   description: "オフィスの卓に置くノンアルを、カテゴリから開く。入口の六杯の先に、残りがある。",
   alternates: { canonical: "/drink/" },
+  openGraph: {
+    title: "一杯の一覧｜sunsup",
+    description: "オフィスの卓に置くノンアルを、カテゴリから開く。入口の六杯の先に、残りがある。",
+    url: "/drink/",
+    siteName: "sunsup",
+    locale: "ja_JP",
+    type: "website",
+    images: [{ url: "/og/drink.jpg", width: 1200, height: 630, alt: "sunsup 一杯の一覧" }],
+  },
 };
 
 export default function DrinkIndexPage() {
@@ -24,6 +33,7 @@ export default function DrinkIndexPage() {
         sublead={`全${total}本・六つのカテゴリ`}
       />
       <CategoryNav categories={categories} total={total} />
+      <TableShelf />
       {groups.map((group, index) => (
         <Section key={group.id} id={group.id} space={index === 0 ? "sm" : "md"} labelledBy={`cat-${group.id}`}>
           <ShelfHead id={`cat-${group.id}`} index={index} title={<Phrase>{group.category}</Phrase>} count={group.drinks.length} />

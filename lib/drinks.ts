@@ -396,6 +396,89 @@ export function relatedDrinks(drink: Drink): Drink[] {
   return group.drinks.filter((item) => item.slug !== drink.slug);
 }
 
+/** Position in the list, 1-based: the drink's number in the collection. */
+export function catalogNumber(drink: Drink): number {
+  const order = drinkGroups().flatMap((group) => group.drinks);
+  return order.findIndex((item) => item.slug === drink.slug) + 1;
+}
+
+/** The drinks either side of this one on its shelf, wrapping at the ends. */
+export function shelfNeighbours(drink: Drink): { previous: Drink; next: Drink } | undefined {
+  const group = drinkGroups().find((item) => categoryKey(item.category) === categoryKey(drink.category));
+  if (!group || group.drinks.length < 2) {
+    return undefined;
+  }
+  const at = group.drinks.findIndex((item) => item.slug === drink.slug);
+  const size = group.drinks.length;
+  const previous = group.drinks[(at - 1 + size) % size];
+  const next = group.drinks[(at + 1) % size];
+  if (!previous || !next) {
+    return undefined;
+  }
+  return { previous, next };
+}
+
+export type Season = "spring" | "summer" | "autumn" | "winter";
+
+type SeasonSpec = { label: string; line: string; keywords: readonly string[]; exclude?: readonly string[] };
+
+const SEASONS: Record<Season, SeasonSpec> = {
+  spring: { label: "春の卓", line: "いちご、白桃、さくら。", keywords: ["さくら", "桜", "いちご", "苺", "白桃", "甘夏", "はっさく"] },
+  summer: {
+    label: "夏の卓",
+    line: "レモン、ライム、ラムネ。冷たい炭酸。",
+    keywords: ["レモン", "ライム", "ミント", "すいか", "スイカ", "ラムネ", "トニック", "パイン", "マンゴー"],
+  },
+  autumn: {
+    label: "秋の卓",
+    line: "ぶどう、梨、りんご、ほうじ茶。",
+    keywords: ["ぶどう", "葡萄", "グレープ", "巨峰", "梨", "りんご", "林檎", "アップル", "柿", "ほうじ", "甲州", "シャルドネ"],
+    exclude: ["グレープフルーツ", "パイナップル"],
+  },
+  winter: {
+    label: "冬の卓",
+    line: "ゆず、みかん、生姜、紅茶。",
+    keywords: ["みかん", "蜜柑", "ゆず", "柚子", "YUZU", "生姜", "しょうが", "ジンジャー", "紅茶"],
+  },
+};
+
+export function seasonOf(date: Date): Season {
+  const month = Number(new Intl.DateTimeFormat("en-US", { month: "numeric", timeZone: "Asia/Tokyo" }).format(date));
+  if (month >= 3 && month <= 5) {
+    return "spring";
+  }
+  if (month >= 6 && month <= 8) {
+    return "summer";
+  }
+  if (month >= 9 && month <= 11) {
+    return "autumn";
+  }
+  return "winter";
+}
+
+/** Drinks whose names carry the season, taken in turn from each shelf so one category cannot fill the table. */
+export function seasonalPicks(season: Season, count: number): { label: string; line: string; drinks: Drink[] } {
+  const spec = SEASONS[season];
+  const shelves = drinkGroups().map((group) =>
+    group.drinks.filter(
+      (drink) =>
+        hasRealStill(drink) &&
+        spec.keywords.some((keyword) => drink.name.includes(keyword)) &&
+        !(spec.exclude ?? []).some((word) => drink.name.includes(word)),
+    ),
+  );
+  const drinks: Drink[] = [];
+  for (let round = 0; drinks.length < count && shelves.some((shelf) => shelf.length > round); round += 1) {
+    for (const shelf of shelves) {
+      const drink = shelf[round];
+      if (drink && drinks.length < count) {
+        drinks.push(drink);
+      }
+    }
+  }
+  return { label: spec.label, line: spec.line, drinks };
+}
+
 export function storeRows(drink: Drink): StoreRow[] {
   const rows: StoreRow[] = [];
   if (drink.officialUrl) {
