@@ -29,7 +29,7 @@ design-system/
 | Group | Tokens | Notes |
 |---|---|---|
 | Palette (locked) | `--palette-paper` `#F3EBDD`, `--palette-linen` `#FFF8EE`, `--palette-brass` `#A57B32`, `--palette-glass` `#3F6B56`, `--palette-ink` `#2C281F` | Derived: `sand`, `mist`, `brass-deep`, `brass-soft`, `glass-deep`, `sage` |
-| Surface | `page` paper · `raised` linen · `frost` translucent linen + blur · `inverse` glass · `sunken` | |
+| Surface | `page` paper · `raised` linen · `frost` translucent linen + blur · `inverse` glass · `sunken` · `plinth` the white board under product stills · `band` deep glass | |
 | Text | `primary` `secondary` `muted` `accent` `accent-deep` `inverse` `inverse-muted` `link` | |
 | Action | `primary` glass · `primary-hover` · `accent` brass disc · `focus` brass | |
 | Type families | `--font-display` Shippori Mincho · `--font-text` Zen Kaku Gothic New · `--font-mark` Cormorant Garamond (italic for numerals) | self-hosted subsets in `fonts/` |
@@ -44,11 +44,12 @@ design-system/
 
 | Component | Use | Key props |
 |---|---|---|
-| `SiteHeader` / `SiteFooter` / `SkipLink` | Layout chrome. Header is a floating frosted pill; footer has the one-liner, the fixed disclaimer, and a giant wordmark. | — |
-| `Section` | Every page section. | `width` wrap · bleed · full, `space` none · sm · md · lg, `labelledBy` / `label` |
+| `SiteHeader` / `SiteFooter` / `SkipLink` | Layout chrome. Header is a quiet paper bar with a hairline and the tagline; footer is the deep-green band with category links, the fixed disclaimer, and a giant wordmark. | `categories` (footer) |
+| `Section` | Every page section. `band` paints the deep-green full-width band. | `width` wrap · bleed · full, `space` none · sm · md · lg, `id`, `band`, `labelledBy` / `label` |
 | `Grid` | Columns inside a section. Collapses at 960. | `columns` split (5/7) · splitWide (7/5) · aside (3/9) · halves · thirds · quarters, `offset` staggered rhythm, `as="ol"` |
 | `Stack` | Vertical spacing between children. | `gap` 1–8 (space tokens), `align` |
-| `Text` | All type. | `variant` display · statement · headline · title · prose · lead · body · small · caption · mark, `tone`, `as`, `intro` |
+| `Text` | All type. Headings use `palt` and break between phrases (`word-break: auto-phrase`). | `variant` display · statement · headline · title · prose · lead · body · small · caption · mark, `tone`, `as`, `intro` |
+| `DisplayLines` `variant="tate"` | Vertical display title, lines read right to left. | |
 | `Eyebrow` · `Numeral` · `Phrase` · `TextLink` | Label with rule · Cormorant italic numbers · keep a Japanese phrase unbroken · inline link. | |
 | `DisplayLines` | Page title whose lines rise out of a mask on load. | `lines`, `variant` display · mark |
 | `FillText` | Statement that inks in per character on scroll. | `lines`, `variant` statement · prose |
@@ -59,17 +60,25 @@ design-system/
 | `Surface` | Card background. | `tone` raised · frost · inverse, `padding` md · lg · xl, `radius`, `rise` / `reveal` / `staggerItem` |
 | `Photo` | Still life image from the catalog (`components/StillLife/photos.ts`). | `name`, `sizes`, `priority` (one per page), `decorative`, `position`, `narrow` art-directed crop |
 | `ExternalPhoto` | Still life from a URL outside the catalog, for a drink's 静物URL. | `src`, `alt`, `priority` |
-| `StillLife` | Frame for a `Photo`. | `ratio` 16:9 · 4:3 · 4:5 · 3:4 · fill, `radius` none · sm · md · lg, `fit` cover · contain, `parallax`, `intro`, `hoverZoom`, `overlay` |
-| `HeroStage` | Home hero: full-bleed rounded still life under the header, frosted headline card, corner aside. | `media`, `aside`, children |
+| `StillLife` | Frame for a `Photo`. `fit="plinth"` stands a product still on the shared warm-white board (contain, multiply, soft floor). Every product still uses it. | `ratio` 16:9 · 4:3 · 4:5 · 3:4 · 1:1 · fill, `radius` none · sm · md · lg, `fit` cover · contain · plinth, `parallax`, `intro`, `hoverZoom`, `overlay` |
+| `HeroStage` | Home hero: vertical (縦書き) headline on the paper beside a large still life. | `media`, `aside`, `title`, `actions`, children |
 | `PageIntro` | Inner page top: steps, folio, eyebrow, masked title, lead. Split hero with `media`. `compact` drops padding so a following full-viewport stage stays in the first screen. | `step`, `folio`, `eyebrow`, `title`, `lead`, `sublead`, `media`, `compact` |
-| `SectionHead` | Eyebrow + section heading. | `eyebrow`, `title`, `size`, `compact` |
+| `SectionHead` | Eyebrow + section heading. `glyph` sets one large character beside it (the season). | `eyebrow`, `title`, `size`, `compact`, `glyph` |
 | `FeatureCard` | Whole-card link to the next step. | `href`, `media`, `folio`, `eyebrow`, `title`, `body`, `action` |
 | `Tile` | Bento unit, photo or text. Place in `<Grid as="ol">`. | `no`, `title`, `lines`, `media` |
 | `MediaPanel` | Full-bleed still life with a frosted card. Place in `<Section width="full">`. | `media`, `cardSide` |
 | `PeakStage` | Desire peak: pinned photo opening to full bleed. Headline sits in the upper calm side, clear of the sticky header, so it is whole in the first viewport. | `folio`, `media` (wide + `narrow`) |
 | `ClosingPanel` | Glass-green close with actions. | `eyebrow`, `title`, `sub`, `actions` |
 | `InfoRow` | Title + text card, for plain information. Title may be a link. | `title`, `muted` |
-| `DrinkShelf` | Dense drink index. A still sits beside the name and size; wide shelves run two columns. No still means a text line only. | `drinks`, `opening`, `defer` |
+| `DrinkShelf` | Dense drink index. A still on its plinth sits beside the catalog number, name and size; wide shelves run two columns. No still means a text line only. | `drinks`, `opening`, `defer` |
+| `DrinkShowcase` | Short curated run (seasonal, venue six, related): still on plinth above name. | `drinks` (+ `label`), `columns` 3 · 4 |
+| `CategoryNav` / `ShelfHead` / `CategoryIndex` | Sticky category jump bar with counts · numbered shelf head · category index on the green band. | `categories`, `total` |
+| `ProductHero` / `FactList` | Drink page top: plinth still beside crumbs, collection number, name, size, store · the four axes as an editorial list. | `crumbs`, `folio`, `media`, `extra` |
+| `TableCard` | Screenshot-ready close of a drink page: still, number, name, the fixed close line, store, share. Covers the dock. | `folio`, `media`, `actions`, `share` |
+| `DrinkTrail` / `VenueLink` | Previous / next drink on the shelf · compact card back to the venue. | |
+| `StoreDock` | Store link that appears once the page's own store button has scrolled away. Floating pill wide, bottom bar narrow. | `href`, `action`, `anchorId` |
+| `ShareRow` | LINE, X, copy link. Plain intent URLs, nothing counted. | `url`, `text`, `tone` |
+| `TableToggle` / `TableShelf` | わたしの卓 (saved) and 最近見た一杯 (recent), kept in localStorage only. Shelf renders nothing on a first visit. | `drink` · `exclude` |
 | `StoreSlot` | One primary store button, then any further product links. Shell keeps the hidden empty 手に入れる / 近く / 読む structure. No affiliate IDs, no search URLs. | `rows` (`label`, `href`, `text`). Omit `rows` on the shell |
 | `Motion` | Wrap each page once. | — |
 
@@ -92,9 +101,9 @@ design-system/
 
 ## Page recipes
 
-- `/`: `HeroStage` → `Section` + `FillText` → `Section` + `FeatureCard` → `Section` + `SectionHead` + `Grid quarters offset` of photo `Tile`s
-- `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of `Tile`s → six category `InfoRow` links → `Section full` + `MediaPanel` with `JourneyCta to="drink"`
+- `/`: `HeroStage` (tate) → `TableShelf` → seasonal `SectionHead glyph` + `DrinkShowcase` → the six entries in `DrinkShowcase` → `Section band` + `CategoryIndex` → `FillText` → `FeatureCard` → photo `Tile`s
+- `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of text `Tile`s → the six in `DrinkShowcase` → seasonal `DrinkShowcase` → `Section full` + `MediaPanel` with `JourneyCta to="drink"` and `ShareRow`
 - `/drink/shell`: `PageIntro` (`compact`) → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot` (no rows)
-- `/drink/`: `PageIntro` (`compact`) → one `Section` per category. `DrinkShelf` puts each still beside its name and size, two columns once the shelf is wide, one when it is narrow. A drink without a still is a line only. Real stills are listed first
-- `/drink/[slug]`: optional `ExternalPhoto` in `StillLife` (only that drink's still) → category `Chip` + product name → `InfoRow`s for 場／見た目／サイズ／味 → same-category links → `ClosingPanel` (fixed close, no second button) → `StoreSlot`: first product link is the primary button, 公式 / Amazon / 楽天 when each URL is a product page
+- `/drink/`: `PageIntro` (`compact`) → sticky `CategoryNav` → `TableShelf` → one `Section id` per category with `ShelfHead`. `DrinkShelf` puts each still beside its name and size, two columns once the shelf is wide, one when it is narrow. A drink without a still is a line only. Real stills are listed first
+- `/drink/[slug]`: `ProductHero` (plinth still only when the drink has one, `StoreSlot` with the one primary store button, `TableToggle`) → `FactList` for 場／見た目／サイズ／味 → `TableCard` (fixed close, store, `ShareRow`) → `DrinkTrail` → eight same-category drinks in `DrinkShowcase` + link to the shelf → `VenueLink` → `TableShelf` → `StoreDock`
 - `/about`: `Section` + `Grid splitWide` (mark title + `Photo`) → `Stack` of `InfoRow`s
