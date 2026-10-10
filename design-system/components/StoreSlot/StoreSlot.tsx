@@ -2,9 +2,9 @@ import { Button } from "../Button/Button";
 import styles from "./StoreSlot.module.css";
 
 const PLACEHOLDER = [
-  { role: "acquire", label: "手に入れる" },
-  { role: "nearby", label: "近く" },
-  { role: "read", label: "読む" },
+  { role: "acquire", label: "購入先" },
+  { role: "nearby", label: "取扱店" },
+  { role: "read", label: "詳細" },
 ] as const;
 
 export type StoreLink = {
@@ -34,8 +34,8 @@ export function StoreSlot({ rows }: StoreSlotProps = {}) {
       return null;
     }
     return (
-      <section id="store-row" className={styles.slot} aria-label="店">
-        <p className={styles.label}>手に入れる</p>
+      <section id="store-row" className={styles.slot} aria-label="買う">
+        <p className={styles.label}>購入先</p>
         <Button variant="primary" size="lg" icon="external" stretch href={primary.href} storePrimary>
           {storeAction(primary)}
         </Button>
@@ -59,7 +59,7 @@ export function StoreSlot({ rows }: StoreSlotProps = {}) {
   }
 
   return (
-    <section id="store-row" className={styles.slot} hidden aria-label="手に入れる">
+    <section id="store-row" className={styles.slot} hidden aria-label="買う">
       <dl className={styles.list}>
         {PLACEHOLDER.map((row) => (
           <div key={row.role} className={styles.row} data-role={row.role}>

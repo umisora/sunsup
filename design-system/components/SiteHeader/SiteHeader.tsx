@@ -27,7 +27,7 @@ export function SiteHeader() {
           <span className={styles.mark}>sunsup</span>
           <span className={styles.tagline}>おしゃれに美味しく飲めるノンアル</span>
         </Link>
-        <nav className={styles.nav} aria-label="サイト">
+        <nav className={styles.nav} aria-label="メニュー">
           {NAV.map((item) => (
             <Link
               key={item.href}

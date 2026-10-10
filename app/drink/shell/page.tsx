@@ -15,18 +15,18 @@ import {
 } from "@/design-system";
 
 export const metadata: Metadata = {
-  title: "この卓の一杯",
+  title: "この場の一杯",
 };
 
 const AXES = [
   {
     no: "01",
     title: "場",
-    lines: ["次にデスクが卓になる午後。ITの会社の、開いた飲み会。", "家で試してから、次の卓へ。"],
+    lines: ["デスクまわりが飲み会の場になる午後。IT企業の、誰でも寄れる飲み会。", "家で一度飲んでから、次の場へ。"],
   },
-  { no: "02", title: "見た目", lines: ["緑のガラス。短い缶。午後の卓に馴染むラベル。"] },
-  { no: "03", title: "サイズ", lines: ["一人が飲み切る量。短い缶。分けられる瓶。"] },
-  { no: "04", title: "味", lines: ["果実、炭酸、冷たいこと。", "乾杯の気泡は、炭酸の瓶で足る。"] },
+  { no: "02", title: "見た目", lines: ["緑のガラス瓶。小さめの缶。午後のテーブルに馴染むラベル。"] },
+  { no: "03", title: "サイズ", lines: ["一人で飲み切れる量。小さめの缶。分けられる瓶。"] },
+  { no: "04", title: "味", lines: ["果実、炭酸、冷たいこと。", "乾杯の気泡は、炭酸の瓶で足りる。"] },
 ] as const;
 
 export default function DrinkShellPage() {
@@ -37,9 +37,9 @@ export default function DrinkShellPage() {
         step="drink"
         compact
         eyebrow="一杯"
-        title={["この卓の一杯"]}
-        lead="午後の卓の、一本。"
-        sublead="ラベルより先に、置いたときの空気で選ぶ。"
+        title={["この場の一杯"]}
+        lead="午後のテーブルに置く、一本。"
+        sublead="ラベルより先に、置いたときの印象で選ぶ。"
       />
 
       <PeakStage id="peak-title" folio="No. 02" media={<Photo name="peak-wide" narrow="peak" sizes="100vw" priority />}>
@@ -67,15 +67,15 @@ export default function DrinkShellPage() {
           eyebrow="次の飲み会"
           title={
             <>
-              <Phrase>次回これにしよ、</Phrase>
+              <Phrase>「次はこれで」と</Phrase>
               <br />
-              <Phrase>が立てばいい。</Phrase>
+              <Phrase>言える一杯があればいい。</Phrase>
             </>
           }
           sub={
             <>
-              <Phrase>家で冷えてから、</Phrase>
-              <Phrase>次の卓の中央へ。</Phrase>
+              <Phrase>家で冷やしてから、</Phrase>
+              <Phrase>次のテーブルの真ん中へ。</Phrase>
             </>
           }
           actions={

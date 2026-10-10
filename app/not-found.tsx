@@ -9,7 +9,7 @@ export default function NotFound() {
           このページはありません。
         </Text>
         <Text variant="lead">
-          <TextLink href="/">入口へ</TextLink>
+          <TextLink href="/">トップへ戻る</TextLink>
         </Text>
       </Stack>
     </Section>

@@ -4,7 +4,7 @@ import styles from "./JourneySteps.module.css";
 
 export function JourneySteps({ current }: { current: JourneyStep }) {
   return (
-    <nav aria-label="旅の位置" data-intro>
+    <nav aria-label="場と一杯" data-intro>
       <ol className={styles.steps}>
         {JOURNEY_ORDER.map((step) => (
           <li key={step}>

@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     default: "sunsup",
     template: "%s｜sunsup",
   },
-  description: "飲み会でも、おしゃれに美味しく飲めるノンアルを届ける",
+  description: "飲み会でも、おしゃれに美味しく飲めるノンアルを集めています。",
   twitter: { card: "summary_large_image" },
 };
 

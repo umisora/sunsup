@@ -125,7 +125,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         />
       </Section>
 
-      <Section space="md" label="この卓のカード">
+      <Section space="md" label="この一杯のカード">
         <TableCard
           id="close-title"
           folio={folio}
@@ -144,14 +144,14 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
       </Section>
 
       {neighbours ? (
-        <Section space="md" label="棚の前後">
+        <Section space="md" label="前後の一杯">
           <DrinkTrail label={`${drink.category}の前後`} previous={neighbours.previous} next={neighbours.next} />
         </Section>
       ) : null}
 
       {related.length > 0 ? (
         <Section space="md" labelledBy="related-title">
-          <SectionHead id="related-title" eyebrow={drink.category} title={<Phrase>同じカテゴリの一杯</Phrase>} />
+          <SectionHead id="related-title" eyebrow={drink.category} title={<Phrase>同じカテゴリ</Phrase>} />
           <Stack gap={7} align="stretch">
             <DrinkShowcase label="同じカテゴリ" columns={4} drinks={related.slice(0, RELATED_SHOWN)} />
             <div>
@@ -174,7 +174,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
               <Phrase>オープンな飲み会</Phrase>
             </>
           }
-          body="デスクが卓になる午後。この場の六杯へ。"
+          body="デスクまわりが、そのまま飲み会の場になる。この場の6杯へ。"
         />
       </Section>
 
