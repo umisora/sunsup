@@ -4,7 +4,7 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { extname, join } from "node:path";
 
-const SOURCE_DIRS = ["app", "design-system"];
+const SOURCE_DIRS = ["app", "design-system", "lib"];
 const EXTRA_FILES = ["data/drinks.csv"];
 const LATIN =
   " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
@@ -27,7 +27,7 @@ async function sourceFiles(dir) {
       if (entry.isDirectory()) {
         return sourceFiles(path);
       }
-      return extname(path) === ".tsx" ? [path] : [];
+      return [".tsx", ".ts"].includes(extname(path)) ? [path] : [];
     }),
   );
   return nested.flat();
