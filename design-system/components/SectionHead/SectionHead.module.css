@@ -6,6 +6,29 @@
   margin-bottom: clamp(32px, 4vw, 56px);
 }
 
+.withGlyph {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: clamp(20px, 3vw, 40px);
+  max-width: none;
+}
+
+.glyph {
+  flex: none;
+  color: color-mix(in srgb, var(--palette-brass) 70%, var(--palette-paper));
+  font-family: var(--font-display);
+  font-size: clamp(96px, 13vw, 184px);
+  font-weight: 500;
+  line-height: 0.82;
+}
+
+.glyphCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 0.3em;
+}
+
 .compact {
   gap: var(--space-3);
   margin-bottom: var(--space-4);

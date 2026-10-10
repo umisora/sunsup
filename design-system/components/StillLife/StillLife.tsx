@@ -74,21 +74,22 @@ export function ExternalPhoto({ src, alt, priority = false, lazy = true }: Exter
   );
 }
 
-type Ratio = "16:9" | "4:3" | "4:5" | "3:4" | "fill";
+type Ratio = "16:9" | "4:3" | "4:5" | "3:4" | "1:1" | "fill";
 
 const RATIO: Record<Ratio, string> = {
   "16:9": styles.r16x9,
   "4:3": styles.r4x3,
   "4:5": styles.r4x5,
   "3:4": styles.r3x4,
+  "1:1": styles.r1x1,
   fill: styles.fill,
 };
 
 type StillLifeProps = {
   ratio?: Ratio;
   radius?: "none" | "sm" | "md" | "lg";
-  /** Cover crops to the frame. Contain keeps the whole still, used when the crop would cut a label. */
-  fit?: "cover" | "contain";
+  /** Cover crops to the frame. Contain keeps the whole still. Plinth stands a product still on the shared white board. */
+  fit?: "cover" | "contain" | "plinth";
   /** Motion: image drifts against scroll. */
   parallax?: boolean;
   /** Motion: frame wipes open on page load. Use once per page, on the first frame. */
@@ -119,6 +120,7 @@ export function StillLife({
         radius === "md" && styles.radiusMd,
         radius === "lg" && styles.radiusLg,
         fit === "contain" && styles.contain,
+        fit === "plinth" && styles.plinth,
         parallax && styles.parallax,
         hoverZoom && styles.hoverZoom,
       )}

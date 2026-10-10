@@ -3,9 +3,25 @@
 .display,
 .statement,
 .headline,
-.title {
+.title,
+.tate {
   font-family: var(--font-display);
   font-weight: 500;
+  font-feature-settings: var(--features-display);
+  word-break: auto-phrase;
+}
+
+/* tategaki: lines become columns, read right to left */
+.tate {
+  writing-mode: vertical-rl;
+  font-size: var(--step-tate);
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  font-feature-settings: "vpal" 1;
+}
+
+.tate .lineInner {
+  white-space: nowrap;
 }
 
 .display {
@@ -97,8 +113,8 @@
 .eyebrow {
   display: flex;
   align-items: center;
-  gap: 14px;
-  color: var(--text-accent);
+  gap: 10px;
+  color: var(--text-accent-deep);
   font-size: var(--step--2);
   font-weight: 500;
   line-height: var(--leading-tight);
@@ -108,9 +124,10 @@
 .eyebrow::before {
   content: "";
   flex: none;
-  width: 28px;
-  height: 1px;
-  background: currentColor;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--action-accent);
 }
 
 .eyebrowInverse {

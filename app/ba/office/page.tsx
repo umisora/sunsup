@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import {
+  DrinkShowcase,
   Eyebrow,
   FillText,
   Grid,
-  InfoRow,
   JourneyCta,
   MediaPanel,
   Motion,
@@ -12,15 +12,26 @@ import {
   Phrase,
   Section,
   SectionHead,
+  ShareRow,
   Stack,
   Text,
   TextLink,
   Tile,
 } from "@/design-system";
-import { officeEntries } from "@/lib/drinks";
+import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
+  description: "次にデスクが卓になる午後。ITの会社の、開いた飲み会に置くノンアル。",
+  openGraph: {
+    title: "オフィスのオープンな飲み会｜sunsup",
+    description: "次にデスクが卓になる午後。ITの会社の、開いた飲み会に置くノンアル。",
+    url: "/ba/office/",
+    siteName: "sunsup",
+    locale: "ja_JP",
+    type: "article",
+    images: [{ url: "/og/office.jpg", width: 1200, height: 630, alt: "sunsup 場 オフィスのオープンな飲み会" }],
+  },
 };
 
 const CRITERIA = [
@@ -42,6 +53,8 @@ const CRITERIA = [
 ] as const;
 
 export default function OfficePage() {
+  const season = seasonalPicks(seasonOf(new Date()), 4);
+
   return (
     <Motion>
       <PageIntro
@@ -65,27 +78,40 @@ export default function OfficePage() {
       </Section>
 
       <Section space="md" label="この場での選び方">
-        <Grid as="ol" columns="thirds">
+        <Grid as="ol" columns="thirds" gap="wide">
           {CRITERIA.map((item) => (
             <Tile key={item.no} no={item.no} title={item.title} titleAs="h2" lines={item.lines} />
           ))}
         </Grid>
       </Section>
 
-      <Section space="md" labelledBy="entries-title">
-        <Stack gap={5}>
-          <SectionHead id="entries-title" eyebrow="一杯" title={<Phrase>この場の一杯</Phrase>} />
-          <Stack gap={3} align="stretch">
-            {officeEntries().map((drink) => (
-              <InfoRow key={drink.slug} title={drink.category}>
-                <TextLink href={`/drink/${drink.slug}/`}>{drink.name}</TextLink>
-              </InfoRow>
-            ))}
-          </Stack>
+      <Section labelledBy="entries-title">
+        <SectionHead id="entries-title" eyebrow="一杯" title={<Phrase>この場の一杯</Phrase>} />
+        <Stack gap={7} align="stretch">
+          <DrinkShowcase label="この場の一杯" drinks={officeEntries().map((drink) => ({ ...drink, label: drink.category }))} />
           <Text variant="body">
             同じカテゴリの残りは、<TextLink href="/drink/">一覧</TextLink>にある。
           </Text>
         </Stack>
+      </Section>
+
+      <Section space="md" labelledBy="office-season-title">
+        <SectionHead
+          id="office-season-title"
+          eyebrow="この場の季節"
+          glyph={season.label.charAt(0)}
+          title={
+            <>
+              <Phrase>この場の、</Phrase>
+              <Phrase>{season.label}</Phrase>
+            </>
+          }
+        >
+          <Text variant="lead" tone="secondary">
+            {season.line}
+          </Text>
+        </SectionHead>
+        <DrinkShowcase label={season.label} columns={4} drinks={season.drinks.map((drink) => ({ ...drink, label: drink.category }))} />
       </Section>
 
       <Section width="full" labelledBy="invite-title">
@@ -101,6 +127,7 @@ export default function OfficePage() {
               一杯を決める。
             </Text>
             <JourneyCta to="drink">一杯へ</JourneyCta>
+            <ShareRow url={`${SITE_ORIGIN}/ba/office/`} text="オフィスのオープンな飲み会に置く、ノンアル。sunsup" />
           </Stack>
         </MediaPanel>
       </Section>

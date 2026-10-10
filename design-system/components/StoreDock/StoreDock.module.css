@@ -1,0 +1,92 @@
+.dock {
+  position: fixed;
+  inset-inline-end: max(var(--layout-gutter), calc((100% - var(--layout-wrap)) / 2));
+  bottom: var(--space-5);
+  z-index: var(--z-dock);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: min(560px, 100% - 2 * var(--layout-gutter));
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+  border: 1px solid var(--border-frost);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--palette-linen) 90%, transparent);
+  box-shadow: var(--shadow-lifted);
+  backdrop-filter: var(--blur-frost);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px);
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    transform 420ms var(--ease-out),
+    visibility 0s linear var(--duration-base);
+}
+
+.dock[data-shown] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    transform 420ms var(--ease-out);
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: var(--step-small);
+  font-feature-settings: var(--features-display);
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.action {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding-inline: 22px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--action-primary);
+  box-shadow: var(--shadow-action);
+  color: var(--text-inverse);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: background-color var(--duration-base) var(--ease-standard);
+}
+
+.action:hover {
+  background: var(--action-primary-hover);
+}
+
+.action svg {
+  width: 11px;
+  height: 11px;
+}
+
+@media (max-width: 767px) {
+  .dock {
+    inset-inline: 0;
+    bottom: 0;
+    max-width: none;
+    padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom)) var(--layout-gutter);
+    border-width: 1px 0 0;
+    border-radius: 0;
+    box-shadow: 0 -18px 40px -30px rgb(44 40 31 / 0.5);
+  }
+
+  .action {
+    min-height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock {
+    transform: none;
+  }
+}

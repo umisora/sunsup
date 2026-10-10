@@ -11,6 +11,23 @@
   padding-inline: var(--layout-bleed-inset);
 }
 
+.band {
+  margin-top: var(--space-section);
+  margin-inline: var(--layout-bleed-inset);
+  padding-bottom: var(--space-9);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(ellipse 50% 70% at 100% 0%, color-mix(in srgb, var(--palette-linen) 10%, transparent), transparent 70%),
+    radial-gradient(ellipse 40% 60% at 0% 100%, color-mix(in srgb, var(--palette-brass) 18%, transparent), transparent 70%),
+    var(--surface-band);
+  color: var(--text-inverse);
+}
+
+.bandInner {
+  position: relative;
+}
+
 .spaceNone {
   padding-top: 0;
 }

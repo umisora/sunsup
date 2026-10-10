@@ -20,9 +20,21 @@ type DrinkShelfProps = {
 
 const EAGER_STILLS = 6;
 
+function folio(index: number): string {
+  return String(index + 1).padStart(3, "0");
+}
+
+export function ArrowGlyph() {
+  return (
+    <svg viewBox="0 0 24 12" aria-hidden="true">
+      <path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
 /**
  * Drinks on the table: a still beside its name, in columns once the shelf is wide.
- * A drink with no still is a line only — no frame, no stand-in photograph.
+ * Every still stands on the same plinth. A drink with no still is a line only — no frame, no stand-in photograph.
  */
 export function DrinkShelf({ drinks, opening = false, defer = false }: DrinkShelfProps) {
   const pictured = drinks.filter((drink) => drink.stillUrl !== "");
@@ -37,7 +49,7 @@ export function DrinkShelf({ drinks, opening = false, defer = false }: DrinkShel
               <li key={drink.slug}>
                 <Link href={`/drink/${drink.slug}/`} className={styles.entry}>
                   <span className={styles.well}>
-                    <StillLife ratio="fill" radius="sm" fit="contain">
+                    <StillLife ratio="fill" radius="sm" fit="plinth">
                       <ExternalPhoto
                         src={drink.stillUrl}
                         alt=""
@@ -47,8 +59,14 @@ export function DrinkShelf({ drinks, opening = false, defer = false }: DrinkShel
                     </StillLife>
                   </span>
                   <span className={styles.copy}>
+                    <span className={styles.no} aria-hidden="true">
+                      {folio(index)}
+                    </span>
                     <span className={styles.name}>{drink.name}</span>
                     <span className={styles.size}>{drink.size}</span>
+                  </span>
+                  <span className={styles.go} aria-hidden="true">
+                    <ArrowGlyph />
                   </span>
                 </Link>
               </li>
@@ -57,11 +75,16 @@ export function DrinkShelf({ drinks, opening = false, defer = false }: DrinkShel
         ) : null}
         {plain.length > 0 ? (
           <ul className={cx(styles.ledger, pictured.length === 0 && styles.ledgerOnly)}>
-            {plain.map((drink) => (
+            {plain.map((drink, index) => (
               <li key={drink.slug}>
                 <Link href={`/drink/${drink.slug}/`} className={styles.plain}>
-                  <span className={styles.name}>{drink.name}</span>
-                  <span className={styles.size}>{drink.size}</span>
+                  <span className={styles.no} aria-hidden="true">
+                    {folio(pictured.length + index)}
+                  </span>
+                  <span className={styles.plainCopy}>
+                    <span className={styles.name}>{drink.name}</span>
+                    <span className={styles.size}>{drink.size}</span>
+                  </span>
                 </Link>
               </li>
             ))}

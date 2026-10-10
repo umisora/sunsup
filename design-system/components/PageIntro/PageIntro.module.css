@@ -38,4 +38,8 @@
   .media {
     order: -1;
   }
+
+  .intro .media > * {
+    aspect-ratio: 5 / 4;
+  }
 }

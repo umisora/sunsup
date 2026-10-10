@@ -1,12 +1,54 @@
 .hero {
-  position: relative;
-  margin-top: calc(-1 * var(--layout-header-height));
-  padding: var(--layout-bleed-inset) var(--layout-bleed-inset) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(24px, 3vw, 48px);
+  width: min(var(--layout-wrap), 100% - 2 * var(--layout-gutter));
+  height: clamp(580px, 100svh - var(--layout-header-height) - 32px, 860px);
+  margin: var(--space-4) auto 0;
+}
+
+.copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "side title"
+    "actions title";
+  column-gap: var(--space-5);
+  row-gap: var(--space-6);
+  padding-block: clamp(16px, 3vw, 48px) clamp(8px, 2vw, 24px);
+}
+
+.title {
+  grid-area: title;
+  align-self: start;
+}
+
+.title h1 {
+  font-size: clamp(36px, 4.4vw, 64px);
+  letter-spacing: 0.12em;
+}
+
+.side {
+  grid-area: side;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+.actions {
+  grid-area: actions;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  white-space: nowrap;
 }
 
 .stage {
   position: relative;
-  height: clamp(620px, 100svh - 2 * var(--layout-bleed-inset), 1000px);
   overflow: hidden;
   border-radius: var(--radius-lg);
 }
@@ -15,45 +57,48 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--scrim-photo);
+  background: linear-gradient(to top, color-mix(in srgb, var(--palette-ink) 22%, transparent), transparent 30%);
   pointer-events: none;
-}
-
-.card {
-  position: absolute;
-  inset-inline-start: calc(var(--layout-bleed-inset) + clamp(16px, 4vw, 64px));
-  bottom: clamp(28px, 5vw, 72px);
-  z-index: 1;
-  width: min(620px, 100% - 56px);
 }
 
 .aside {
   position: absolute;
-  inset-inline-end: calc(var(--layout-bleed-inset) + clamp(16px, 3vw, 48px));
-  bottom: clamp(28px, 5vw, 72px);
+  inset-inline-end: clamp(16px, 2.4vw, 32px);
+  bottom: clamp(16px, 2.4vw, 32px);
   z-index: 1;
 }
 
 @media (max-width: 959px) {
+  .hero {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: var(--space-5);
+  }
+
   .stage {
-    height: min(62svh, 620px);
-    min-height: 440px;
+    order: -1;
+    aspect-ratio: 5 / 4;
   }
 
   .stage img {
     object-position: 40% 50%;
   }
 
-  .card {
-    position: relative;
-    inset: auto;
-    width: auto;
-    margin: -148px var(--layout-bleed-inset) 0;
+  .copy {
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "side title"
+      "actions actions";
+    padding-block: 0;
   }
 
-  .aside {
-    top: calc(var(--layout-header-height) + var(--space-5));
-    bottom: auto;
-    inset-inline: calc(var(--layout-bleed-inset) + var(--space-3)) auto;
+  .title h1 {
+    font-size: clamp(34px, 9.4vw, 48px);
+  }
+}
+
+@media (max-width: 599px) {
+  .actions {
+    align-items: stretch;
   }
 }

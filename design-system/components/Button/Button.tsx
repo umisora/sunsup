@@ -5,11 +5,21 @@ import { JOURNEY, type JourneyStep } from "../../journey";
 import styles from "./Button.module.css";
 
 export type ButtonVariant = "primary" | "secondary" | "inverse";
-type ButtonIcon = "forward" | "back" | "none";
+type ButtonIcon = "forward" | "back" | "external" | "none";
+
+const GLYPH: Record<Exclude<ButtonIcon, "none">, string> = {
+  forward: "M0 6h22M17 1l5 5-5 5",
+  back: "M0 6h22M17 1l5 5-5 5",
+  external: "M1 11 11 1M3 1h8v8",
+};
 
 type ButtonProps = {
   variant?: ButtonVariant;
   icon?: ButtonIcon;
+  /** Large is the store call to action. */
+  size?: "md" | "lg";
+  /** Fill the width of the parent. */
+  stretch?: boolean;
   /** Renders a link. Without it the button is a visual-only span, for use inside a larger link (e.g. a card). */
   href?: string;
   /** Motion: enters with the page intro. */
@@ -19,12 +29,24 @@ type ButtonProps = {
   children: ReactNode;
 };
 
-export function Button({ variant = "primary", icon = "forward", href, intro = false, storePrimary = false, children }: ButtonProps) {
+export function Button({
+  variant = "primary",
+  icon = "forward",
+  size = "md",
+  stretch = false,
+  href,
+  intro = false,
+  storePrimary = false,
+  children,
+}: ButtonProps) {
   const className = cx(
     styles.button,
     styles[variant],
     (variant === "primary" || variant === "inverse") && styles.block,
+    size === "lg" && styles.large,
+    stretch && styles.stretch,
     icon === "back" && styles.back,
+    icon === "external" && styles.external,
     icon === "none" && styles.noIcon,
   );
 
@@ -33,8 +55,8 @@ export function Button({ variant = "primary", icon = "forward", href, intro = fa
       <span>{children}</span>
       {icon === "none" ? null : (
         <span className={styles.icon} aria-hidden="true">
-          <svg viewBox="0 0 24 12">
-            <path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          <svg viewBox={icon === "external" ? "0 0 12 12" : "0 0 24 12"}>
+            <path d={GLYPH[icon]} fill="none" stroke="currentColor" strokeWidth="1.4" />
           </svg>
         </span>
       )}

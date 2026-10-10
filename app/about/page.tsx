@@ -3,6 +3,15 @@ import { DisplayLines, Eyebrow, Grid, InfoRow, Motion, Photo, Section, Stack, St
 
 export const metadata: Metadata = {
   title: "運営",
+  openGraph: {
+    title: "運営｜sunsup",
+    description: "次のオフィス飲み会に何を置くかを、場・見た目・サイズ・味から選ぶためのサイトです。",
+    url: "/about/",
+    siteName: "sunsup",
+    locale: "ja_JP",
+    type: "website",
+    images: [{ url: "/og/about.jpg", width: 1200, height: 630, alt: "sunsup 運営" }],
+  },
 };
 
 export default function AboutPage() {
@@ -24,7 +33,7 @@ export default function AboutPage() {
       </Section>
 
       <Section space="md" label="運営について">
-        <Stack gap={3} align="stretch">
+        <Stack gap={0} align="stretch">
           <InfoRow title="最初の場">
             <TextLink href="/ba/office/">昼のオフィスのオープンな飲み会</TextLink>。家で届いてから、次の卓へ。
           </InfoRow>
