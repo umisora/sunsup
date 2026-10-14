@@ -10,6 +10,7 @@ import {
   FeatureCard,
   FillText,
   Grid,
+  HERO_TABLE_SLUGS,
   HeroStage,
   JourneyCta,
   Motion,
@@ -22,7 +23,7 @@ import {
   Text,
   Tile,
 } from "@/design-system";
-import { categorySummaries, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
+import { categorySummaries, getDrink, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: { absolute: "sunsup" },
@@ -44,6 +45,16 @@ const AXES = [
   { no: "04", title: "味", line: "果汁、炭酸、苦み", photo: "detail", position: "28% 62%" },
 ] as const;
 
+function heroDrinks() {
+  return HERO_TABLE_SLUGS.map((slug) => {
+    const drink = getDrink(slug);
+    if (!drink || !drink.stillUrl.startsWith("/drinks/") || drink.stillUrl.includes("/drinks/fallback-")) {
+      throw new Error(`hero drink missing: ${slug}`);
+    }
+    return { slug: drink.slug, name: drink.name, src: drink.stillUrl };
+  });
+}
+
 export default function HomePage() {
   const total = loadDrinks().length;
   const season = seasonalPicks(seasonOf(new Date()), 8);
@@ -52,7 +63,7 @@ export default function HomePage() {
     <Motion>
       <HeroStage
         labelledBy="home-title"
-        media={<Photo name="table" sizes="(min-width: 960px) 60vw, 100vw" priority />}
+        drinks={heroDrinks()}
         aside={<ChipList tone="frost" label="選び方" items={AXES.map((axis) => axis.title)} intro />}
         title={<DisplayLines id="home-title" variant="tate" lines={["飲み会向けの", "ノンアルコール飲料"]} />}
         actions={

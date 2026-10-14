@@ -61,7 +61,7 @@ design-system/
 | `Photo` | Still life image from the catalog (`components/StillLife/photos.ts`). | `name`, `sizes`, `priority` (one per page), `decorative`, `position`, `narrow` art-directed crop |
 | `ExternalPhoto` | Still life from a URL outside the catalog, for a drink's 静物URL. | `src`, `alt`, `priority` |
 | `StillLife` | Frame for a `Photo`. `fit="plinth"` stands a product still on the shared warm-white board (contain, multiply, soft floor). Every product still uses it. | `ratio` 16:9 · 4:3 · 4:5 · 3:4 · 1:1 · fill, `radius` none · sm · md · lg, `fit` cover · contain · plinth, `parallax`, `intro`, `hoverZoom`, `overlay` |
-| `HeroStage` | Home hero: vertical (縦書き) headline on the paper beside a large still life. | `media`, `aside`, `title`, `actions`, children |
+| `HeroStage` | Home hero: vertical (縦書き) headline on the paper beside the table. Real stills from `public/drinks` arrive and line up, then two of them toast. Reduced motion shows the settled lineup. | `drinks`, `aside`, `title`, `actions`, children |
 | `PageIntro` | Inner page top: steps, folio, eyebrow, masked title, lead. Split hero with `media`. `compact` drops padding so a following full-viewport stage stays in the first screen. | `step`, `folio`, `eyebrow`, `title`, `lead`, `sublead`, `media`, `compact` |
 | `SectionHead` | Eyebrow + section heading. `glyph` sets one large character beside it (the season). | `eyebrow`, `title`, `size`, `compact`, `glyph` |
 | `FeatureCard` | Whole-card link to the next step. | `href`, `media`, `folio`, `eyebrow`, `title`, `body`, `action` |
@@ -97,11 +97,13 @@ design-system/
 | `data-fill` | `FillText` | per-character ink, scrubbed | no (dimmed only) |
 | `data-parallax` | `StillLife parallax` | image drifts ±5%, scrubbed | no |
 | `data-drift` | `HeroStage` card | card drifts up as the hero leaves | no |
+| `data-arrive` | `TableArrival` | stills slide onto the table on load, then two toast and settle (~8s). Own timeline, not `playIntro` | off-table until it runs |
+| `data-arrive-floor` | `TableArrival` | contact shadow fades in as that still lands | yes (opacity) |
 | `data-peak-*` | `PeakStage` | pin + clip-path open (≥768px), scrub open (narrow) | no |
 
 ## Page recipes
 
-- `/`: `HeroStage` (tate) → `TableShelf` → seasonal `SectionHead glyph` + `DrinkShowcase` → the six entries in `DrinkShowcase` → `Section band` + `CategoryIndex` → `FillText` → `FeatureCard` → photo `Tile`s
+- `/`: `HeroStage` (tate, table arrival) → `TableShelf` → seasonal `SectionHead glyph` + `DrinkShowcase` → the six entries in `DrinkShowcase` → `Section band` + `CategoryIndex` → `FillText` → `FeatureCard` → photo `Tile`s
 - `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of text `Tile`s → the six in `DrinkShowcase` → seasonal `DrinkShowcase` → `Section full` + `MediaPanel` with `JourneyCta to="drink"` and `ShareRow`
 - `/drink/shell`: `PageIntro` (`compact`) → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot` (no rows)
 - `/drink/`: `PageIntro` (`compact`) → sticky `CategoryNav` → `TableShelf` → one `Section id` per category with `ShelfHead`. `DrinkShelf` puts each still beside its name and size, two columns once the shelf is wide, one when it is narrow. A drink without a still is a line only. Real stills are listed first

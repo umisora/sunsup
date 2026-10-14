@@ -52,7 +52,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </main>
         <SiteFooter categories={categorySummaries()} />
         <noscript>
-          <style>{`[data-intro],[data-line],[data-reveal],[data-stagger-item]{visibility:visible !important}[data-intro-media]{clip-path:none !important}`}</style>
+          <style>{`[data-intro],[data-line],[data-reveal],[data-stagger-item]{visibility:visible !important}[data-intro-media]{clip-path:none !important}[data-arrive]{transform:none !important}[data-arrive-floor]{opacity:1 !important}`}</style>
         </noscript>
       </body>
     </html>
