@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { SITE_NAME } from "../../brand";
-import { Phrase } from "../Text/Text";
+import { Phrase, SoftBreak } from "../Text/Text";
 import styles from "./TableCard.module.css";
 
 type TableCardProps = {
@@ -27,7 +27,9 @@ export function TableCard({ id, folio, category, name, media, actions, share }: 
         </p>
         <div className={styles.copy}>
           <p className={styles.category}>{category}</p>
-          <p className={styles.name}>{name}</p>
+          <p className={styles.name}>
+            <SoftBreak text={name} />
+          </p>
           <h2 id={id} className={styles.close}>
             <Phrase>次の飲み会に</Phrase>
             <Phrase>持っていく。</Phrase>

@@ -80,6 +80,7 @@
   line-height: var(--leading-snug);
   letter-spacing: 0.05em;
   word-break: auto-phrase;
+  line-break: strict;
   overflow-wrap: anywhere;
   transition: color var(--duration-fast) var(--ease-standard);
 }

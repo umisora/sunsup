@@ -3,7 +3,7 @@
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   gap: clamp(24px, 3vw, 48px);
   width: min(var(--layout-wrap), 100% - 2 * var(--layout-gutter));
-  height: clamp(580px, 100svh - var(--layout-header-height) - 32px, 860px);
+  height: clamp(540px, 100svh - var(--layout-header-height) - 48px, 760px);
   margin: var(--space-4) auto 0;
 }
 
@@ -15,8 +15,8 @@
     "side title"
     "actions title";
   column-gap: var(--space-5);
-  row-gap: var(--space-6);
-  padding-block: clamp(16px, 3vw, 48px) clamp(8px, 2vw, 24px);
+  row-gap: var(--space-5);
+  padding-block: clamp(12px, 2vw, 32px) clamp(8px, 2vw, 20px);
 }
 
 .title {
@@ -25,8 +25,18 @@
 }
 
 .title h1 {
-  font-size: clamp(36px, 4.4vw, 64px);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+}
+
+@media (min-width: 960px) {
+  .copy {
+    container-type: size;
+  }
+
+  .title h1 {
+    font-size: clamp(32px, min(4.6vw, calc((100cqh - 72px) / 8.6)), 64px);
+  }
 }
 
 .side {
@@ -88,6 +98,25 @@
 }
 
 @media (max-width: 599px) {
+  .stage {
+    aspect-ratio: 4 / 3;
+  }
+
+  .copy {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "side"
+      "actions";
+    row-gap: var(--space-4);
+  }
+
+  .title h1 {
+    font-size: clamp(28px, 8vw, 36px);
+    letter-spacing: 0.08em;
+    line-height: 1.35;
+  }
+
   .actions {
     align-items: stretch;
   }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cx } from "../../cx";
 import { ExternalPhoto, StillLife } from "../StillLife/StillLife";
+import { SoftBreak } from "../Text/Text";
 import styles from "./DrinkShelf.module.css";
 
 export type DrinkShelfItem = {
@@ -62,7 +63,9 @@ export function DrinkShelf({ drinks, opening = false, defer = false }: DrinkShel
                     <span className={styles.no} aria-hidden="true">
                       {folio(index)}
                     </span>
-                    <span className={styles.name}>{drink.name}</span>
+                    <span className={styles.name}>
+                      <SoftBreak text={drink.name} />
+                    </span>
                     <span className={styles.size}>{drink.size}</span>
                   </span>
                   <span className={styles.go} aria-hidden="true">
@@ -82,7 +85,9 @@ export function DrinkShelf({ drinks, opening = false, defer = false }: DrinkShel
                     {folio(pictured.length + index)}
                   </span>
                   <span className={styles.plainCopy}>
-                    <span className={styles.name}>{drink.name}</span>
+                    <span className={styles.name}>
+                      <SoftBreak text={drink.name} />
+                    </span>
                     <span className={styles.size}>{drink.size}</span>
                   </span>
                 </Link>

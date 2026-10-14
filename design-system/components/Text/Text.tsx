@@ -3,6 +3,31 @@ import type { ReactNode } from "react";
 import { cx } from "../../cx";
 import styles from "./Text.module.css";
 
+const SOFT_BOUNDARY =
+  /(?<=[\u3040-\u30ff\u3400-\u9fff々ー])(?=[A-Za-z0-9])|(?<=[A-Za-z0-9])(?=[\u3040-\u30ff\u3400-\u9fff々ー])/u;
+
+/** Break opportunities at spaces and between Japanese and Latin. The words stay the same. */
+export function SoftBreak({ text }: { text: string }) {
+  const nodes: ReactNode[] = [];
+  text.split(/(\s+)/).forEach((token, index) => {
+    if (token.length === 0) {
+      return;
+    }
+    if (/^\s+$/.test(token)) {
+      nodes.push(token);
+      nodes.push(<wbr key={`space-${index}`} />);
+      return;
+    }
+    token.split(SOFT_BOUNDARY).forEach((bit, bitIndex) => {
+      if (bitIndex > 0) {
+        nodes.push(<wbr key={`break-${index}-${bitIndex}`} />);
+      }
+      nodes.push(bit);
+    });
+  });
+  return nodes;
+}
+
 export type TextVariant = "display" | "statement" | "headline" | "title" | "prose" | "lead" | "body" | "small" | "caption" | "mark";
 export type TextTone = "primary" | "secondary" | "muted" | "accent" | "inverse" | "inverseMuted";
 type TextTag = "h1" | "h2" | "h3" | "p" | "span" | "div";
@@ -74,7 +99,7 @@ export function DisplayLines({ as: Tag = "h1", id, variant = "display", lines }:
       {lines.map((line) => (
         <span key={line} className={styles.line}>
           <span className={styles.lineInner} data-line>
-            {line}
+            <SoftBreak text={line} />
           </span>
         </span>
       ))}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cx } from "../../cx";
 import { ExternalPhoto, StillLife } from "../StillLife/StillLife";
+import { SoftBreak } from "../Text/Text";
 import styles from "./DrinkShowcase.module.css";
 
 export type DrinkShowcaseItem = {
@@ -33,7 +34,9 @@ export function DrinkShowcase({ drinks, columns = 3, label }: DrinkShowcaseProps
             ) : null}
             <span className={cx(styles.copy, !drink.stillUrl && styles.plain)}>
               {drink.label ? <span className={styles.label}>{drink.label}</span> : null}
-              <span className={styles.name}>{drink.name}</span>
+              <span className={styles.name}>
+                <SoftBreak text={drink.name} />
+              </span>
               <span className={styles.size}>{drink.size}</span>
             </span>
           </Link>

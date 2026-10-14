@@ -21,7 +21,7 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
   color: var(--text-primary);
   text-decoration: none;
@@ -35,7 +35,7 @@
 
 .wordmark {
   display: block;
-  height: 22px;
+  height: 18px;
   width: auto;
 }
 
@@ -92,15 +92,43 @@
   color: var(--text-primary);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1080px) {
   .tagline {
     display: none;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 720px) {
+  .bar {
+    gap: var(--space-3);
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .emblem {
+    height: 36px;
+  }
+
+  .wordmark {
+    height: 16px;
+  }
+
+  .link {
+    padding-inline: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .link::after {
+    inset-inline: 12px calc(12px + 0.1em);
+  }
+}
+
+@media (max-width: 420px) {
   .bar {
     gap: var(--space-2);
+    width: min(var(--layout-wrap), 100% - 24px);
   }
 
   .brand {
@@ -112,42 +140,34 @@
   }
 
   .wordmark {
-    height: 16px;
+    height: 15px;
+  }
+
+  .link {
+    padding-inline: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .link::after {
+    inset-inline: 8px calc(8px + 0.04em);
+  }
+}
+
+@media (max-width: 340px) {
+  .emblem {
+    height: 28px;
+  }
+
+  .wordmark {
+    height: 13px;
   }
 
   .link {
     padding-inline: 6px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0;
   }
 
   .link::after {
-    inset-inline: 6px calc(6px + 0.08em);
-  }
-}
-
-@media (max-width: 380px) {
-  .bar {
-    gap: var(--space-1);
-  }
-
-  .brand {
-    gap: 4px;
-  }
-
-  .emblem {
-    height: 26px;
-  }
-
-  .wordmark {
-    height: 14px;
-  }
-
-  .link {
-    padding-inline: 4px;
-    letter-spacing: 0.02em;
-  }
-
-  .link::after {
-    inset-inline: 4px calc(4px + 0.02em);
+    inset-inline: 6px;
   }
 }

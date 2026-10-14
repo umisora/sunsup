@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { cx } from "../../cx";
 import { ExternalPhoto, StillLife } from "../StillLife/StillLife";
+import { SoftBreak } from "../Text/Text";
 import styles from "./MyTable.module.css";
 
 export type TableDrink = {
@@ -105,7 +106,9 @@ function Strip({ title, drinks, note }: { title: string; drinks: readonly TableD
                 </span>
               ) : null}
               <span className={styles.category}>{drink.category}</span>
-              <span className={styles.name}>{drink.name}</span>
+              <span className={styles.name}>
+                <SoftBreak text={drink.name} />
+              </span>
             </Link>
           </li>
         ))}

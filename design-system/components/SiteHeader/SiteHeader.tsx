@@ -25,8 +25,8 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.bar}>
         <Link href="/" className={styles.brand} aria-current={pathname === "/" ? "page" : undefined}>
-          <img className={styles.emblem} src="/brand/stylish-mark.webp" alt="" width={270} height={256} />
-          <img className={styles.wordmark} src="/brand/stylish-wordmark.webp" alt={SITE_NAME} width={293} height={50} />
+          <img className={styles.emblem} src="/brand/stylish-mark.svg" alt="" width={134} height={162} />
+          <img className={styles.wordmark} src="/brand/stylish-wordmark.svg" alt={SITE_NAME} width={566} height={90} />
           <span className={styles.tagline}>飲み会向けのノンアルコール</span>
         </Link>
         <nav className={styles.nav} aria-label="メニュー">
