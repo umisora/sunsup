@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE_NAME } from "../../brand";
 import type { CategoryLink } from "../CategoryNav/CategoryNav";
 import { Phrase } from "../Text/Text";
 import styles from "./SiteFooter.module.css";
@@ -33,7 +34,7 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
             </ul>
           </div>
           <div className={styles.column}>
-            <p className={styles.heading}>sunsup</p>
+            <p className={styles.heading}>{SITE_NAME}</p>
             <ul className={styles.links}>
               {NAV.map((item) => (
                 <li key={item.href}>
@@ -48,7 +49,7 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
       </div>
       <p className={styles.note}>紹介文の一部は企画のためのフィクションです。</p>
       <p className={styles.giant} aria-hidden="true">
-        sunsup
+        {SITE_NAME}
       </p>
     </footer>
   );

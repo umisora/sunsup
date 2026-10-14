@@ -1,6 +1,6 @@
-# sunsup design system
+# STYLISH! design system
 
-Daylight office table, modern editorial. Linen, window light, green glass, brass.
+Daylight office table, modern editorial. Linen, window light, logo blue.
 Everything lives in `design-system/`; pages only compose it and carry no CSS of their own.
 
 ```
@@ -28,10 +28,10 @@ design-system/
 
 | Group | Tokens | Notes |
 |---|---|---|
-| Palette (locked) | `--palette-paper` `#F3EBDD`, `--palette-linen` `#FFF8EE`, `--palette-brass` `#A57B32`, `--palette-glass` `#3F6B56`, `--palette-ink` `#2C281F` | Derived: `sand`, `mist`, `brass-deep`, `brass-soft`, `glass-deep`, `sage` |
+| Palette | `--palette-paper` `#F3EBDD`, `--palette-linen` `#FFF8EE`, `--palette-brass` `#57C1FF`, `--palette-glass` `#184474`, `--palette-ink` `#2C281F` | Paper and ink stay. Brass and glass follow the logo blue. Derived: `sand`, `mist`, `brass-deep`, `brass-soft`, `glass-deep`, `sage` |
 | Surface | `page` paper · `raised` linen · `frost` translucent linen + blur · `inverse` glass · `sunken` · `plinth` the white board under product stills · `band` deep glass | |
 | Text | `primary` `secondary` `muted` `accent` `accent-deep` `inverse` `inverse-muted` `link` | |
-| Action | `primary` glass · `primary-hover` · `accent` brass disc · `focus` brass | |
+| Action | `primary` glass · `primary-hover` · `accent` logo blue · `focus` deep blue | |
 | Type families | `--font-display` Shippori Mincho · `--font-text` Zen Kaku Gothic New · `--font-mark` Cormorant Garamond (italic for numerals) | self-hosted subsets in `fonts/` |
 | Type scale | `--step--2` 11 · `--step--1` 13 · `--step-small` 15 · `--step-0` 16 · `--step-1`…`--step-6` fluid · `--step-mark` | display = step-5, statement = step-6 |
 | Space | `--space-1`…`--space-8` (4 → 64px), `--space-9` fluid, `--space-section` fluid | |
@@ -61,7 +61,8 @@ design-system/
 | `Photo` | Still life image from the catalog (`components/StillLife/photos.ts`). | `name`, `sizes`, `priority` (one per page), `decorative`, `position`, `narrow` art-directed crop |
 | `ExternalPhoto` | Still life from a URL outside the catalog, for a drink's 静物URL. | `src`, `alt`, `priority` |
 | `StillLife` | Frame for a `Photo`. `fit="plinth"` stands a product still on the shared warm-white board (contain, multiply, soft floor). Every product still uses it. | `ratio` 16:9 · 4:3 · 4:5 · 3:4 · 1:1 · fill, `radius` none · sm · md · lg, `fit` cover · contain · plinth, `parallax`, `intro`, `hoverZoom`, `overlay` |
-| `HeroStage` | Home hero: vertical (縦書き) headline on the paper beside a large still life. | `media`, `aside`, `title`, `actions`, children |
+| `HeroStage` | Home hero: vertical (縦書き) headline on the paper beside the table. Two or three real stills from `public/drinks` arrive and line up, then the first two toast. Reduced motion shows the settled lineup. | `drinks`, `castKey`, `visitId`, `aside`, `title`, `actions`, children |
+| `VisitHero` | Home hero that paints a fixed visit story, then may swap the copy and stills for another story. | `initialId`, `aside`, `title`, `actions` |
 | `PageIntro` | Inner page top: steps, folio, eyebrow, masked title, lead. Split hero with `media`. `compact` drops padding so a following full-viewport stage stays in the first screen. | `step`, `folio`, `eyebrow`, `title`, `lead`, `sublead`, `media`, `compact` |
 | `SectionHead` | Eyebrow + section heading. `glyph` sets one large character beside it (the season). | `eyebrow`, `title`, `size`, `compact`, `glyph` |
 | `FeatureCard` | Whole-card link to the next step. | `href`, `media`, `folio`, `eyebrow`, `title`, `body`, `action` |
@@ -97,11 +98,13 @@ design-system/
 | `data-fill` | `FillText` | per-character ink, scrubbed | no (dimmed only) |
 | `data-parallax` | `StillLife parallax` | image drifts ±5%, scrubbed | no |
 | `data-drift` | `HeroStage` card | card drifts up as the hero leaves | no |
+| `data-arrive` | `TableArrival` | stills slide onto the table on load, then two toast and settle (~8s). Own timeline, not `playIntro` | off-table until it runs |
+| `data-arrive-floor` | `TableArrival` | contact shadow fades in as that still lands | yes (opacity) |
 | `data-peak-*` | `PeakStage` | pin + clip-path open (≥768px), scrub open (narrow) | no |
 
 ## Page recipes
 
-- `/`: `HeroStage` (tate) → `TableShelf` → seasonal `SectionHead glyph` + `DrinkShowcase` → the six entries in `DrinkShowcase` → `Section band` + `CategoryIndex` → `FillText` → `FeatureCard` → photo `Tile`s
+- `/`: `VisitHero` / `HeroStage` (tate, visit story, table arrival) → `TableShelf` → seasonal `SectionHead glyph` + `DrinkShowcase` → the six entries in `DrinkShowcase` → `Section band` + drink-list `Button` + `CategoryIndex` → `FillText` → `FeatureCard` → photo `Tile`s
 - `/ba/office`: `PageIntro` (media) → `Section` + `Grid aside` + `FillText prose` → `Grid thirds` of text `Tile`s → the six in `DrinkShowcase` → seasonal `DrinkShowcase` → `Section full` + `MediaPanel` with `JourneyCta to="drink"` and `ShareRow`
 - `/drink/shell`: `PageIntro` (`compact`) → `PeakStage` → `Grid split` (`StillLife` + `Grid halves` of `Tile`s) → `ClosingPanel` with back `JourneyCta` + `StoreSlot` (no rows)
 - `/drink/`: `PageIntro` (`compact`) → sticky `CategoryNav` → `TableShelf` → one `Section id` per category with `ShelfHead`. `DrinkShelf` puts each still beside its name and size, two columns once the shelf is wide, one when it is narrow. A drink without a still is a line only. Real stills are listed first

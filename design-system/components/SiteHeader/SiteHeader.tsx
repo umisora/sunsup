@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SITE_NAME } from "../../brand";
 import styles from "./SiteHeader.module.css";
 
 const NAV = [
@@ -24,7 +25,8 @@ export function SiteHeader() {
     <header className={styles.header}>
       <div className={styles.bar}>
         <Link href="/" className={styles.brand} aria-current={pathname === "/" ? "page" : undefined}>
-          <span className={styles.mark}>sunsup</span>
+          <img className={styles.emblem} src="/brand/stylish-mark.webp" alt="" width={270} height={256} />
+          <img className={styles.wordmark} src="/brand/stylish-wordmark.webp" alt={SITE_NAME} width={293} height={50} />
           <span className={styles.tagline}>飲み会向けのノンアルコール</span>
         </Link>
         <nav className={styles.nav} aria-label="メニュー">

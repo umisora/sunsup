@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import {
+  SITE_NAME,
   Button,
   CategoryIndex,
-  Chip,
   ChipList,
   DisplayLines,
   DrinkShowcase,
@@ -10,7 +10,6 @@ import {
   FeatureCard,
   FillText,
   Grid,
-  HeroStage,
   JourneyCta,
   Motion,
   Photo,
@@ -18,22 +17,25 @@ import {
   Section,
   SectionHead,
   Stack,
+  TABLE_CAST,
   TableShelf,
   Text,
+  VisitHero,
   Tile,
 } from "@/design-system";
-import { categorySummaries, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
+import { categorySummaries, getDrink, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
+import { DEFAULT_STORY_ID, STORIES, storyById, type Daypart, type Season } from "@/lib/visit";
 
 export const metadata: Metadata = {
-  title: { absolute: "sunsup" },
+  title: { absolute: SITE_NAME },
   openGraph: {
-    title: "sunsup｜飲み会向けのノンアルコール",
+    title: `${SITE_NAME}｜飲み会向けのノンアルコール`,
     description: "オフィスの飲み会に出すノンアルコール飲料を、場面・見た目・サイズ・味から選べます。",
     url: "/",
-    siteName: "sunsup",
+    siteName: SITE_NAME,
     locale: "ja_JP",
     type: "website",
-    images: [{ url: "/og/home.jpg", width: 1200, height: 630, alt: "sunsup 飲み会向けのノンアルコール" }],
+    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} 飲み会向けのノンアルコール` }],
   },
 };
 
@@ -44,34 +46,68 @@ const AXES = [
   { no: "04", title: "味", line: "果汁、炭酸、苦み", photo: "detail", position: "28% 62%" },
 ] as const;
 
+const SEASONS: readonly Season[] = ["spring", "summer", "autumn", "winter"];
+const DAYPARTS: readonly Daypart[] = ["morning", "afternoon", "evening"];
+
+function assertVisitCatalog(): void {
+  if (!storyById(DEFAULT_STORY_ID)) {
+    throw new Error("default visit story missing");
+  }
+  const seen = new Set<string>();
+  for (const item of STORIES) {
+    if (seen.has(item.id)) {
+      throw new Error(`duplicate visit story ${item.id}`);
+    }
+    seen.add(item.id);
+    if (item.slugs.length < 2 || item.slugs.length > 3) {
+      throw new Error(`${item.id} needs 2 or 3 drinks`);
+    }
+    if ([...item.kicker].length > 8 || [...item.lead[0]].length > 9 || [...item.lead[1]].length > 9) {
+      throw new Error(`${item.id} copy is too long`);
+    }
+    for (const slug of item.slugs) {
+      const drink = getDrink(slug);
+      const cast = TABLE_CAST[slug];
+      if (!drink || !cast) {
+        throw new Error(`visit drink missing: ${slug}`);
+      }
+      if (drink.stillUrl !== cast.src || drink.name !== cast.name) {
+        throw new Error(`visit still changed: ${slug}`);
+      }
+      if (!drink.stillUrl.startsWith("/drinks/") || drink.stillUrl.includes("fallback-")) {
+        throw new Error(`visit still invalid: ${slug}`);
+      }
+    }
+  }
+  for (const season of SEASONS) {
+    for (const daypart of DAYPARTS) {
+      const hit = STORIES.some((item) => item.season === season && item.daypart === daypart && !item.weather && !item.region);
+      if (!hit) {
+        throw new Error(`missing ${season} ${daypart} fallback`);
+      }
+    }
+  }
+}
+
+assertVisitCatalog();
+
 export default function HomePage() {
   const total = loadDrinks().length;
   const season = seasonalPicks(seasonOf(new Date()), 8);
 
   return (
     <Motion>
-      <HeroStage
+      <VisitHero
         labelledBy="home-title"
-        media={<Photo name="table" sizes="(min-width: 960px) 60vw, 100vw" priority />}
+        initialId={DEFAULT_STORY_ID}
         aside={<ChipList tone="frost" label="選び方" items={AXES.map((axis) => axis.title)} intro />}
         title={<DisplayLines id="home-title" variant="tate" lines={["飲み会向けの", "ノンアルコール飲料"]} />}
         actions={
-          <>
-            <JourneyCta to="ba" intro>
-              オフィスの飲み会を見る
-            </JourneyCta>
-            <Button variant="secondary" href="/drink/" intro>
-              {total}本のドリンク
-            </Button>
-          </>
+          <JourneyCta to="ba" intro>
+            オフィスの飲み会を見る
+          </JourneyCta>
         }
-      >
-        <Chip intro>ノンアルコール飲料</Chip>
-        <Text variant="lead" intro>
-          <Phrase>オフィスの飲み会に</Phrase>
-          <Phrase>何を出そう。</Phrase>
-        </Text>
-      </HeroStage>
+      />
 
       <TableShelf known={loadDrinks().map((drink) => drink.slug)} />
 
@@ -116,6 +152,9 @@ export default function HomePage() {
             <Text variant="body" tone="inverseMuted">
               全{total}本です。写真があるものから並んでいます。
             </Text>
+            <Button variant="inverse" href="/drink/">
+              {total}本のドリンク
+            </Button>
           </Stack>
           <CategoryIndex categories={categorySummaries()} />
         </Stack>

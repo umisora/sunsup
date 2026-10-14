@@ -1,6 +1,7 @@
 /*
-  sunsup design tokens.
-  Base palette is LOCKED (daylight office table). Everything else derives from it.
+  STYLISH! design tokens.
+  Paper, linen, and ink stay the daylight office table.
+  Accent and glass follow the logo blue.
   Components read semantic tokens (--surface-*, --text-*, --action-*), never raw hex.
 */
 
@@ -9,17 +10,17 @@
     /* palette — locked */
     --palette-paper: #f3ebdd;
     --palette-linen: #fff8ee;
-    --palette-brass: #a57b32;
-    --palette-glass: #3f6b56;
+    --palette-brass: #57c1ff;
+    --palette-glass: #184474;
     --palette-ink: #2c281f;
 
     /* palette — derived */
     --palette-sand: #e2d4c2;
     --palette-mist: #7a7368;
-    --palette-brass-deep: #8a6a38;
+    --palette-brass-deep: #184474;
     --palette-brass-soft: color-mix(in srgb, var(--palette-brass) 55%, var(--palette-linen));
     --palette-glass-deep: color-mix(in srgb, var(--palette-glass) 84%, var(--palette-ink));
-    --palette-sage: #e5f0ea;
+    --palette-sage: #e7f5fc;
 
     /* surfaces */
     --surface-page: var(--palette-paper);
@@ -36,7 +37,7 @@
     --text-primary: var(--palette-ink);
     --text-secondary: color-mix(in srgb, var(--palette-ink) 78%, var(--palette-mist));
     --text-muted: var(--palette-mist);
-    --text-accent: var(--palette-brass);
+    --text-accent: var(--palette-brass-deep);
     --text-accent-deep: var(--palette-brass-deep);
     --text-inverse: var(--palette-linen);
     --text-inverse-muted: color-mix(in srgb, var(--palette-linen) 82%, var(--palette-glass));
@@ -53,7 +54,7 @@
     --action-primary-hover: var(--palette-glass-deep);
     --action-accent: var(--palette-brass);
     --action-accent-hover: color-mix(in srgb, var(--palette-brass) 88%, var(--palette-linen));
-    --action-focus: var(--palette-brass);
+    --action-focus: var(--palette-brass-deep);
 
     /* type families (next/font variables are set on <html>) */
     --font-display: var(--font-shippori), "Hiragino Mincho ProN", "Yu Mincho", serif;

@@ -46,7 +46,11 @@ npm run preview
 ワークフローは [`.github/workflows/ci.yml`](.github/workflows/ci.yml)。
 
 - pull request と `main` への push で `npm ci` と `npm run build` を実行する。ビルドが失敗するとジョブも失敗する。
-- `main` への push で、下の secret が両方あるときだけ `out/` を `wrangler pages deploy --project-name=sunsup` で上げる。どちらかが無いときはデプロイをスキップし、ビルド結果はそのまま残る。
+- `main` への push で、下の secret が両方あるときだけ `out/` を `wrangler pages deploy --project-name=sunsup` で上げる。どちらかが無いときはデプロイをスキップし、ビルド結果はそのまま残る。同じジョブはリポジトリ直下の `functions/` も上げる。
+
+### 訪問ごとの卓
+
+トップの卓は、静的 HTML に秋の午後の初期表示を書いてある。`functions/api/visit.ts` は `request.cf` の地域・緯度・経度だけを読み、Open-Meteo で天気を見て物語の id を返す。Cookie は置かず、IP は読まない。ブラウザの位置情報ダイアログは出さない。地域か天気が取れないときは、季節と時間帯から選ぶ。
 - プロジェクト `sunsup` がまだ無いときは、同じ secret で Direct Upload 用に作成する。production branch は `main`。
 
 リポジトリの Settings → Secrets and variables → Actions に、次の名前で repository secret を作る。値はここに書かない。

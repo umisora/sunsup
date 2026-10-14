@@ -70,8 +70,25 @@ function parseCsv(text) {
 
 const home = read("index.html");
 read("ba/office/index.html");
-if (!home.includes("<title>sunsup</title>") || home.includes("drinkup") || home.includes("Drinkup")) {
-  fail("home no longer uses the sunsup name");
+if (!home.includes("<title>STYLISH!</title>") || home.includes("drinkup") || home.includes("Drinkup")) {
+  fail("home no longer uses the STYLISH! name");
+}
+const manifest = read("manifest.webmanifest");
+if (!manifest.includes('"name":"STYLISH!"') || !manifest.includes('"short_name":"STYLISH!"')) {
+  fail("manifest is missing the STYLISH! name");
+}
+for (const asset of [
+  "icon.png",
+  "icon-192.png",
+  "icon-512.png",
+  "brand/stylish-logo.webp",
+  "brand/stylish-mark.webp",
+  "brand/stylish-wordmark.webp",
+  "og/stylish.jpg",
+]) {
+  if (!existsSync(join("out", asset))) {
+    fail(`missing brand asset out/${asset}`);
+  }
 }
 read("about/index.html");
 const shell = read("drink/shell/index.html");
@@ -90,8 +107,8 @@ if (!cup || cup[1] !== "/drink/kimino-yuzu/") {
 if (office.includes('href="/drink/shell/"')) {
   fail("office links to the drink shell");
 }
-if (office.includes("drinkup") || office.includes("Drinkup") || !office.includes("sunsup")) {
-  fail("office no longer uses the sunsup name");
+if (office.includes("drinkup") || office.includes("Drinkup") || !office.includes("STYLISH!")) {
+  fail("office no longer uses the STYLISH! name");
 }
 
 const OFFICE_ENTRIES = [
@@ -140,7 +157,7 @@ function isRakutenProduct(url) {
 }
 
 function drinkTitle(drink) {
-  return `${drink["品名"]}｜${drink["カテゴリ"]}｜sunsup`;
+  return `${drink["品名"]}｜${drink["カテゴリ"]}｜STYLISH!`;
 }
 
 function drinkDescription(drink) {
@@ -354,7 +371,7 @@ for (const drink of publicDrinks) {
 }
 
 const list = read("drink/index.html");
-if (!list.includes("<title>ドリンク一覧｜sunsup</title>")) {
+if (!list.includes("<title>ドリンク一覧｜STYLISH!</title>")) {
   fail("drink list is missing its title");
 }
 for (const slug of slugs) {
@@ -373,7 +390,11 @@ if (list.includes("fallback-") || list.includes("drinkup") || list.includes("Dri
 if (!home.includes('href="/drink/"') || !office.includes('href="/drink/"')) {
   fail("home or office does not link to the drink list");
 }
-if (!(home.includes("624本") || home.includes("624<!-- -->本")) || home.includes("658")) {
+if (
+  !(home.includes("624本") || home.includes("624<!-- -->本")) ||
+  home.includes("658本") ||
+  home.includes("658<!-- -->本")
+) {
   fail("home count is not the public 624");
 }
 if (!list.includes("624本") || list.includes("658本")) {

@@ -16,5 +16,15 @@
     html.js [data-intro-media] {
       clip-path: inset(0% 0% 100% 0%);
     }
+
+    /* Hero stills wait off the table until GSAP sets them down. The anchor bottle is not marked. */
+    html.js [data-arrive] {
+      transform: translate3d(var(--from-x), var(--from-y), 0) rotate(var(--from-r));
+      will-change: transform;
+    }
+
+    html.js [data-arrive-floor] {
+      opacity: 0;
+    }
   }
 }

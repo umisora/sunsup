@@ -51,21 +51,15 @@
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-lg);
-}
-
-.stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, color-mix(in srgb, var(--palette-ink) 22%, transparent), transparent 30%);
-  pointer-events: none;
+  background: var(--palette-linen);
 }
 
 .aside {
   position: absolute;
-  inset-inline-end: clamp(16px, 2.4vw, 32px);
-  bottom: clamp(16px, 2.4vw, 32px);
-  z-index: 1;
+  inset-inline-end: clamp(12px, 2vw, 28px);
+  top: clamp(12px, 2vw, 28px);
+  z-index: 2;
+  max-width: min(240px, 72%);
 }
 
 @media (max-width: 959px) {
@@ -78,10 +72,6 @@
   .stage {
     order: -1;
     aspect-ratio: 5 / 4;
-  }
-
-  .stage img {
-    object-position: 40% 50%;
   }
 
   .copy {
