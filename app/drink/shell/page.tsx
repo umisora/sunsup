@@ -22,11 +22,11 @@ const AXES = [
   {
     no: "01",
     title: "場面",
-    lines: ["お酒を飲まない人も、仕事が残っている人もいる場です。", "家で味を確かめてから、当日のテーブルに出してください。"],
+    lines: ["お酒を飲まない人も、仕事が残っている人もいる場です。", "家で味を確かめてから、当日のテーブルに出せます。"],
   },
   { no: "02", title: "見た目", lines: ["緑のガラス瓶と小さめの缶なら、会議テーブルでも場違いに見えません。"] },
-  { no: "03", title: "サイズ", lines: ["ひとりで飲み切れる量です。", "缶は途中から来た人に、瓶は最初からいる人で分けてください。"] },
-  { no: "04", title: "味", lines: ["果汁と炭酸を冷やして出してください。", "甘いだけだと飽きるので、苦みのある一本も混ぜてください。"] },
+  { no: "03", title: "サイズ", lines: ["ひとりで飲み切れる量です。", "缶はひとりに一本渡し、瓶はテーブルで分けます。"] },
+  { no: "04", title: "味", lines: ["冷やした果汁と炭酸がおすすめです。", "甘いだけだと飽きるので、苦みのある一本も混ぜると安心です。"] },
 ] as const;
 
 export default function DrinkShellPage() {
@@ -45,7 +45,7 @@ export default function DrinkShellPage() {
       <PeakStage id="peak-title" folio="No. 02" media={<Photo name="peak-wide" narrow="peak" sizes="100vw" priority />}>
         次の飲み会に
         <br />
-        持っていってください。
+        持っていく一本です。
       </PeakStage>
 
       <Section label="選び方">
@@ -69,7 +69,7 @@ export default function DrinkShellPage() {
             <>
               <Phrase>次の飲み会に</Phrase>
               <br />
-              <Phrase>持っていってください。</Phrase>
+              <Phrase>持っていく一本です。</Phrase>
             </>
           }
           sub={

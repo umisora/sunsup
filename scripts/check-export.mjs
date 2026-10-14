@@ -323,7 +323,7 @@ for (const drink of publicDrinks) {
   } else if (primaryCount !== 0 && !official) {
     fail(`${drink.slug} renders a store CTA without a product link`);
   }
-  if (!html.includes("次の飲み会に") || !html.includes("持っていってください。")) {
+  if (!html.includes("次の飲み会に") || !html.includes("持っていく一本です。")) {
     fail(`${drink.slug} is missing the close line`);
   }
   if (!html.includes("/ 675") || html.includes("/ 709")) {
