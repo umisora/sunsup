@@ -104,7 +104,7 @@ type JourneyCtaProps = {
   children: ReactNode;
 };
 
-/** The only way pages link along 場 → 一杯. Forward is always the solid primary action. */
+/** The only way pages link along the office party and a drink. Forward is always the solid primary action. */
 export function JourneyCta({ to, direction = "forward", surface = "light", intro = false, children }: JourneyCtaProps) {
   const href = JOURNEY[to].href;
 

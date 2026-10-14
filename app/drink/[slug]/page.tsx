@@ -42,7 +42,7 @@ type DrinkPageProps = {
 };
 
 const AXES = [
-  { key: "place", no: "01", title: "場" },
+  { key: "place", no: "01", title: "場面" },
   { key: "look", no: "02", title: "見た目" },
   { key: "size", no: "03", title: "サイズ" },
   { key: "taste", no: "04", title: "味" },
@@ -106,7 +106,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
       <ProductHero
         id="drink-title"
         crumbs={[
-          { href: "/drink/", label: "一覧" },
+          { href: "/drink/", label: "ドリンク一覧" },
           { href: shelf, label: drink.category },
         ]}
         folio={folio}
@@ -118,14 +118,14 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         {rows.length > 0 ? <StoreSlot rows={rows} /> : null}
       </ProductHero>
 
-      <Section space="md" label="この一杯">
+      <Section space="md" label="このドリンク">
         <FactList
-          label="この一杯"
+          label="このドリンク"
           facts={AXES.map((axis) => ({ key: axis.key, no: axis.no, title: axis.title, body: drink[axis.key] }))}
         />
       </Section>
 
-      <Section space="md" label="この一杯のカード">
+      <Section space="md" label="このドリンクの紹介">
         <TableCard
           id="close-title"
           folio={folio}
@@ -139,12 +139,12 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
               </Button>
             ) : null
           }
-          share={<ShareRow tone="inverse" url={`${SITE_ORIGIN}/drink/${drink.slug}/`} text={`次の飲み会に、これを置く。${drink.name}`} />}
+          share={<ShareRow tone="inverse" url={`${SITE_ORIGIN}/drink/${drink.slug}/`} text={`次の飲み会に持っていくなら、${drink.name}`} />}
         />
       </Section>
 
       {neighbours ? (
-        <Section space="md" label="前後の一杯">
+        <Section space="md" label="前後のドリンク">
           <DrinkTrail label={`${drink.category}の前後`} previous={neighbours.previous} next={neighbours.next} />
         </Section>
       ) : null}
@@ -163,18 +163,18 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         </Section>
       ) : null}
 
-      <Section space="md" label="この一杯の場">
+      <Section space="md" label="オフィスの飲み会">
         <VenueLink
           href="/ba/office/"
           media={<Photo name="place" sizes="(min-width: 768px) 420px, 100vw" position="46% 50%" decorative />}
-          eyebrow="この一杯の場"
+          eyebrow="オフィスの飲み会"
           title={
             <>
               <Phrase>オフィスの</Phrase>
               <Phrase>オープンな飲み会</Phrase>
             </>
           }
-          body="デスクまわりが、そのまま飲み会の場になる。この場の6杯へ。"
+          body="デスクのまわりで開く飲み会です。おすすめの6本もこちらです。"
         />
       </Section>
 

@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     default: "sunsup",
     template: "%s｜sunsup",
   },
-  description: "飲み会でも、おしゃれに美味しく飲めるノンアルを集めています。",
+  description: "飲み会に持っていけるノンアルコール飲料を集めたサイトです。",
   twitter: { card: "summary_large_image" },
 };
 

@@ -15,18 +15,18 @@ import {
 } from "@/design-system";
 
 export const metadata: Metadata = {
-  title: "この場の一杯",
+  title: "この飲み会のドリンク",
 };
 
 const AXES = [
   {
     no: "01",
-    title: "場",
-    lines: ["デスクまわりが飲み会の場になる午後。IT企業の、誰でも寄れる飲み会。", "家で一度飲んでから、次の場へ。"],
+    title: "場面",
+    lines: ["IT企業の、誰でも参加できる午後の飲み会です。", "家で味を見てから、飲み会に持っていくこともできます。"],
   },
-  { no: "02", title: "見た目", lines: ["緑のガラス瓶。小さめの缶。午後のテーブルに馴染むラベル。"] },
-  { no: "03", title: "サイズ", lines: ["一人で飲み切れる量。小さめの缶。分けられる瓶。"] },
-  { no: "04", title: "味", lines: ["果実、炭酸、冷たいこと。", "乾杯の気泡は、炭酸の瓶で足りる。"] },
+  { no: "02", title: "見た目", lines: ["緑のガラス瓶や小さめの缶など、午後のテーブルに合うラベルです。"] },
+  { no: "03", title: "サイズ", lines: ["ひとりで飲み切れる量です。小さめの缶と、分けて飲める瓶があります。"] },
+  { no: "04", title: "味", lines: ["果汁、炭酸、冷やして出せるものが中心です。"] },
 ] as const;
 
 export default function DrinkShellPage() {
@@ -36,19 +36,19 @@ export default function DrinkShellPage() {
         id="shell-title"
         step="drink"
         compact
-        eyebrow="一杯"
-        title={["この場の一杯"]}
-        lead="午後のテーブルに置く、一本。"
-        sublead="ラベルより先に、置いたときの印象で選ぶ。"
+        eyebrow="ドリンク"
+        title={["この飲み会のドリンク"]}
+        lead="午後のテーブルに出す1本です。"
+        sublead="ラベルより、並べたときの印象で選んでいます。"
       />
 
       <PeakStage id="peak-title" folio="No. 02" media={<Photo name="peak-wide" narrow="peak" sizes="100vw" priority />}>
         次の飲み会に、
         <br />
-        これを置く。
+        持っていく。
       </PeakStage>
 
-      <Section label="この一杯の選び方">
+      <Section label="選び方">
         <Grid columns="split">
           <StillLife ratio="4:3" radius="md" parallax>
             <Photo name="office" sizes="(min-width: 960px) 520px, calc(100vw - 32px)" position="78% 50%" decorative />
@@ -64,23 +64,23 @@ export default function DrinkShellPage() {
       <Section labelledBy="close-title">
         <ClosingPanel
           id="close-title"
-          eyebrow="次の飲み会"
+          eyebrow="飲み会に持っていく"
           title={
             <>
-              <Phrase>「次はこれで」と</Phrase>
+              <Phrase>次の飲み会に</Phrase>
               <br />
-              <Phrase>言える一杯があればいい。</Phrase>
+              <Phrase>持っていく1本です。</Phrase>
             </>
           }
           sub={
             <>
               <Phrase>家で冷やしてから、</Phrase>
-              <Phrase>次のテーブルの真ん中へ。</Phrase>
+              <Phrase>テーブルに出します。</Phrase>
             </>
           }
           actions={
             <JourneyCta to="ba" direction="back" surface="inverse">
-              場へ戻る
+              飲み会に戻る
             </JourneyCta>
           }
         />

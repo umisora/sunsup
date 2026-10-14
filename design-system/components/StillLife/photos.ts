@@ -19,7 +19,7 @@ export const PHOTOS: Record<PhotoName, PhotoSpec> = {
     widths: [720, 1152],
     width: 1152,
     height: 864,
-    alt: "明るいオフィスの会議テーブルが、飲み会の場になっている。緑のガラス瓶が並ぶ。",
+    alt: "明るいオフィスの会議テーブル。飲み会用に、緑のガラス瓶が並ぶ。",
   },
   office: {
     widths: [768, 1280],

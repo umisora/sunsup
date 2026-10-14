@@ -4,9 +4,9 @@ import { Phrase } from "../Text/Text";
 import styles from "./SiteFooter.module.css";
 
 const NAV = [
-  { href: "/ba/office/", label: "場" },
-  { href: "/drink/", label: "一覧" },
-  { href: "/about/", label: "運営" },
+  { href: "/ba/office/", label: "飲み会" },
+  { href: "/drink/", label: "ドリンク" },
+  { href: "/about/", label: "案内" },
 ] as const;
 
 export function SiteFooter({ categories }: { categories: readonly CategoryLink[] }) {
@@ -14,9 +14,9 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <p className={styles.oneliner}>
-          <Phrase>飲み会でも、</Phrase>
-          <Phrase>おしゃれに美味しく飲める</Phrase>
-          <Phrase>ノンアルを集めています。</Phrase>
+          <Phrase>飲み会に持っていける</Phrase>
+          <Phrase>ノンアルコール飲料を</Phrase>
+          <Phrase>集めています。</Phrase>
         </p>
         <nav className={styles.columns} aria-label="フッター">
           <div className={styles.column}>
@@ -46,7 +46,7 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
           </div>
         </nav>
       </div>
-      <p className={styles.note}>掲載内容には、企画用のフィクションがあります。</p>
+      <p className={styles.note}>紹介文の一部はフィクションです。</p>
       <p className={styles.giant} aria-hidden="true">
         sunsup
       </p>

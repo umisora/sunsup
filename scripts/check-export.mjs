@@ -83,9 +83,9 @@ if (shell.includes("amazon.co.jp") || shell.includes("rakuten.co.jp") || shell.i
 if (shell.includes("KIMINO") || shell.includes("クラノオト")) {
   fail("shell includes a product name");
 }
-const cup = office.match(/<a\b[^>]*href="([^"]*)"[^>]*>\s*<span>一杯へ<\/span>/);
+const cup = office.match(/<a\b[^>]*href="([^"]*)"[^>]*>\s*<span>ドリンクを見る<\/span>/);
 if (!cup || cup[1] !== "/drink/kimino-yuzu/") {
-  fail(`office 一杯へ links to ${cup ? cup[1] : "nothing"}`);
+  fail(`office ドリンクを見る links to ${cup ? cup[1] : "nothing"}`);
 }
 if (office.includes('href="/drink/shell/"')) {
   fail("office links to the drink shell");
@@ -306,7 +306,7 @@ for (const drink of publicDrinks) {
   } else if (primaryCount !== 0 && !official) {
     fail(`${drink.slug} renders a store CTA without a product link`);
   }
-  if (!html.includes("次の飲み会に、") || !html.includes("これを置く。")) {
+  if (!html.includes("次の飲み会に、") || !html.includes("持っていく。")) {
     fail(`${drink.slug} is missing the close line`);
   }
   if (!html.includes("/ 624") || html.includes("/ 658")) {
@@ -354,7 +354,7 @@ for (const drink of publicDrinks) {
 }
 
 const list = read("drink/index.html");
-if (!list.includes("<title>一杯の一覧｜sunsup</title>")) {
+if (!list.includes("<title>ドリンク一覧｜sunsup</title>")) {
   fail("drink list is missing its title");
 }
 for (const slug of slugs) {
