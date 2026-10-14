@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
-import { SiteFooter, SiteHeader, SkipLink } from "@/design-system";
+import { SITE_NAME, SiteFooter, SiteHeader, SkipLink } from "@/design-system";
 import { categorySummaries } from "@/lib/drinks";
 import "@/design-system/styles/index.css";
 
@@ -34,8 +34,14 @@ const zen = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunsup-dv4.pages.dev"),
   title: {
-    default: "sunsup",
-    template: "%s｜sunsup",
+    default: SITE_NAME,
+    template: `%s｜${SITE_NAME}`,
+  },
+  applicationName: SITE_NAME,
+  openGraph: {
+    siteName: SITE_NAME,
+    locale: "ja_JP",
+    type: "website",
   },
   description: "飲み会に持っていけるノンアルコール飲料を集めたサイトです。",
   twitter: { card: "summary_large_image" },

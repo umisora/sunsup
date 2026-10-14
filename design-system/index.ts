@@ -1,3 +1,4 @@
+export { SITE_NAME } from "./brand";
 export { Button, JourneyCta, type ButtonVariant } from "./components/Button/Button";
 export { CategoryIndex, CategoryNav, ShelfHead, type CategoryLink } from "./components/CategoryNav/CategoryNav";
 export { Chip, ChipList } from "./components/Chip/Chip";
@@ -14,6 +15,7 @@ export { FeatureCard } from "./components/FeatureCard/FeatureCard";
 export { HeroStage, type HeroTableDrink } from "./components/HeroStage/HeroStage";
 export { TABLE_CAST } from "./components/TableArrival/cast";
 export { VisitHero } from "./components/VisitHero/VisitHero";
+export { LogoTitle } from "./components/Logo/Logo";
 export { InfoRow } from "./components/InfoRow/InfoRow";
 export { JourneySteps } from "./components/JourneySteps/JourneySteps";
 export { Container, Grid, Section, Stack } from "./components/Layout/Layout";

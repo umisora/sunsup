@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import {
+  SITE_NAME,
   Button,
   CategoryIndex,
   ChipList,
@@ -26,15 +27,15 @@ import { categorySummaries, getDrink, loadDrinks, officeEntries, seasonalPicks, 
 import { DEFAULT_STORY_ID, STORIES, storyById, type Daypart, type Season } from "@/lib/visit";
 
 export const metadata: Metadata = {
-  title: { absolute: "sunsup" },
+  title: { absolute: SITE_NAME },
   openGraph: {
-    title: "sunsup｜飲み会向けのノンアルコール",
+    title: `${SITE_NAME}｜飲み会向けのノンアルコール`,
     description: "オフィスの飲み会に出すノンアルコール飲料を、場面・見た目・サイズ・味から選べます。",
     url: "/",
-    siteName: "sunsup",
+    siteName: SITE_NAME,
     locale: "ja_JP",
     type: "website",
-    images: [{ url: "/og/home.jpg", width: 1200, height: 630, alt: "sunsup 飲み会向けのノンアルコール" }],
+    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} 飲み会向けのノンアルコール` }],
   },
 };
 

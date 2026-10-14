@@ -13,6 +13,7 @@ import {
   Section,
   SectionHead,
   ShareRow,
+  SITE_NAME,
   Stack,
   Text,
   TextLink,
@@ -24,13 +25,13 @@ export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
   description: "デスクのまわりで気軽に集まる、誰でも参加できる飲み会です。出すノンアルコール飲料を紹介しています。",
   openGraph: {
-    title: "オフィスのオープンな飲み会｜sunsup",
+    title: `オフィスのオープンな飲み会｜${SITE_NAME}`,
     description: "デスクのまわりで気軽に集まる、誰でも参加できる飲み会です。出すノンアルコール飲料を紹介しています。",
     url: "/ba/office/",
-    siteName: "sunsup",
+    siteName: SITE_NAME,
     locale: "ja_JP",
     type: "article",
-    images: [{ url: "/og/office.jpg", width: 1200, height: 630, alt: "sunsup オフィスのオープンな飲み会" }],
+    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} オフィスのオープンな飲み会` }],
   },
 };
 
@@ -127,7 +128,7 @@ export default function OfficePage() {
               ドリンクを選ぶ。
             </Text>
             <JourneyCta to="drink">ドリンクを見る</JourneyCta>
-            <ShareRow url={`${SITE_ORIGIN}/ba/office/`} text="オフィスの飲み会向けノンアルコール飲料です。sunsup" />
+            <ShareRow url={`${SITE_ORIGIN}/ba/office/`} text={`オフィスの飲み会向けノンアルコール飲料です。${SITE_NAME}`} />
           </Stack>
         </MediaPanel>
       </Section>

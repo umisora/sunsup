@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { DisplayLines, Eyebrow, Grid, InfoRow, Motion, Photo, Section, Stack, StillLife, Text, TextLink } from "@/design-system";
+import { Eyebrow, Grid, InfoRow, LogoTitle, Motion, Photo, Section, SITE_NAME, Stack, StillLife, Text, TextLink } from "@/design-system";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
   openGraph: {
-    title: "このサイトについて｜sunsup",
+    title: `このサイトについて｜${SITE_NAME}`,
     description: "オフィスの飲み会に出すノンアルコール飲料を、場面・見た目・サイズ・味から選べるサイトです。",
     url: "/about/",
-    siteName: "sunsup",
+    siteName: SITE_NAME,
     locale: "ja_JP",
     type: "website",
-    images: [{ url: "/og/about.jpg", width: 1200, height: 630, alt: "sunsup このサイトについて" }],
+    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} このサイトについて` }],
   },
 };
 
@@ -21,7 +21,7 @@ export default function AboutPage() {
         <Grid columns="splitWide" align="center">
           <Stack gap={5}>
             <Eyebrow intro>このサイトについて</Eyebrow>
-            <DisplayLines id="about-title" variant="mark" lines={["sunsup"]} />
+            <LogoTitle id="about-title" />
             <Text variant="lead" intro>
               オフィスの飲み会に出すノンアルコール飲料を、場面・見た目・サイズ・味から選べるサイトです。
             </Text>

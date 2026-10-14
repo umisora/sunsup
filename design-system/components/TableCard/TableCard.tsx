@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SITE_NAME } from "../../brand";
 import { Phrase } from "../Text/Text";
 import styles from "./TableCard.module.css";
 
@@ -21,7 +22,7 @@ export function TableCard({ id, folio, category, name, media, actions, share }: 
       {media ? <div className={styles.media}>{media}</div> : null}
       <div className={styles.body}>
         <p className={styles.brand}>
-          <span className={styles.mark}>sunsup</span>
+          <span className={styles.mark}>{SITE_NAME}</span>
           <span className={styles.folio}>{folio}</span>
         </p>
         <div className={styles.copy}>

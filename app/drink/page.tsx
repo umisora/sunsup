@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead, TableShelf } from "@/design-system";
+import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead, SITE_NAME, TableShelf } from "@/design-system";
 import { drinkGroups } from "@/lib/drinks";
 
 export const metadata: Metadata = {
@@ -7,13 +7,13 @@ export const metadata: Metadata = {
   description: "オフィスの飲み会に出すノンアルコール飲料を、カテゴリから探せます。",
   alternates: { canonical: "/drink/" },
   openGraph: {
-    title: "ドリンク一覧｜sunsup",
+    title: `ドリンク一覧｜${SITE_NAME}`,
     description: "オフィスの飲み会に出すノンアルコール飲料を、カテゴリから探せます。",
     url: "/drink/",
-    siteName: "sunsup",
+    siteName: SITE_NAME,
     locale: "ja_JP",
     type: "website",
-    images: [{ url: "/og/drink.jpg", width: 1200, height: 630, alt: "sunsup ドリンク一覧" }],
+    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} ドリンク一覧` }],
   },
 };
 

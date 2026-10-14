@@ -1,6 +1,6 @@
-# sunsup design system
+# STYLISH! design system
 
-Daylight office table, modern editorial. Linen, window light, green glass, brass.
+Daylight office table, modern editorial. Linen, window light, logo blue.
 Everything lives in `design-system/`; pages only compose it and carry no CSS of their own.
 
 ```
@@ -28,10 +28,10 @@ design-system/
 
 | Group | Tokens | Notes |
 |---|---|---|
-| Palette (locked) | `--palette-paper` `#F3EBDD`, `--palette-linen` `#FFF8EE`, `--palette-brass` `#A57B32`, `--palette-glass` `#3F6B56`, `--palette-ink` `#2C281F` | Derived: `sand`, `mist`, `brass-deep`, `brass-soft`, `glass-deep`, `sage` |
+| Palette | `--palette-paper` `#F3EBDD`, `--palette-linen` `#FFF8EE`, `--palette-brass` `#57C1FF`, `--palette-glass` `#184474`, `--palette-ink` `#2C281F` | Paper and ink stay. Brass and glass follow the logo blue. Derived: `sand`, `mist`, `brass-deep`, `brass-soft`, `glass-deep`, `sage` |
 | Surface | `page` paper · `raised` linen · `frost` translucent linen + blur · `inverse` glass · `sunken` · `plinth` the white board under product stills · `band` deep glass | |
 | Text | `primary` `secondary` `muted` `accent` `accent-deep` `inverse` `inverse-muted` `link` | |
-| Action | `primary` glass · `primary-hover` · `accent` brass disc · `focus` brass | |
+| Action | `primary` glass · `primary-hover` · `accent` logo blue · `focus` deep blue | |
 | Type families | `--font-display` Shippori Mincho · `--font-text` Zen Kaku Gothic New · `--font-mark` Cormorant Garamond (italic for numerals) | self-hosted subsets in `fonts/` |
 | Type scale | `--step--2` 11 · `--step--1` 13 · `--step-small` 15 · `--step-0` 16 · `--step-1`…`--step-6` fluid · `--step-mark` | display = step-5, statement = step-6 |
 | Space | `--space-1`…`--space-8` (4 → 64px), `--space-9` fluid, `--space-section` fluid | |

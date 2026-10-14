@@ -94,7 +94,7 @@
   margin-bottom: -0.22em;
   color: color-mix(in srgb, var(--palette-linen) 12%, var(--surface-band));
   font-family: var(--font-mark);
-  font-size: clamp(96px, 24vw, 380px);
+  font-size: clamp(64px, 16vw, 280px);
   font-weight: 500;
   line-height: 0.9;
   letter-spacing: 0.08em;
