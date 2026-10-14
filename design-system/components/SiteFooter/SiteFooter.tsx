@@ -46,7 +46,7 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
           </div>
         </nav>
       </div>
-      <p className={styles.note}>紹介文の一部はフィクションです。</p>
+      <p className={styles.note}>紹介文の一部は企画のためのフィクションです。</p>
       <p className={styles.giant} aria-hidden="true">
         sunsup
       </p>

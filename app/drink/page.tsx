@@ -29,8 +29,8 @@ export default function DrinkIndexPage() {
         compact
         eyebrow="ドリンク"
         title={["ドリンク一覧"]}
-        lead="カテゴリ別に、ノンアルコール飲料を探せます。"
-        sublead={`全${total}本、6つのカテゴリです。`}
+        lead="カテゴリ別にノンアルコール飲料を探せます。"
+        sublead={`全${total}本を6つのカテゴリに分けています。`}
       />
       <CategoryNav categories={categories} total={total} />
       <TableShelf known={groups.flatMap((group) => group.drinks.map((drink) => drink.slug))} />
