@@ -21,7 +21,7 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
   color: var(--text-primary);
   text-decoration: none;
@@ -35,7 +35,7 @@
 
 .wordmark {
   display: block;
-  height: 22px;
+  height: 18px;
   width: auto;
 }
 
@@ -112,7 +112,7 @@
   }
 
   .wordmark {
-    height: 20px;
+    height: 16px;
   }
 
   .link {
@@ -140,7 +140,7 @@
   }
 
   .wordmark {
-    height: 18px;
+    height: 15px;
   }
 
   .link {
@@ -155,11 +155,11 @@
 
 @media (max-width: 340px) {
   .emblem {
-    height: 30px;
+    height: 28px;
   }
 
   .wordmark {
-    height: 16px;
+    height: 13px;
   }
 
   .link {

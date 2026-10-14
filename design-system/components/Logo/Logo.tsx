@@ -5,7 +5,7 @@ import styles from "./Logo.module.css";
 export function LogoTitle({ id }: { id: string }) {
   return (
     <h1 id={id} className={styles.title}>
-      <img className={styles.lockup} src="/brand/stylish-logo.webp" alt={SITE_NAME} width={500} height={500} />
+      <img className={styles.lockup} src="/brand/stylish-logo.svg" alt={SITE_NAME} width={350} height={332} />
     </h1>
   );
 }
