@@ -30,7 +30,7 @@ export function ShareRow({ url, text, tone = "light" }: ShareRowProps) {
 
   return (
     <div className={cx(styles.row, tone === "inverse" && styles.inverse)}>
-      <p className={styles.label}>送る</p>
+      <p className={styles.label}>共有</p>
       <ul className={styles.list}>
         <li>
           <a href={line} className={styles.pill} target="_blank" rel="noreferrer">

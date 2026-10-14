@@ -34,7 +34,7 @@ export function StoreSlot({ rows }: StoreSlotProps = {}) {
       return null;
     }
     return (
-      <section id="store-row" className={styles.slot} aria-label="買う">
+      <section id="store-row" className={styles.slot} aria-label="購入先">
         <p className={styles.label}>購入先</p>
         <Button variant="primary" size="lg" icon="external" stretch href={primary.href} storePrimary>
           {storeAction(primary)}
@@ -59,7 +59,7 @@ export function StoreSlot({ rows }: StoreSlotProps = {}) {
   }
 
   return (
-    <section id="store-row" className={styles.slot} hidden aria-label="買う">
+    <section id="store-row" className={styles.slot} hidden aria-label="購入先">
       <dl className={styles.list}>
         {PLACEHOLDER.map((row) => (
           <div key={row.role} className={styles.row} data-role={row.role}>

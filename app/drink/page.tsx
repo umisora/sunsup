@@ -3,17 +3,17 @@ import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead,
 import { drinkGroups } from "@/lib/drinks";
 
 export const metadata: Metadata = {
-  title: "一杯の一覧",
-  description: "オフィスのテーブルに置くノンアルを、カテゴリから探せます。場で紹介した6杯の先に、残りがあります。",
+  title: "ドリンク一覧",
+  description: "オフィスの飲み会に出すノンアルコール飲料を、カテゴリから探せます。",
   alternates: { canonical: "/drink/" },
   openGraph: {
-    title: "一杯の一覧｜sunsup",
-    description: "オフィスのテーブルに置くノンアルを、カテゴリから探せます。場で紹介した6杯の先に、残りがあります。",
+    title: "ドリンク一覧｜sunsup",
+    description: "オフィスの飲み会に出すノンアルコール飲料を、カテゴリから探せます。",
     url: "/drink/",
     siteName: "sunsup",
     locale: "ja_JP",
     type: "website",
-    images: [{ url: "/og/drink.jpg", width: 1200, height: 630, alt: "sunsup 一杯の一覧" }],
+    images: [{ url: "/og/drink.jpg", width: 1200, height: 630, alt: "sunsup ドリンク一覧" }],
   },
 };
 
@@ -27,10 +27,10 @@ export default function DrinkIndexPage() {
       <PageIntro
         id="list-title"
         compact
-        eyebrow="一覧"
-        title={["一杯の一覧"]}
-        lead="場では6杯だけ紹介しています。同じカテゴリの残りは、ここから開けます。"
-        sublead={`全${total}本、6つのカテゴリ`}
+        eyebrow="ドリンク"
+        title={["ドリンク一覧"]}
+        lead="カテゴリ別に、ノンアルコール飲料を探せます。"
+        sublead={`全${total}本、6つのカテゴリです。`}
       />
       <CategoryNav categories={categories} total={total} />
       <TableShelf known={groups.flatMap((group) => group.drinks.map((drink) => drink.slug))} />

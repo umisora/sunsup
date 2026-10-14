@@ -51,7 +51,7 @@ function useStored(key: string): TableDrink[] {
   return drinks;
 }
 
-/** Put this drink on わたしの卓, kept in this browser only. Also notes the visit for 最近見た一杯. */
+/** Save this drink in this browser only. Also notes the visit for 最近見たドリンク. */
 export function TableToggle({ drink }: { drink: TableDrink }) {
   const saved = useStored(SAVED);
   const on = saved.some((item) => item.slug === drink.slug);
@@ -80,7 +80,7 @@ export function TableToggle({ drink }: { drink: TableDrink }) {
           )}
         </svg>
       </span>
-      {on ? "わたしの卓にある" : "わたしの卓に置く"}
+      {on ? "お気に入り済み" : "お気に入りに追加"}
     </button>
   );
 }
@@ -114,7 +114,7 @@ function Strip({ title, drinks, note }: { title: string; drinks: readonly TableD
   );
 }
 
-/** わたしの卓 and 最近見た一杯, from this browser. Renders nothing for a first visit. */
+/** お気に入り and 最近見たドリンク, from this browser. Renders nothing for a first visit. */
 export function TableShelf({ exclude, known }: { exclude?: string; known?: readonly string[] }) {
   const allowed = known ? new Set(known) : null;
   const visible = (item: TableDrink) => !allowed || allowed.has(item.slug);
@@ -125,8 +125,8 @@ export function TableShelf({ exclude, known }: { exclude?: string; known?: reado
   }
   return (
     <div className={styles.shelf}>
-      {saved.length > 0 ? <Strip title="わたしの卓" drinks={saved} note="次の飲み会の候補。このブラウザにだけ残る。" /> : null}
-      {recent.length > 0 ? <Strip title="最近見た一杯" drinks={recent} /> : null}
+      {saved.length > 0 ? <Strip title="お気に入り" drinks={saved} note="このブラウザにだけ保存されます。" /> : null}
+      {recent.length > 0 ? <Strip title="最近見たドリンク" drinks={recent} /> : null}
     </div>
   );
 }

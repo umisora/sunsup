@@ -22,7 +22,7 @@ function Step({ drink, direction }: { drink: TrailDrink; direction: "previous" |
           <span className={styles.arrow} aria-hidden="true">
             <ArrowGlyph />
           </span>
-          {direction === "next" ? "次の一杯" : "前の一杯"}
+          {direction === "next" ? "次のドリンク" : "前のドリンク"}
         </span>
         <span className={styles.name}>{drink.name}</span>
       </span>

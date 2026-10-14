@@ -27,21 +27,21 @@ import { categorySummaries, loadDrinks, officeEntries, seasonalPicks, seasonOf }
 export const metadata: Metadata = {
   title: { absolute: "sunsup" },
   openGraph: {
-    title: "sunsup｜飲み会でも、おしゃれに美味しく。",
-    description: "次のオフィス飲み会、何を出そう。おしゃれに美味しく飲めるノンアルを、場・見た目・サイズ・味から選べます。",
+    title: "sunsup｜飲み会向けのノンアルコール",
+    description: "オフィスの飲み会に出すノンアルコール飲料を、場面・見た目・サイズ・味から選べます。",
     url: "/",
     siteName: "sunsup",
     locale: "ja_JP",
     type: "website",
-    images: [{ url: "/og/home.jpg", width: 1200, height: 630, alt: "sunsup 飲み会でも、おしゃれに美味しく。" }],
+    images: [{ url: "/og/home.jpg", width: 1200, height: 630, alt: "sunsup 飲み会向けのノンアルコール" }],
   },
 };
 
 const AXES = [
-  { no: "01", title: "場", line: "次のオフィス飲み会。", photo: "place", position: "46% 50%" },
-  { no: "02", title: "見た目", line: "テーブルに置いて、場に合うか。", photo: "peak", position: "38% 50%" },
-  { no: "03", title: "サイズ", line: "一人で飲み切れる量。", photo: "office", position: "80% 50%" },
-  { no: "04", title: "味", line: "果実、炭酸、苦み。", photo: "detail", position: "28% 62%" },
+  { no: "01", title: "場面", line: "オフィスの飲み会向け。", photo: "place", position: "46% 50%" },
+  { no: "02", title: "見た目", line: "テーブルに並べた印象。", photo: "peak", position: "38% 50%" },
+  { no: "03", title: "サイズ", line: "ひとりで飲み切れる量。", photo: "office", position: "80% 50%" },
+  { no: "04", title: "味", line: "果汁、炭酸、苦み。", photo: "detail", position: "28% 62%" },
 ] as const;
 
 export default function HomePage() {
@@ -53,30 +53,30 @@ export default function HomePage() {
       <HeroStage
         labelledBy="home-title"
         media={<Photo name="table" sizes="(min-width: 960px) 60vw, 100vw" priority />}
-        aside={<ChipList tone="frost" label="選ぶときの軸" items={AXES.map((axis) => axis.title)} intro />}
-        title={<DisplayLines id="home-title" variant="tate" lines={["飲み会でも、", "おしゃれに美味しく。"]} />}
+        aside={<ChipList tone="frost" label="選び方" items={AXES.map((axis) => axis.title)} intro />}
+        title={<DisplayLines id="home-title" variant="tate" lines={["飲み会向けの", "ノンアルコール。"]} />}
         actions={
           <>
             <JourneyCta to="ba" intro>
-              オフィスの場を見る
+              オフィスの飲み会を見る
             </JourneyCta>
             <Button variant="secondary" href="/drink/" intro>
-              {total}本の一覧
+              {total}本のドリンク
             </Button>
           </>
         }
       >
-        <Chip intro>ノンアルの案内</Chip>
+        <Chip intro>ノンアルコール飲料</Chip>
         <Text variant="lead" intro>
-          <Phrase>次のオフィス飲み会、</Phrase>
-          <Phrase>何を出そう。</Phrase>
+          <Phrase>オフィスの飲み会に、</Phrase>
+          <Phrase>何を出しますか。</Phrase>
         </Text>
       </HeroStage>
 
       <TableShelf known={loadDrinks().map((drink) => drink.slug)} />
 
       <Section space="lg" labelledBy="season-title">
-        <SectionHead id="season-title" eyebrow="季節の卓" glyph={season.label.charAt(0)} title={<Phrase>{season.label}</Phrase>}>
+        <SectionHead id="season-title" eyebrow="季節のおすすめ" glyph={season.label.charAt(0)} title={<Phrase>{season.label}</Phrase>}>
           <Text variant="lead" tone="secondary">
             {season.line}
           </Text>
@@ -91,16 +91,16 @@ export default function HomePage() {
       <Section space="lg" labelledBy="picks-title">
         <SectionHead
           id="picks-title"
-          eyebrow="場の6杯"
+          eyebrow="おすすめ"
           title={
             <>
               <Phrase>カテゴリごとに、</Phrase>
-              <Phrase>まず一杯。</Phrase>
+              <Phrase>まず1本。</Phrase>
             </>
           }
         />
         <DrinkShowcase
-          label="場の6杯"
+          label="おすすめ6本"
           drinks={officeEntries().map((drink) => ({ ...drink, label: drink.category }))}
         />
       </Section>
@@ -108,13 +108,13 @@ export default function HomePage() {
       <Section band space="md" labelledBy="shelves-title">
         <Stack gap={7} align="stretch">
           <Stack gap={4}>
-            <Eyebrow tone="inverse">一覧</Eyebrow>
+            <Eyebrow tone="inverse">ドリンク</Eyebrow>
             <Text as="h2" id="shelves-title" variant="headline">
-              <Phrase>6つのカテゴリから、</Phrase>
-              <Phrase>次の一杯を。</Phrase>
+              <Phrase>6つのカテゴリから</Phrase>
+              <Phrase>選べます。</Phrase>
             </Text>
             <Text variant="body" tone="inverseMuted">
-              全{total}本。写真のある一杯から並んでいます。
+              全{total}本です。
             </Text>
           </Stack>
           <CategoryIndex categories={categorySummaries()} />
@@ -123,35 +123,35 @@ export default function HomePage() {
 
       <Section labelledBy="entry-title">
         <Stack gap={5}>
-          <Eyebrow>まず場から</Eyebrow>
-          <FillText as="h2" id="entry-title" lines={["場が決まると、", "一杯も決まる。", "次の飲み会に何を置くか。"]} />
+          <Eyebrow>オフィスの飲み会</Eyebrow>
+          <FillText as="h2" id="entry-title" lines={["オフィスの飲み会に", "出すドリンクは、", "ここで選べます。"]} />
         </Stack>
       </Section>
 
-      <Section space="md" label="最初の場">
+      <Section space="md" label="オフィスの飲み会">
         <FeatureCard
           href="/ba/office/"
           media={<Photo name="place" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />}
           folio="No. 01"
-          eyebrow="場"
+          eyebrow="飲み会"
           title={
             <>
               <Phrase>オフィスの</Phrase>
               <Phrase>オープンな飲み会</Phrase>
             </>
           }
-          body="デスクまわりが、そのまま飲み会の場になる。窓のあるIT企業。"
-          action="この場を見る"
+          body="窓のあるオフィスで、デスクのまわりに集まる飲み会です。"
+          action="詳しく見る"
         />
       </Section>
 
       <Section labelledBy="choose-title">
         <SectionHead
           id="choose-title"
-          eyebrow="選ぶとき"
+          eyebrow="選び方"
           title={
             <>
-              <Phrase>場、見た目、</Phrase>
+              <Phrase>場面、見た目、</Phrase>
               <Phrase>サイズ、味。</Phrase>
             </>
           }

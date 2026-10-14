@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import styles from "./SiteHeader.module.css";
 
 const NAV = [
-  { href: "/ba/office/", label: "場" },
-  { href: "/drink/", label: "一覧" },
-  { href: "/about/", label: "運営" },
+  { href: "/ba/office/", label: "飲み会" },
+  { href: "/drink/", label: "ドリンク" },
+  { href: "/about/", label: "案内" },
 ] as const;
 
 function normalize(path: string): string {
@@ -25,7 +25,7 @@ export function SiteHeader() {
       <div className={styles.bar}>
         <Link href="/" className={styles.brand} aria-current={pathname === "/" ? "page" : undefined}>
           <span className={styles.mark}>sunsup</span>
-          <span className={styles.tagline}>おしゃれに美味しく飲めるノンアル</span>
+          <span className={styles.tagline}>飲み会向けのノンアルコール</span>
         </Link>
         <nav className={styles.nav} aria-label="メニュー">
           {NAV.map((item) => (
