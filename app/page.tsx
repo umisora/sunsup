@@ -124,7 +124,7 @@ export default function HomePage() {
       <Section labelledBy="entry-title">
         <Stack gap={5}>
           <Eyebrow>オフィスの飲み会</Eyebrow>
-          <FillText as="h2" id="entry-title" lines={["オフィスの飲み会に", "出すドリンクは、", "ここで選べます。"]} />
+          <FillText as="h2" id="entry-title" lines={["オフィスの飲み会に", "出すドリンクは", "ここで選べます。"]} />
         </Stack>
       </Section>
 
@@ -152,7 +152,7 @@ export default function HomePage() {
           title={
             <>
               <Phrase>場面、見た目、</Phrase>
-              <Phrase>サイズ、味。</Phrase>
+              <Phrase>サイズ、味</Phrase>
             </>
           }
         />

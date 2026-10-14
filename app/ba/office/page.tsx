@@ -72,7 +72,7 @@ export default function OfficePage() {
           <Eyebrow id="scene-title">この飲み会</Eyebrow>
           <FillText
             variant="prose"
-            lines={["IT企業の、誰でも参加できる飲み会です。", "会議テーブルのまわりで立ち話をします。窓の外はまだ昼に近いです。", "翌日のデスクと、長いテーブルが場所になります。"]}
+            lines={["IT企業の誰でも参加できる飲み会です。", "会議テーブルのまわりで立ち話をします。窓の外はまだ昼に近いです。", "翌日のデスクと長いテーブルが場所になります。"]}
           />
         </Grid>
       </Section>
