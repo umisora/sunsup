@@ -63,15 +63,10 @@
   line-height: var(--leading-snug);
   letter-spacing: 0.05em;
   word-break: auto-phrase;
-  overflow-wrap: anywhere;
+  line-break: strict;
+  overflow-wrap: break-word;
   text-wrap: balance;
   transition: color var(--duration-fast) var(--ease-standard);
-}
-
-.entry .well img {
-  inset: 5%;
-  width: 90%;
-  height: 90%;
 }
 
 .size {
@@ -168,6 +163,10 @@
 
   .name {
     font-size: var(--step-1);
+  }
+
+  .shelf > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 
   .plainCopy {

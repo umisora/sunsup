@@ -116,6 +116,10 @@
 }
 
 @media (max-width: 959px) {
+  .offset > :nth-child(even) {
+    margin-top: 0;
+  }
+
   .split,
   .splitWide,
   .aside,

@@ -32,10 +32,10 @@
 .set {
   position: absolute;
   z-index: 1;
-  left: 3%;
-  right: 3%;
-  bottom: 7%;
-  height: min(58%, 168px);
+  left: 4%;
+  right: 4%;
+  bottom: 8%;
+  height: min(74%, 240px);
 }
 
 .lineup {
@@ -145,16 +145,22 @@
   opacity: 0.6;
 }
 
+@media (min-width: 600px) {
+  .set {
+    height: min(68%, 360px);
+  }
+}
+
 @media (min-width: 960px) {
   .table {
     height: 30%;
   }
 
   .set {
-    left: 5%;
-    right: 5%;
-    bottom: 6%;
-    height: min(50%, 320px);
+    left: 7%;
+    right: 7%;
+    bottom: 8%;
+    height: min(64%, 440px);
   }
 
   .clink {
@@ -170,10 +176,10 @@
 
 @media (max-width: 359px) {
   .set {
-    left: 2%;
-    right: 2%;
-    bottom: 4%;
-    height: min(44%, 112px);
+    left: 3%;
+    right: 3%;
+    bottom: 7%;
+    height: min(70%, 180px);
   }
 
   .lineup {

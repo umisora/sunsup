@@ -186,6 +186,18 @@
 
 .phrase {
   display: inline-block;
+  max-width: 100%;
+  line-break: strict;
+  word-break: auto-phrase;
+}
+
+@media (max-width: 599px) {
+  .tate {
+    writing-mode: horizontal-tb;
+    font-size: clamp(28px, 8vw, 36px);
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+  }
 }
 
 .srOnly {

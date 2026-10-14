@@ -198,6 +198,34 @@
   transform: translateX(4px);
 }
 
+@media (max-width: 599px) {
+  .head {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "folio meta"
+      "title title";
+    row-gap: var(--space-2);
+    align-items: center;
+  }
+
+  .folio {
+    grid-area: folio;
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+
+  .title {
+    grid-area: title;
+    font-size: var(--step-3);
+  }
+
+  .meta {
+    grid-area: meta;
+    justify-self: end;
+    padding-bottom: 0;
+  }
+}
+
 @media (max-width: 767px) {
   .bar {
     margin-top: var(--space-5);
@@ -228,7 +256,23 @@
     border-inline-start: 1px solid var(--border-inverse);
   }
 
+  .stopName {
+    word-break: auto-phrase;
+    line-break: strict;
+    overflow-wrap: break-word;
+  }
+
   .stopNo {
     padding-bottom: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .index {
+    grid-template-columns: 1fr;
+  }
+
+  .index > li:nth-child(even) {
+    border-inline-start: 0;
   }
 }

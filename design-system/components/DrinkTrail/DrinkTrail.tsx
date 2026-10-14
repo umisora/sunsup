@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { cx } from "../../cx";
 import { ArrowGlyph } from "../DrinkShelf/DrinkShelf";
 import { ExternalPhoto, StillLife } from "../StillLife/StillLife";
+import { SoftBreak } from "../Text/Text";
 import styles from "./DrinkTrail.module.css";
 
 type TrailDrink = { slug: string; name: string; stillUrl: string };
@@ -24,7 +25,9 @@ function Step({ drink, direction }: { drink: TrailDrink; direction: "previous" |
           </span>
           {direction === "next" ? "次のドリンク" : "前のドリンク"}
         </span>
-        <span className={styles.name}>{drink.name}</span>
+        <span className={styles.name}>
+          <SoftBreak text={drink.name} />
+        </span>
       </span>
     </Link>
   );

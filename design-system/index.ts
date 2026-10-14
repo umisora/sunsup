@@ -31,5 +31,5 @@ export { ExternalPhoto, Photo, StillLife } from "./components/StillLife/StillLif
 export { StoreSlot, storeAction } from "./components/StoreSlot/StoreSlot";
 export { Surface, type SurfaceTone } from "./components/Surface/Surface";
 export { Tile } from "./components/Tile/Tile";
-export { DisplayLines, Eyebrow, FillText, Numeral, Phrase, Text, TextLink } from "./components/Text/Text";
+export { DisplayLines, Eyebrow, FillText, Numeral, Phrase, SoftBreak, Text, TextLink } from "./components/Text/Text";
 export { JOURNEY, type JourneyStep } from "./journey";

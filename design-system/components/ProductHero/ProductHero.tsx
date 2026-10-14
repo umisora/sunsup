@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { cx } from "../../cx";
 import layout from "../Layout/Layout.module.css";
+import { SoftBreak } from "../Text/Text";
 import styles from "./ProductHero.module.css";
 
 export type Crumb = { href: string; label: string };
@@ -43,7 +44,7 @@ export function ProductHero({ id, crumbs, title, meta, folio, media, children, e
           {folio ? <p className={styles.folio}>{folio}</p> : null}
         </div>
         <h1 id={id} className={styles.title} data-intro>
-          {title}
+          {typeof title === "string" ? <SoftBreak text={title} /> : title}
         </h1>
         {meta ? (
           <p className={styles.meta} data-intro>
