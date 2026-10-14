@@ -32,7 +32,7 @@ export function TableCard({ id, folio, category, name, media, actions, share }: 
           </p>
           <h2 id={id} className={styles.close}>
             <Phrase>次の飲み会に</Phrase>
-            <Phrase>持っていく。</Phrase>
+            <Phrase>持っていってください。</Phrase>
           </h2>
         </div>
         {actions || share ? (

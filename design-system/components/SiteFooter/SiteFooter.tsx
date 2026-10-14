@@ -15,8 +15,8 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <p className={styles.oneliner}>
-          <Phrase>飲み会に持っていける</Phrase>
-          <Phrase>ノンアルコール飲料を</Phrase>
+          <Phrase>飲み会を任された人へ。</Phrase>
+          <Phrase>持っていくノンアルコールを</Phrase>
           <Phrase>集めています。</Phrase>
         </p>
         <nav className={styles.columns} aria-label="フッター">

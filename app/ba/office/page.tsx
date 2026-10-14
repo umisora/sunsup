@@ -23,10 +23,10 @@ import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drink
 
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
-  description: "デスクのまわりで気軽に集まる、誰でも参加できる飲み会です。出すノンアルコール飲料を紹介しています。",
+  description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒を飲まない人にも渡せる缶と瓶を紹介しています。",
   openGraph: {
     title: `オフィスのオープンな飲み会｜${SITE_NAME}`,
-    description: "デスクのまわりで気軽に集まる、誰でも参加できる飲み会です。出すノンアルコール飲料を紹介しています。",
+    description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒を飲まない人にも渡せる缶と瓶を紹介しています。",
     url: "/ba/office/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -39,17 +39,17 @@ const CRITERIA = [
   {
     no: "01",
     title: "見た目",
-    lines: ["テーブルに並べて、雰囲気に合うものを選んでいます。", "緑のガラス瓶や小さめの缶です。ラベルは午後のテーブルに合います。"],
+    lines: ["会議テーブルに置くなら、緑のガラス瓶か小さめの缶にしてください。", "仕事の画面の横に置いても、場違いに見えません。"],
   },
   {
     no: "02",
     title: "サイズ",
-    lines: ["ひとりで飲み切れる量です。", "分けて飲める瓶と小さめの缶があります。"],
+    lines: ["立ち飲みなので、ひとりで飲み切れる量にしてください。", "缶は途中から来た人に、瓶は最初からいる人で分けてください。"],
   },
   {
     no: "03",
     title: "味",
-    lines: ["果汁、炭酸、苦みがあります。", "冷やして出せるものが中心です。"],
+    lines: ["冷やした果汁と炭酸を出してください。", "甘いだけだと飽きる人のために、苦みのある一本も置いてください。"],
   },
 ] as const;
 
@@ -64,7 +64,7 @@ export default function OfficePage() {
         folio="No. 01"
         eyebrow="飲み会"
         title={["オフィスの", "オープンな飲み会"]}
-        lead="デスクのまわりで気軽に集まる午後です。"
+        lead="飲み会を任されたあなたが、定時後に出すドリンクのページです。"
         media={<Photo name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" position="68% 50%" priority />}
       />
 
@@ -73,7 +73,9 @@ export default function OfficePage() {
           <Eyebrow id="scene-title">この飲み会</Eyebrow>
           <FillText
             variant="prose"
-            lines={["IT企業の誰でも参加できる飲み会です。", "会議テーブルのまわりで立ち話をします。窓の外はまだ昼に近いです。", "翌日のデスクと長いテーブルが場所になります。"]}
+            lines={[
+              "定時後のオフィスで、会議室のテーブルを囲んで立ち飲み。お酒を飲まない人も、まだ仕事が残っている人もいる場です。片手で持てる缶や小ぶりの瓶を中心に、少しだけ特別な一本を混ぜると盛り上がります。",
+            ]}
           />
         </Grid>
       </Section>
@@ -120,12 +122,12 @@ export default function OfficePage() {
           <Stack gap={4}>
             <Eyebrow>ドリンクを選ぶ</Eyebrow>
             <Text variant="small" tone="muted">
-              おいしいぶどうジュースをテーブルの真ん中に置けます。
+              真ん中にぶどうの瓶を一本置くと、話のきっかけになります。
             </Text>
             <Text as="h2" id="invite-title" variant="headline">
-              この飲み会に合う
+              特別な一本を
               <br />
-              ドリンクを選ぶ。
+              混ぜてみてください。
             </Text>
             <JourneyCta to="drink">ドリンクを見る</JourneyCta>
             <ShareRow url={`${SITE_ORIGIN}/ba/office/`} text={`オフィスの飲み会向けノンアルコール飲料です。${SITE_NAME}`} />
