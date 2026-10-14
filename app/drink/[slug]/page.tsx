@@ -175,7 +175,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
               <Phrase>オープンな飲み会</Phrase>
             </>
           }
-          body="デスクのまわりで開く飲み会です。おすすめの6本もこちらです。"
+          body="翌日も使うデスクのまわりで開く飲み会です。おすすめの6本もこちらにあります。"
         />
       </Section>
 

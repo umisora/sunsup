@@ -4,11 +4,11 @@ import { drinkGroups } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: "ドリンク一覧",
-  description: "オフィスの飲み会に出すノンアルコール飲料を、カテゴリから探せます。",
+  description: "オフィスの飲み会に持っていくノンアルコール飲料を、カテゴリから探せます。",
   alternates: { canonical: "/drink/" },
   openGraph: {
     title: `ドリンク一覧｜${SITE_NAME}`,
-    description: "オフィスの飲み会に出すノンアルコール飲料を、カテゴリから探せます。",
+    description: "オフィスの飲み会に持っていくノンアルコール飲料を、カテゴリから探せます。",
     url: "/drink/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -29,8 +29,8 @@ export default function DrinkIndexPage() {
         compact
         eyebrow="ドリンク"
         title={["ドリンク一覧"]}
-        lead="カテゴリ別にノンアルコール飲料を探せます。"
-        sublead={`全${total}本を6つのカテゴリに分けています。`}
+        lead="オフィスの飲み会に持っていくノンアルコール飲料を、カテゴリから探せます。"
+        sublead={`全${total}本を、6つのカテゴリに分けています。`}
       />
       <CategoryNav categories={categories} total={total} />
       <TableShelf known={groups.flatMap((group) => group.drinks.map((drink) => drink.slug))} />

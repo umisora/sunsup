@@ -513,21 +513,25 @@ export type Season = "spring" | "summer" | "autumn" | "winter";
 type SeasonSpec = { label: string; line: string; keywords: readonly string[]; exclude?: readonly string[] };
 
 const SEASONS: Record<Season, SeasonSpec> = {
-  spring: { label: "春のおすすめ", line: "いちご、白桃、さくら。", keywords: ["さくら", "桜", "いちご", "苺", "白桃", "甘夏", "はっさく"] },
+  spring: {
+    label: "春のおすすめ",
+    line: "いちご、白桃、さくらが、春のテーブルに合います。",
+    keywords: ["さくら", "桜", "いちご", "苺", "白桃", "甘夏", "はっさく"],
+  },
   summer: {
     label: "夏のおすすめ",
-    line: "レモン、ライム、ラムネ、冷たい炭酸。",
+    line: "レモン、ライム、ラムネ、冷たい炭酸が、夏の席に合います。",
     keywords: ["レモン", "ライム", "ミント", "すいか", "スイカ", "ラムネ", "トニック", "パイン", "マンゴー"],
   },
   autumn: {
     label: "秋のおすすめ",
-    line: "ぶどう、梨、りんご、ほうじ茶。",
+    line: "ぶどう、梨、りんご、ほうじ茶が、秋の集まりに合います。",
     keywords: ["ぶどう", "葡萄", "グレープ", "巨峰", "梨", "りんご", "林檎", "アップル", "柿", "ほうじ", "甲州", "シャルドネ"],
     exclude: ["グレープフルーツ", "パイナップル"],
   },
   winter: {
     label: "冬のおすすめ",
-    line: "ゆず、みかん、生姜、紅茶。",
+    line: "ゆず、みかん、生姜、紅茶が、寒い日の席に合います。",
     keywords: ["みかん", "蜜柑", "ゆず", "柚子", "YUZU", "生姜", "しょうが", "ジンジャー", "紅茶"],
   },
 };
