@@ -174,12 +174,19 @@
   left: 34%;
 }
 
+@media (max-width: 599px) {
+  .set {
+    bottom: 6%;
+    height: min(50%, 132px);
+  }
+}
+
 @media (max-width: 359px) {
   .set {
     left: 3%;
     right: 3%;
-    bottom: 7%;
-    height: min(70%, 180px);
+    bottom: 6%;
+    height: min(48%, 120px);
   }
 
   .lineup {

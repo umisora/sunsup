@@ -83,7 +83,7 @@
   letter-spacing: 0.05em;
   word-break: auto-phrase;
   line-break: strict;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   text-wrap: balance;
 }
 

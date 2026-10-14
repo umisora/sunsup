@@ -93,7 +93,7 @@
     /* break Japanese between phrases (文節), never inside a word */
     word-break: auto-phrase;
     line-break: strict;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
   }
 
   p {
