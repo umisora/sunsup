@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: SITE_NAME,
     short_name: SITE_NAME,
-    description: "飲み会に持っていけるノンアルコール飲料を集めたサイトです。",
+    description: "オフィスの飲み会を任された人が、定時後に出すノンアルコールを選ぶサイトです。",
     start_url: "/",
     display: "standalone",
     background_color: "#f3ebdd",

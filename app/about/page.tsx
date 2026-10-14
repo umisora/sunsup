@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "このサイトについて",
   openGraph: {
     title: `このサイトについて｜${SITE_NAME}`,
-    description: "オフィスの飲み会に持っていくノンアルコール飲料を、場面と見た目、サイズ、味から紹介するサイトです。",
+    description: "オフィスの飲み会を任されたあなたが、定時後に出すノンアルコールを選ぶサイトです。",
     url: "/about/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -23,7 +23,7 @@ export default function AboutPage() {
             <Eyebrow intro>このサイトについて</Eyebrow>
             <LogoTitle id="about-title" />
             <Text variant="lead" intro>
-              オフィスの飲み会に持っていくノンアルコール飲料を紹介しています。場面、見た目、サイズ、味から探せます。
+              オフィスの飲み会を任されたあなたのためのサイトです。定時後に出すノンアルコールを、場面と見た目、サイズ、味から選べます。
             </Text>
           </Stack>
           <StillLife ratio="3:4" radius="lg">
@@ -35,13 +35,13 @@ export default function AboutPage() {
       <Section space="md" label="サイトの内容">
         <Stack gap={0} align="stretch">
           <InfoRow title="オフィスの飲み会">
-            <TextLink href="/ba/office/">オフィスのオープンな飲み会</TextLink>に持っていくドリンクを紹介しています。
+            <TextLink href="/ba/office/">オフィスのオープンな飲み会</TextLink>に、定時後何を出すかをまとめています。
           </InfoRow>
           <InfoRow title="ドリンク一覧">
-            <TextLink href="/drink/">ドリンク一覧</TextLink>では、ノンアルコール飲料をカテゴリ別に並べています。
+            <TextLink href="/drink/">ドリンク一覧</TextLink>から、カテゴリごとに一本選べます。
           </InfoRow>
           <InfoRow title="購入リンク">
-            商品ページへのリンクを載せています。アフィリエイトには参加しておらず、価格の安い順でも並べていません。
+            買うページへのリンクだけ載せています。アフィリエイトではなく、安い順でも並べていません。
           </InfoRow>
           <InfoRow title="このサイトにないもの" muted>
             カートや会員登録、ランキング、価格比較はありません。

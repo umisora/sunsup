@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     locale: "ja_JP",
     type: "website",
   },
-  description: "飲み会に持っていけるノンアルコール飲料を集めたサイトです。",
+  description: "オフィスの飲み会を任された人が、定時後に出すノンアルコールを選ぶサイトです。",
   twitter: { card: "summary_large_image" },
 };
 

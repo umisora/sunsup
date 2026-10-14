@@ -22,11 +22,11 @@ const AXES = [
   {
     no: "01",
     title: "場面",
-    lines: ["IT企業の誰でも参加できる午後の飲み会です。", "家で一度飲んでから、当日のテーブルに出せます。"],
+    lines: ["お酒を飲まない人も、仕事が残っている人もいる場です。", "家で味を確かめてから、当日のテーブルに出してください。"],
   },
-  { no: "02", title: "見た目", lines: ["緑のガラス瓶と小さめの缶です。", "午後のテーブルの雰囲気に合います。"] },
-  { no: "03", title: "サイズ", lines: ["ひとりで飲み切れる量です。", "缶は持ったまま飲めて、瓶は分けて飲めます。"] },
-  { no: "04", title: "味", lines: ["果汁と炭酸が中心です。", "冷やして、午後の席に出せます。"] },
+  { no: "02", title: "見た目", lines: ["緑のガラス瓶と小さめの缶なら、会議テーブルでも場違いに見えません。"] },
+  { no: "03", title: "サイズ", lines: ["ひとりで飲み切れる量です。", "缶は途中から来た人に、瓶は最初からいる人で分けてください。"] },
+  { no: "04", title: "味", lines: ["果汁と炭酸を冷やして出してください。", "甘いだけだと飽きるので、苦みのある一本も混ぜてください。"] },
 ] as const;
 
 export default function DrinkShellPage() {
@@ -38,14 +38,14 @@ export default function DrinkShellPage() {
         compact
         eyebrow="ドリンク"
         title={["この飲み会のドリンク"]}
-        lead="午後のテーブルに出す1本です。"
-        sublead="家で冷やしてから、飲み会に持っていけます。"
+        lead="定時後のテーブルに出す一本です。"
+        sublead="家で冷やしてから持っていくと、当日に慌てません。"
       />
 
       <PeakStage id="peak-title" folio="No. 02" media={<Photo name="peak-wide" narrow="peak" sizes="100vw" priority />}>
         次の飲み会に
         <br />
-        持っていけます。
+        持っていってください。
       </PeakStage>
 
       <Section label="選び方">
@@ -64,18 +64,18 @@ export default function DrinkShellPage() {
       <Section labelledBy="close-title">
         <ClosingPanel
           id="close-title"
-          eyebrow="飲み会に持っていく"
+          eyebrow="当日に出す"
           title={
             <>
               <Phrase>次の飲み会に</Phrase>
               <br />
-              <Phrase>持っていける1本です。</Phrase>
+              <Phrase>持っていってください。</Phrase>
             </>
           }
           sub={
             <>
-              <Phrase>家で冷やしてから、</Phrase>
-              <Phrase>テーブルに出せます。</Phrase>
+              <Phrase>家で冷やしてから持っていくと、</Phrase>
+              <Phrase>当日に慌てません。</Phrase>
             </>
           }
           actions={

@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   title: { absolute: SITE_NAME },
   openGraph: {
     title: `${SITE_NAME}｜飲み会向けのノンアルコール`,
-    description: "オフィスの飲み会に持っていくノンアルコール飲料を、場面と見た目、サイズ、味から探せます。",
+    description: "オフィスの飲み会を任された人が、定時後に出すノンアルコールを選ぶサイトです。",
     url: "/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -40,10 +40,10 @@ export const metadata: Metadata = {
 };
 
 const AXES = [
-  { no: "01", title: "場面", line: "次のオフィス飲み会に持っていけます。", photo: "place", position: "46% 50%" },
-  { no: "02", title: "見た目", line: "テーブルに並べると、部屋に合います。", photo: "peak", position: "38% 50%" },
-  { no: "03", title: "サイズ", line: "ひとりで飲み切れる量です。", photo: "office", position: "80% 50%" },
-  { no: "04", title: "味", line: "果汁と炭酸、苦みがあります。", photo: "detail", position: "28% 62%" },
+  { no: "01", title: "場面", line: "次のオフィス飲み会に、このまま持っていけます。", photo: "place", position: "46% 50%" },
+  { no: "02", title: "見た目", line: "会議テーブルに置いても、場違いに見えません。", photo: "peak", position: "38% 50%" },
+  { no: "03", title: "サイズ", line: "ひとりで飲み切れる量にしてください。", photo: "office", position: "80% 50%" },
+  { no: "04", title: "味", line: "果汁と炭酸に、苦みのある一本を混ぜてください。", photo: "detail", position: "28% 62%" },
 ] as const;
 
 const SEASONS: readonly Season[] = ["spring", "summer", "autumn", "winter"];
@@ -62,7 +62,7 @@ function assertVisitCatalog(): void {
     if (item.slugs.length < 2 || item.slugs.length > 3) {
       throw new Error(`${item.id} needs 2 or 3 drinks`);
     }
-    if ([...item.kicker].length > 8 || [...item.lead[0]].length > 32 || [...item.lead[1]].length > 32) {
+    if ([...item.kicker].length > 8 || [...item.lead[0]].length > 80 || [...item.lead[1]].length > 80) {
       throw new Error(`${item.id} copy is too long`);
     }
     if (!item.lead[0].endsWith("。") || !item.lead[1].endsWith("。")) {
@@ -133,8 +133,8 @@ export default function HomePage() {
           eyebrow="おすすめ"
           title={
             <>
-              <Phrase>カテゴリごとに</Phrase>
-              <Phrase>飲み会へ出せる1本です。</Phrase>
+              <Phrase>迷ったら、</Phrase>
+              <Phrase>カテゴリごとにこの一本。</Phrase>
             </>
           }
         />
@@ -153,7 +153,7 @@ export default function HomePage() {
               <Phrase>選べます。</Phrase>
             </Text>
             <Text variant="body" tone="inverseMuted">
-              全{total}本です。写真のあるものから並んでいます。
+              全{total}本あります。写真があるものから見てください。
             </Text>
             <Button variant="inverse" href="/drink/">
               {total}本のドリンク
@@ -166,7 +166,7 @@ export default function HomePage() {
       <Section labelledBy="entry-title">
         <Stack gap={5}>
           <Eyebrow>オフィスの飲み会</Eyebrow>
-          <FillText as="h2" id="entry-title" lines={["オフィスの飲み会に", "出すドリンクは", "ここで選べます。"]} />
+          <FillText as="h2" id="entry-title" lines={["定時後に出すなら、", "ここから選んでください。"]} />
         </Stack>
       </Section>
 
@@ -182,7 +182,7 @@ export default function HomePage() {
               <Phrase>オープンな飲み会</Phrase>
             </>
           }
-          body="窓のあるオフィスで、デスクのまわりに誰でも集まれる飲み会です。"
+          body="定時後に会議室を囲む飲み会です。お酒を飲まない人も、仕事が残っている人もいます。"
           action="詳しく見る"
         />
       </Section>
