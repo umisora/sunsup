@@ -140,7 +140,7 @@ export function TableArrival({ pieces }: TableArrivalProps) {
     <div ref={root} className={styles.scene}>
       <div className={styles.wall} aria-hidden="true" />
       <div className={styles.table} aria-hidden="true" />
-      <div className={styles.set}>
+      <div className={styles.set} data-count={pieces.length}>
         <div className={styles.clink} data-clink aria-hidden="true" />
         <ul className={styles.lineup} aria-label="テーブルに並ぶノンアルコール">
           {pieces.map((piece) => (

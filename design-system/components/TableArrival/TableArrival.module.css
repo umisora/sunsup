@@ -122,7 +122,7 @@
 .clink {
   position: absolute;
   z-index: 2;
-  left: 54%;
+  left: 50%;
   top: 8%;
   width: 72px;
   height: 72px;
@@ -162,6 +162,10 @@
     height: 96px;
     margin-left: -48px;
   }
+}
+
+.set[data-count="3"] .clink {
+  left: 34%;
 }
 
 @media (max-width: 359px) {
