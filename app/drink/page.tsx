@@ -4,11 +4,11 @@ import { drinkGroups } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: "ドリンク一覧",
-  description: "次の飲み会に持っていく一本を、カテゴリから選んでください。",
+  description: "次の飲み会に持っていく一本を、カテゴリから選べます。",
   alternates: { canonical: "/drink/" },
   openGraph: {
     title: `ドリンク一覧｜${SITE_NAME}`,
-    description: "次の飲み会に持っていく一本を、カテゴリから選んでください。",
+    description: "次の飲み会に持っていく一本を、カテゴリから選べます。",
     url: "/drink/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -29,7 +29,7 @@ export default function DrinkIndexPage() {
         compact
         eyebrow="ドリンク"
         title={["ドリンク一覧"]}
-        lead="次の飲み会に持っていく一本を、カテゴリから選んでください。"
+        lead="次の飲み会に持っていく一本を、カテゴリから選べます。"
         sublead={`全${total}本を、6つのカテゴリに分けています。`}
       />
       <CategoryNav categories={categories} total={total} />

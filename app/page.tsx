@@ -42,8 +42,8 @@ export const metadata: Metadata = {
 const AXES = [
   { no: "01", title: "場面", line: "次のオフィス飲み会に、このまま持っていけます。", photo: "place", position: "46% 50%" },
   { no: "02", title: "見た目", line: "会議テーブルに置いても、場違いに見えません。", photo: "peak", position: "38% 50%" },
-  { no: "03", title: "サイズ", line: "ひとりで飲み切れる量にしてください。", photo: "office", position: "80% 50%" },
-  { no: "04", title: "味", line: "果汁と炭酸に、苦みのある一本を混ぜてください。", photo: "detail", position: "28% 62%" },
+  { no: "03", title: "サイズ", line: "ひとりで飲み切れる量です。", photo: "office", position: "80% 50%" },
+  { no: "04", title: "味", line: "果汁と炭酸に、苦みのある一本を混ぜるのがおすすめです。", photo: "detail", position: "28% 62%" },
 ] as const;
 
 const SEASONS: readonly Season[] = ["spring", "summer", "autumn", "winter"];
@@ -153,7 +153,7 @@ export default function HomePage() {
               <Phrase>選べます。</Phrase>
             </Text>
             <Text variant="body" tone="inverseMuted">
-              全{total}本あります。写真があるものから見てください。
+              全{total}本あります。写真があるものから並んでいます。
             </Text>
             <Button variant="inverse" href="/drink/">
               {total}本のドリンク
@@ -166,7 +166,7 @@ export default function HomePage() {
       <Section labelledBy="entry-title">
         <Stack gap={5}>
           <Eyebrow>オフィスの飲み会</Eyebrow>
-          <FillText as="h2" id="entry-title" lines={["定時後に出すなら、", "ここから選んでください。"]} />
+          <FillText as="h2" id="entry-title" lines={["定時後に出すなら、", "ここから選べます。"]} />
         </Stack>
       </Section>
 
