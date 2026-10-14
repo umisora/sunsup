@@ -38,10 +38,10 @@ export const metadata: Metadata = {
 };
 
 const AXES = [
-  { no: "01", title: "場面", line: "オフィスの飲み会向け。", photo: "place", position: "46% 50%" },
-  { no: "02", title: "見た目", line: "テーブルに並べた印象。", photo: "peak", position: "38% 50%" },
-  { no: "03", title: "サイズ", line: "ひとりで飲み切れる量。", photo: "office", position: "80% 50%" },
-  { no: "04", title: "味", line: "果汁、炭酸、苦み。", photo: "detail", position: "28% 62%" },
+  { no: "01", title: "場面", line: "次のオフィス飲み会", photo: "place", position: "46% 50%" },
+  { no: "02", title: "見た目", line: "テーブルに並べた印象", photo: "peak", position: "38% 50%" },
+  { no: "03", title: "サイズ", line: "ひとりで飲み切れる量", photo: "office", position: "80% 50%" },
+  { no: "04", title: "味", line: "果汁、炭酸、苦み", photo: "detail", position: "28% 62%" },
 ] as const;
 
 export default function HomePage() {
@@ -54,7 +54,7 @@ export default function HomePage() {
         labelledBy="home-title"
         media={<Photo name="table" sizes="(min-width: 960px) 60vw, 100vw" priority />}
         aside={<ChipList tone="frost" label="選び方" items={AXES.map((axis) => axis.title)} intro />}
-        title={<DisplayLines id="home-title" variant="tate" lines={["飲み会向けの", "ノンアルコール。"]} />}
+        title={<DisplayLines id="home-title" variant="tate" lines={["飲み会向けの", "ノンアルコール飲料"]} />}
         actions={
           <>
             <JourneyCta to="ba" intro>
@@ -68,8 +68,8 @@ export default function HomePage() {
       >
         <Chip intro>ノンアルコール飲料</Chip>
         <Text variant="lead" intro>
-          <Phrase>オフィスの飲み会に、</Phrase>
-          <Phrase>何を出しますか。</Phrase>
+          <Phrase>オフィスの飲み会に</Phrase>
+          <Phrase>何を出そう。</Phrase>
         </Text>
       </HeroStage>
 
@@ -94,8 +94,8 @@ export default function HomePage() {
           eyebrow="おすすめ"
           title={
             <>
-              <Phrase>カテゴリごとに、</Phrase>
-              <Phrase>まず1本。</Phrase>
+              <Phrase>カテゴリごとに</Phrase>
+              <Phrase>まず1本ずつ紹介します。</Phrase>
             </>
           }
         />
@@ -114,7 +114,7 @@ export default function HomePage() {
               <Phrase>選べます。</Phrase>
             </Text>
             <Text variant="body" tone="inverseMuted">
-              全{total}本です。
+              全{total}本です。写真があるものから並んでいます。
             </Text>
           </Stack>
           <CategoryIndex categories={categorySummaries()} />

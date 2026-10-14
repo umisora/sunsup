@@ -139,7 +139,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
               </Button>
             ) : null
           }
-          share={<ShareRow tone="inverse" url={`${SITE_ORIGIN}/drink/${drink.slug}/`} text={`次の飲み会に持っていくなら、${drink.name}`} />}
+          share={<ShareRow tone="inverse" url={`${SITE_ORIGIN}/drink/${drink.slug}/`} text={`次の飲み会に持っていけます。${drink.name}`} />}
         />
       </Section>
 

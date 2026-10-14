@@ -38,17 +38,17 @@ const CRITERIA = [
   {
     no: "01",
     title: "見た目",
-    lines: ["テーブルに並べて、雰囲気に合うものを選んでいます。", "緑のガラス瓶や小さめの缶など、午後のテーブルに合うラベルです。"],
+    lines: ["テーブルに並べて、雰囲気に合うものを選んでいます。", "緑のガラス瓶や小さめの缶です。ラベルは午後のテーブルに合います。"],
   },
   {
     no: "02",
     title: "サイズ",
-    lines: ["ひとりで飲み切れる量です。", "分けて飲める瓶と、小さめの缶があります。"],
+    lines: ["ひとりで飲み切れる量です。", "分けて飲める瓶と小さめの缶があります。"],
   },
   {
     no: "03",
     title: "味",
-    lines: ["果汁、炭酸、苦みがあります。", "冷やして出せるものを中心にしています。"],
+    lines: ["果汁、炭酸、苦みがあります。", "冷やして出せるものが中心です。"],
   },
 ] as const;
 
@@ -63,7 +63,7 @@ export default function OfficePage() {
         folio="No. 01"
         eyebrow="飲み会"
         title={["オフィスの", "オープンな飲み会"]}
-        lead="デスクのまわりで、気軽に集まる午後です。"
+        lead="デスクのまわりで気軽に集まる午後です。"
         media={<Photo name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" position="68% 50%" priority />}
       />
 
@@ -72,7 +72,7 @@ export default function OfficePage() {
           <Eyebrow id="scene-title">この飲み会</Eyebrow>
           <FillText
             variant="prose"
-            lines={["IT企業の、誰でも参加できる飲み会です。", "会議テーブルのまわりで立ち話をします。", "普段のデスクと、長いテーブルで開きます。"]}
+            lines={["IT企業の、誰でも参加できる飲み会です。", "会議テーブルのまわりで立ち話をします。窓の外はまだ昼に近いです。", "翌日のデスクと、長いテーブルが場所になります。"]}
           />
         </Grid>
       </Section>
@@ -119,7 +119,7 @@ export default function OfficePage() {
           <Stack gap={4}>
             <Eyebrow>ドリンクを選ぶ</Eyebrow>
             <Text variant="small" tone="muted">
-              テーブルの真ん中に置ける、ぶどうジュースもあります。
+              おいしいぶどうジュースをテーブルの真ん中に置けます。
             </Text>
             <Text as="h2" id="invite-title" variant="headline">
               この飲み会に合う
@@ -127,7 +127,7 @@ export default function OfficePage() {
               ドリンクを選ぶ。
             </Text>
             <JourneyCta to="drink">ドリンクを見る</JourneyCta>
-            <ShareRow url={`${SITE_ORIGIN}/ba/office/`} text="オフィスの飲み会向けノンアルコール。sunsup" />
+            <ShareRow url={`${SITE_ORIGIN}/ba/office/`} text="オフィスの飲み会向けノンアルコール飲料です。sunsup" />
           </Stack>
         </MediaPanel>
       </Section>

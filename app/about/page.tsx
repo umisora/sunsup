@@ -38,10 +38,10 @@ export default function AboutPage() {
             <TextLink href="/ba/office/">オフィスのオープンな飲み会</TextLink>で出すドリンクを紹介しています。
           </InfoRow>
           <InfoRow title="ドリンク一覧">
-            <TextLink href="/drink/">カテゴリ別の一覧</TextLink>です。ノンアルコール飲料を並べています。
+            <TextLink href="/drink/">ドリンク一覧</TextLink>では、ノンアルコール飲料をカテゴリ別に並べています。
           </InfoRow>
           <InfoRow title="購入リンク">
-            商品ページへのリンクを載せています。アフィリエイトには参加していません。価格の安い順には並べていません。
+            商品ページへのリンクを載せています。アフィリエイトには参加しておらず、価格の安い順でも並べていません。
           </InfoRow>
           <InfoRow title="このサイトにないもの" muted>
             カート、会員登録、ランキング、価格比較。
