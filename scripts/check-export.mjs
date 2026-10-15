@@ -172,13 +172,13 @@ function htmlText(value) {
 const table = parseCsv(readFileSync(join("data", "drinks.csv"), "utf8"));
 const header = table[0];
 const drinks = table.slice(1).map((row) => Object.fromEntries(header.map((column, index) => [column, (row[index] ?? "").trim()])));
-if (drinks.length !== 753) {
-  fail(`expected 753 drink rows, found ${drinks.length}`);
+if (drinks.length !== 797) {
+  fail(`expected 797 drink rows, found ${drinks.length}`);
 }
 const publicDrinks = drinks.filter((drink) => drink["公開"] === "1");
 const hiddenDrinks = drinks.filter((drink) => drink["公開"] === "0");
-if (publicDrinks.length !== 719) {
-  fail(`expected 719 public drink rows, found ${publicDrinks.length}`);
+if (publicDrinks.length !== 763) {
+  fail(`expected 763 public drink rows, found ${publicDrinks.length}`);
 }
 if (hiddenDrinks.length !== 34) {
   fail(`expected 34 hidden drink rows, found ${hiddenDrinks.length}`);
@@ -187,8 +187,8 @@ if (drinks.some((drink) => drink["カテゴリ"] === "クラフト／瓶もの")
   fail("craft bottle category still uses the slash label");
 }
 const craftCount = drinks.filter((drink) => drink["カテゴリ"] === "クラフト・瓶もの").length;
-if (craftCount !== 150) {
-  fail(`expected 150 craft bottle rows, found ${craftCount}`);
+if (craftCount !== 171) {
+  fail(`expected 171 craft bottle rows, found ${craftCount}`);
 }
 const descriptions = drinks.map((drink) => drinkDescription(drink));
 if (new Set(descriptions).size !== drinks.length || new Set(drinks.map((drink) => drinkTitle(drink))).size !== drinks.length) {
@@ -326,8 +326,8 @@ for (const drink of publicDrinks) {
   if (!html.includes("次の飲み会に") || !html.includes("持っていく一本です。")) {
     fail(`${drink.slug} is missing the close line`);
   }
-  if (!html.includes("/ 719") || html.includes("/ 753")) {
-    fail(`${drink.slug} catalog count is not the public 719`);
+  if (!html.includes("/ 763") || html.includes("/ 797")) {
+    fail(`${drink.slug} catalog count is not the public 763`);
   }
   const stores = [
     [official, "公式サイト"],
@@ -391,14 +391,14 @@ if (!home.includes('href="/drink/"') || !office.includes('href="/drink/"')) {
   fail("home or office does not link to the drink list");
 }
 if (
-  !(home.includes("719本") || home.includes("719<!-- -->本")) ||
-  home.includes("753本") ||
-  home.includes("753<!-- -->本")
+  !(home.includes("763本") || home.includes("763<!-- -->本")) ||
+  home.includes("797本") ||
+  home.includes("797<!-- -->本")
 ) {
-  fail("home count is not the public 719");
+  fail("home count is not the public 763");
 }
-if (!list.includes("719本") || list.includes("753本")) {
-  fail("drink list count is not the public 719");
+if (!list.includes("763本") || list.includes("797本")) {
+  fail("drink list count is not the public 763");
 }
 if (shell.includes('data-store-primary="true"')) {
   fail("shell has a store CTA");
