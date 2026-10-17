@@ -24,6 +24,8 @@ export type VisitStory = {
   kicker: string;
   lead: readonly [string, string];
   slugs: readonly string[];
+  /** Large glass bottles only, never convenience-store staples. */
+  pairing?: "formal";
 };
 
 export type VisitQuery = {
@@ -144,7 +146,7 @@ function story(
   kicker: string,
   lead: readonly [string, string],
   slugs: readonly string[],
-  extra?: { weather?: Weather; region?: Region; daypart?: Daypart },
+  extra?: { weather?: Weather; region?: Region; daypart?: Daypart; pairing?: "formal" },
 ): VisitStory {
   return { id, season, kicker, lead, slugs, ...extra };
 }
@@ -208,6 +210,10 @@ export const STORIES: readonly VisitStory[] = [
   story("spring-hot", "spring", "暖かい春", ["少し暑い春の日は、よく冷えたものがおすすめです。", "常温だと甘さばかり感じます。"], ["fujiya-sparkling-peach", "kimino-yuzu", "sanpellegrino-aranciata"], { weather: "hot" }),
   story("spring-cold", "spring", "寒い春", ["まだ寒い朝は、甘いものだけにしない方が安心です。", "香りの強い瓶を一本混ぜます。"], ["kimino-yuzu", "kimino-ume", "kodama-ginger-250"], { weather: "cold" }),
   story("spring-rain-kanto", "spring", "関東の春雨", ["関東の春の雨の日は、戻った人がすぐ取れる場所に置くと安心です。", "真ん中に出すと、そこから各自が取れます。"], ["kimino-ume", "fujiya-sparkling-peach", "kimura-momo-cider"], { weather: "rain", region: "kanto" }),
+  story("autumn-formal", "autumn", "秋の会食", ["少人数の会食には、大きな瓶を二、三本、テーブルの真ん中に置きます。", "グラスに注いで分けると、甘いものと、甘さの弱いものを一緒に出せます。"], ["ringowork-original-720", "alps-winery-grape-1000", "nfs-tomato-720"], { daypart: "evening", pairing: "formal" }),
+  story("winter-formal", "winter", "冬の会食", ["冷えた大きな瓶を、暖かい部屋の真ん中に置きます。", "グラスに少しずつ注ぐと、人数で分けられます。"], ["perrier-glass-750", "sanpellegrino-sparkling-750", "sanpellegrino-sparkling-1000"], { daypart: "evening", pairing: "formal" }),
+  story("spring-formal", "spring", "春の顔合わせ", ["顔合わせの席には、大きな瓶を二、三本置きます。", "グラスに注いで分けると、ひとりひとりの好みに合わせられます。"], ["perrier-glass-750", "sanpellegrino-sparkling-750", "sanpellegrino-sparkling-1000"], { daypart: "afternoon", pairing: "formal" }),
+  story("summer-formal", "summer", "夏の夕食", ["夏の夕食には、よく冷えた大きな瓶を真ん中に置きます。", "グラスに注ぐと、甘い果汁と、甘さのないものを一緒に出せます。"], ["perrier-glass-750", "sanpellegrino-sparkling-750", "sanpellegrino-sparkling-1000"], { daypart: "evening", pairing: "formal" }),
 ];
 
 export function storyById(id: string): VisitStory | undefined {

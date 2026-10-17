@@ -95,6 +95,35 @@ if (firstKey === secondKey) {
   fail("two winter visits picked the same drinks");
 }
 
+const formalA = pages({ season: "autumn", daypart: "evening", storyId: "autumn-formal" }, 4);
+const formalB = pages({ season: "autumn", daypart: "evening", storyId: "autumn-formal" }, 11);
+const formalLeadA = formalA[0];
+const formalLeadB = formalB[0];
+if (!formalLeadA || formalLeadA.id !== "autumn-formal" || !formalLeadB || formalLeadB.id !== "autumn-formal") {
+  fail("autumn formal story was not shown");
+}
+for (const page of [formalLeadA, formalLeadB]) {
+  if (!page || page.drinks.length < 2 || page.drinks.length > 3) {
+    fail(`autumn formal picked ${page?.drinks.length ?? 0} drinks`);
+    continue;
+  }
+  for (const drink of page.drinks) {
+    const row = bySlug.get(drink.slug);
+    if (!row) {
+      fail(`autumn formal missing ${drink.slug}`);
+      continue;
+    }
+    if (row.generic || row.vessel !== "大瓶" || row.name.includes("シロップ")) {
+      fail(`autumn formal picked ${drink.slug}`);
+    }
+  }
+}
+const formalKeyA = formalLeadA?.drinks.map((drink) => drink.slug).join("|");
+const formalKeyB = formalLeadB?.drinks.map((drink) => drink.slug).join("|");
+if (formalKeyA && formalKeyA === formalKeyB) {
+  fail("two autumn formal visits picked the same bottles");
+}
+
 if (failures.length > 0) {
   for (const message of failures) {
     console.error(message);

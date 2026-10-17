@@ -17,6 +17,7 @@ const COLUMNS = [
   "その他URL",
   "公開",
   "定番",
+  "容器",
 ] as const;
 
 const REQUIRED = ["品名", "場", "見た目", "サイズ", "味"] as const;
@@ -40,6 +41,8 @@ export type Drink = {
   otherUrl: string;
   /** Nationwide convenience-store staple. Kept in the catalog, kept off the top-page stories. */
   generic: boolean;
+  /** Container. Used to pick large bottles for a formal table. */
+  vessel: string;
 };
 
 export type StoreLabel = "Amazon" | "楽天" | "公式ショップ" | "その他の通販" | "公式";
@@ -318,6 +321,7 @@ export function parseDrinks(text: string): Drink[] {
       directUrl: httpOrEmpty(cell(row, "直販URL"), slug, "直販URL"),
       otherUrl: httpOrEmpty(cell(row, "その他URL"), slug, "その他URL"),
       generic: cell(row, "定番") === "1",
+      vessel: cell(row, "容器"),
     });
     if (cell(row, "公開") === "1") {
       published.add(slug);
