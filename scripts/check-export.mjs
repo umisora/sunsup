@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { isGenericProduct } from "./generic-rule.mjs";
 
 const failures = [];
 
@@ -171,7 +172,46 @@ function htmlText(value) {
 
 const table = parseCsv(readFileSync(join("data", "drinks.csv"), "utf8"));
 const header = table[0];
+if (!header.includes("定番")) {
+  fail("drinks.csv is missing the 定番 column");
+}
 const drinks = table.slice(1).map((row) => Object.fromEntries(header.map((column, index) => [column, (row[index] ?? "").trim()])));
+const genericDrinks = drinks.filter((drink) => drink["定番"] === "1");
+for (const drink of drinks) {
+  const flag = drink["定番"];
+  if (flag !== "0" && flag !== "1") {
+    fail(`${drink.slug} 定番 must be 0 or 1`);
+    continue;
+  }
+  if ((flag === "1") !== isGenericProduct(drink["品名"])) {
+    fail(`${drink.slug} 定番 disagrees with scripts/generic-rule.mjs`);
+  }
+}
+if (genericDrinks.length < 40) {
+  fail(`expected a recorded set of convenience-store staples, found ${genericDrinks.length}`);
+}
+const poolPath = join("data", "visit-pool.json");
+if (!existsSync(poolPath)) {
+  fail("missing data/visit-pool.json");
+} else {
+  const pool = JSON.parse(readFileSync(poolPath, "utf8"));
+  if (!Array.isArray(pool) || pool.length < 100) {
+    fail("visit pool is too small to vary the top page");
+  }
+  for (const drink of pool) {
+    const row = drinks.find((item) => item.slug === drink.slug);
+    if (!row || row["公開"] !== "1") {
+      fail(`visit pool includes a drink that is not public: ${drink.slug}`);
+      continue;
+    }
+    if (!drink.src || !String(drink.src).startsWith("/drinks/") || String(drink.src).includes("fallback-")) {
+      fail(`visit pool still is not real: ${drink.slug}`);
+    }
+    if (Boolean(drink.generic) !== (row["定番"] === "1")) {
+      fail(`visit pool generic flag drifted for ${drink.slug}`);
+    }
+  }
+}
 if (drinks.length !== 882) {
   fail(`expected 882 drink rows, found ${drinks.length}`);
 }

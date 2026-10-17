@@ -80,6 +80,9 @@ function assertVisitCatalog(): void {
       if (!drink.stillUrl.startsWith("/drinks/") || drink.stillUrl.includes("fallback-")) {
         throw new Error(`visit still invalid: ${slug}`);
       }
+      if (drink.generic) {
+        throw new Error(`visit fallback is a convenience-store staple: ${slug}`);
+      }
     }
   }
   for (const season of SEASONS) {

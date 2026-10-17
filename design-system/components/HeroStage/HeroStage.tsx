@@ -1,12 +1,23 @@
 import type { ReactNode } from "react";
-import { TABLE_CAST, type ArrivalToast } from "../TableArrival/cast";
+import { TABLE_CAST, type ArrivalStand, type ArrivalToast } from "../TableArrival/cast";
 import { TableArrival, type TablePiece } from "../TableArrival/TableArrival";
 import styles from "./HeroStage.module.css";
+
+export type HeroFrame = {
+  nw: number;
+  nh: number;
+  l: number;
+  t: number;
+  cw: number;
+  ch: number;
+};
 
 export type HeroTableDrink = {
   slug: string;
   name: string;
   src: string;
+  stand?: ArrivalStand;
+  frame?: HeroFrame;
 };
 
 type HeroStageProps = {
@@ -17,6 +28,8 @@ type HeroStageProps = {
   castKey: string;
   /** Set on the section so a visit can be told apart. */
   visitId?: string;
+  /** Slugs on the table, so a reload can be told apart. */
+  drinkIds?: string;
   /** Small content pinned to a corner of the stage (e.g. a ChipList). */
   aside?: ReactNode;
   /** The headline, usually <DisplayLines variant="tate">. Stands on the paper, upper right of the copy column. */
@@ -54,10 +67,16 @@ function tablePieces(drinks: readonly HeroTableDrink[]): TablePiece[] {
   }
   return drinks.map((drink, index) => {
     const item = TABLE_CAST[drink.slug];
-    if (!item) {
+    const frame = item?.frame ?? drink.frame;
+    const stand = item?.stand ?? drink.stand;
+    const src = item?.src ?? drink.src;
+    if (!frame || !stand) {
       throw new Error(`hero drink missing: ${drink.slug}`);
     }
-    if (drink.src !== item.src) {
+    if (!src.startsWith("/drinks/") || src.includes("fallback-")) {
+      throw new Error(`hero still invalid: ${drink.slug}`);
+    }
+    if (item && drink.src !== item.src) {
       throw new Error(`hero still changed for ${drink.slug}`);
     }
     const place = index === 0 || index === 1 || index === 2 ? index : undefined;
@@ -66,18 +85,18 @@ function tablePieces(drinks: readonly HeroTableDrink[]): TablePiece[] {
     }
     const motion = ARRIVALS[place];
     return {
-      slug: item.slug,
+      slug: drink.slug,
       name: drink.name,
-      src: item.src,
-      stand: item.stand,
+      src,
+      stand,
       toast: toastAt(place),
       anchor: place === 0,
-      nw: item.frame.nw,
-      nh: item.frame.nh,
-      l: item.frame.l,
-      t: item.frame.t,
-      cw: item.frame.cw,
-      ch: item.frame.ch,
+      nw: frame.nw,
+      nh: frame.nh,
+      l: frame.l,
+      t: frame.t,
+      cw: frame.cw,
+      ch: frame.ch,
       fromX: motion.fromX,
       fromY: motion.fromY,
       fromR: motion.fromR,
@@ -86,9 +105,9 @@ function tablePieces(drinks: readonly HeroTableDrink[]): TablePiece[] {
 }
 
 /** Home hero: a vertical headline on the paper beside the table, where the drinks arrive. */
-export function HeroStage({ labelledBy, drinks, castKey, visitId, aside, title, actions, children }: HeroStageProps) {
+export function HeroStage({ labelledBy, drinks, castKey, visitId, drinkIds, aside, title, actions, children }: HeroStageProps) {
   return (
-    <section className={styles.hero} aria-labelledby={labelledBy} data-visit={visitId}>
+    <section className={styles.hero} aria-labelledby={labelledBy} data-visit={visitId} data-drinks={drinkIds}>
       <div className={styles.copy}>
         <div className={styles.title}>{title}</div>
         <div className={styles.side}>{children}</div>

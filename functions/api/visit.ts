@@ -1,4 +1,5 @@
-import { daypartOf, regionFromCf, resolveVisit, seasonOf, weatherBucket, type Weather } from "../../lib/visit";
+import { pickVisitStories } from "../../lib/visit-picks";
+import { daypartOf, regionFromCf, seasonOf, weatherBucket, type Weather } from "../../lib/visit";
 
 type CfGeo = {
   region?: string;
@@ -16,6 +17,7 @@ type PagesContext = {
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "cache-control": "private, no-store",
+  "cdn-cache-control": "no-store",
 };
 
 function finiteCoord(value: string | number | undefined): number | undefined {
@@ -66,8 +68,9 @@ export async function onRequestGet(context: PagesContext): Promise<Response> {
   const weather = await weatherFromCf(cf);
   const region = regionFromCf(cf?.country, cf?.region, cf?.regionCode);
   const daypart = daypartOf(now, cf?.timezone || "Asia/Tokyo");
-  const story = resolveVisit({
-    season: seasonOf(now),
+  const season = seasonOf(now);
+  const stories = pickVisitStories({
+    season,
     daypart,
     weather,
     region,
@@ -75,15 +78,33 @@ export async function onRequestGet(context: PagesContext): Promise<Response> {
     random: Math.random,
   });
 
-  console.log(JSON.stringify({ visit: story.id, weather: weather ?? "unknown", region: region ?? "unknown" }));
+  console.log(
+    JSON.stringify({
+      visit: stories.map((item) => item.id),
+      drinks: stories.map((item) => item.drinks.map((drink) => drink.slug)),
+      weather: weather ?? "unknown",
+      region: region ?? "unknown",
+    }),
+  );
 
   return new Response(
     JSON.stringify({
-      id: story.id,
-      season: story.season,
+      season,
       daypart,
       weather: weather ?? null,
       region: region ?? null,
+      stories: stories.map((item) => ({
+        id: item.id,
+        drinks: item.drinks.map((drink) => ({
+          slug: drink.slug,
+          name: drink.name,
+          src: drink.src,
+          category: drink.category,
+          size: drink.size,
+          stand: drink.stand,
+          frame: drink.frame,
+        })),
+      })),
     }),
     { headers: JSON_HEADERS },
   );
