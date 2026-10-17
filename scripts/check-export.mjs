@@ -223,6 +223,47 @@ if (publicDrinks.length !== 898) {
 if (hiddenDrinks.length !== 34) {
   fail(`expected 34 hidden drink rows, found ${hiddenDrinks.length}`);
 }
+
+function sizeSentences(value) {
+  return value
+    .split("。")
+    .map((part) => part.trim())
+    .filter((part) => part !== "");
+}
+
+function sizeHasPredicate(sentence) {
+  return /(です|ます|ません|でした|ました|でしょう|ください)$/.test(sentence);
+}
+
+for (const drink of drinks) {
+  const size = drink["サイズ"];
+  if (size.includes("卓")) {
+    fail(`${drink.slug} サイズ uses the jargon 卓`);
+  }
+  if (size.replaceAll("大さじ一杯", "").replaceAll("小さじ一杯", "").includes("一杯")) {
+    fail(`${drink.slug} サイズ uses the jargon 一杯`);
+  }
+  if (size !== "" && !size.endsWith("。")) {
+    fail(`${drink.slug} サイズ does not finish a sentence`);
+  }
+  let fragmentRun = 0;
+  let reportedChain = false;
+  for (const sentence of sizeSentences(size)) {
+    if (/^\d+(?:\.\d+)?(?:ml|mL|ML|g|kg|L)$/.test(sentence)) {
+      fail(`${drink.slug} サイズ is a measure with no sentence: ${sentence}。`);
+    }
+    if (!sizeHasPredicate(sentence)) {
+      fragmentRun += 1;
+      fail(`${drink.slug} サイズ has a noun-only sentence: ${sentence}。`);
+      if (fragmentRun >= 2 && !reportedChain) {
+        fail(`${drink.slug} サイズ is a telegraph chain`);
+        reportedChain = true;
+      }
+    } else {
+      fragmentRun = 0;
+    }
+  }
+}
 if (drinks.some((drink) => drink["カテゴリ"] === "クラフト／瓶もの")) {
   fail("craft bottle category still uses the slash label");
 }
