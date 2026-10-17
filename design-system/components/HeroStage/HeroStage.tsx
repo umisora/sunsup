@@ -38,6 +38,8 @@ type HeroStageProps = {
   actions?: ReactNode;
   /** Lead, lower left of the copy column. */
   children: ReactNode;
+  /** A still failed to decode. */
+  onStillError?: (slug: string) => void;
 };
 
 const ARRIVALS = [
@@ -105,7 +107,7 @@ function tablePieces(drinks: readonly HeroTableDrink[]): TablePiece[] {
 }
 
 /** Home hero: a vertical headline on the paper beside the table, where the drinks arrive. */
-export function HeroStage({ labelledBy, drinks, castKey, visitId, drinkIds, aside, title, actions, children }: HeroStageProps) {
+export function HeroStage({ labelledBy, drinks, castKey, visitId, drinkIds, aside, title, actions, children, onStillError }: HeroStageProps) {
   return (
     <section className={styles.hero} aria-labelledby={labelledBy} data-visit={visitId} data-drinks={drinkIds}>
       <div className={styles.copy}>
@@ -114,7 +116,7 @@ export function HeroStage({ labelledBy, drinks, castKey, visitId, drinkIds, asid
         {actions ? <div className={styles.actions}>{actions}</div> : null}
       </div>
       <div className={styles.stage}>
-        <TableArrival key={castKey} pieces={tablePieces(drinks)} />
+        <TableArrival key={castKey} pieces={tablePieces(drinks)} onStillError={onStillError} />
         {aside ? <div className={styles.aside}>{aside}</div> : null}
       </div>
     </section>

@@ -194,9 +194,13 @@
 @media (max-width: 599px) {
   .tate {
     writing-mode: horizontal-tb;
-    font-size: clamp(28px, 8vw, 36px);
+    font-size: clamp(26px, 7.2vw, 34px);
     line-height: 1.35;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
+  }
+
+  .tate .lineInner {
+    white-space: normal;
   }
 }
 
