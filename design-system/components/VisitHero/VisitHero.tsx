@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { daypartOf, DEFAULT_STORY_ID, seasonOf, storyById, type VisitStory } from "@/lib/visit";
-import { pickVisitStories, type PickedDrink, type PickedStory } from "@/lib/visit-picks";
+import { pickVisitStories, replacementDrink, type PickedDrink, type PickedStory } from "@/lib/visit-picks";
 import { Chip } from "../Chip/Chip";
 import { DrinkShowcase } from "../DrinkShowcase/DrinkShowcase";
 import { HeroStage, type HeroFrame, type HeroTableDrink } from "../HeroStage/HeroStage";
@@ -119,10 +119,56 @@ function heroDrinks(drinks: readonly PickedDrink[]): HeroTableDrink[] {
 /** Home hero whose story and stills can change after the static default has painted. */
 export function VisitHero({ labelledBy, initialId, aside, title, actions }: VisitHeroProps) {
   const [page, setPage] = useState<PickedStory[] | null>(null);
+  const [broken, setBroken] = useState<readonly string[]>([]);
+  const [extras, setExtras] = useState<readonly PickedDrink[]>([]);
   const primary = page?.[0];
   const story = requireStory(primary?.id ?? initialId);
-  const drinks = primary ? heroDrinks(primary.drinks) : fallbackDrinks(story);
+  const picked = primary ? heroDrinks(primary.drinks) : fallbackDrinks(story);
+  const brokenSet = new Set(broken);
+  const replaced = [...picked.filter((drink) => !brokenSet.has(drink.slug)), ...extras.map((drink) => ({
+    slug: drink.slug,
+    name: drink.name,
+    src: drink.src,
+    stand: drink.stand,
+    frame: drink.frame,
+  }))];
+  const drinks = replaced.length >= 2 ? replaced.slice(0, 3) : picked;
   const drinkIds = drinks.map((drink) => drink.slug).join(" ");
+  const storyRef = useRef(story);
+  const pickedRef = useRef(picked);
+  const extrasRef = useRef(extras);
+  const seen = useRef(new Set<string>());
+  storyRef.current = story;
+  pickedRef.current = picked;
+  extrasRef.current = extras;
+
+  const sourceKey = picked.map((drink) => drink.slug).join(" ");
+  const sourceKeyRef = useRef(sourceKey);
+  useEffect(() => {
+    if (sourceKeyRef.current === sourceKey) {
+      return;
+    }
+    sourceKeyRef.current = sourceKey;
+    seen.current = new Set();
+    extrasRef.current = [];
+    setBroken([]);
+    setExtras([]);
+  }, [sourceKey]);
+
+  const onStillError = useCallback((slug: string) => {
+    if (seen.current.has(slug) || seen.current.size >= 8) {
+      return;
+    }
+    seen.current.add(slug);
+    const avoid = new Set<string>([...seen.current, ...pickedRef.current.map((drink) => drink.slug), ...extrasRef.current.map((drink) => drink.slug)]);
+    const next = replacementDrink(storyRef.current.id, { season: seasonOf(new Date()), daypart: daypartOf(new Date()) }, [...avoid]);
+    if (next) {
+      seen.current.add(next.slug);
+      extrasRef.current = [...extrasRef.current, next];
+      setExtras(extrasRef.current);
+    }
+    setBroken((current) => (current.includes(slug) ? current : [...current, slug]));
+  }, []);
 
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get("story") ?? undefined;
@@ -184,6 +230,7 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
         aside={aside}
         title={title}
         actions={actions}
+        onStillError={onStillError}
       >
         <Chip intro>{story.kicker}</Chip>
         <Text variant="lead" intro>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -29,6 +29,8 @@ export type TablePiece = {
 
 type TableArrivalProps = {
   pieces: readonly TablePiece[];
+  /** A still that never decoded. The hero should draw a different drink. */
+  onStillError?: (slug: string) => void;
 };
 
 function standClass(stand: ArrivalStand): string {
@@ -55,8 +57,24 @@ function readMotion(el: HTMLElement): { x: string; y: string; rotation: number }
 }
 
 /** Bottles and cans set down on the office table, then a short toast. Settles; reduced motion shows the settled frame. */
-export function TableArrival({ pieces }: TableArrivalProps) {
+export function TableArrival({ pieces, onStillError }: TableArrivalProps) {
   const root = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scope = root.current;
+    if (!scope || !onStillError) {
+      return;
+    }
+    scope.querySelectorAll<HTMLImageElement>("img").forEach((img) => {
+      if (!img.complete || img.naturalWidth !== 0) {
+        return;
+      }
+      const slug = img.closest("[data-slug]")?.getAttribute("data-slug");
+      if (slug) {
+        onStillError(slug);
+      }
+    });
+  }, [pieces, onStillError]);
 
   useGSAP(
     () => {
@@ -148,6 +166,7 @@ export function TableArrival({ pieces }: TableArrivalProps) {
               key={piece.slug}
               className={`${styles.slot} ${standClass(piece.stand)}`}
               data-slot=""
+              data-slug={piece.slug}
               style={
                 {
                   "--nw": String(piece.nw),
@@ -170,9 +189,10 @@ export function TableArrival({ pieces }: TableArrivalProps) {
                   alt=""
                   width={piece.nw}
                   height={piece.nh}
-                  loading={piece.anchor ? "eager" : "lazy"}
-                  fetchPriority={piece.anchor ? "high" : "low"}
+                  loading="eager"
+                  fetchPriority="high"
                   decoding="async"
+                  onError={() => onStillError?.(piece.slug)}
                   data-arrive={piece.anchor ? undefined : ""}
                   data-toast={piece.toast}
                 />

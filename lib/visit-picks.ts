@@ -282,25 +282,25 @@ function formalBottle(drink: PoolDrink): boolean {
   return drink.vessel === "大瓶" && !drink.name.includes("シロップ");
 }
 
-function drawFor(story: VisitStory, query: VisitQuery, pool: readonly PoolDrink[], used: Set<string>, random: () => number): PickedDrink[] {
-  const wanted = story.slugs.length >= 3 ? 3 : 2;
+function matchingPool(story: VisitStory, query: VisitQuery, pool: readonly PoolDrink[], used: Set<string>, minimum: number): PoolDrink[] {
   const formal = story.pairing === "formal";
   const source = formal ? pool.filter(formalBottle) : pool;
   const modes: readonly FitMode[] = ["strict", "any-weather", "any-region", "versatile"];
-  let found: PoolDrink[] = [];
   const genericPasses = formal ? [false] : [false, true];
   for (const allowGeneric of genericPasses) {
     for (const mode of modes) {
       const next = source.filter((drink) => !used.has(drink.slug) && (allowGeneric || !drink.generic) && eligible(drink, story, query, mode));
-      if (next.length >= 2) {
-        found = next;
-        break;
+      if (next.length >= minimum) {
+        return next;
       }
     }
-    if (found.length >= 2) {
-      break;
-    }
   }
+  return [];
+}
+
+function drawFor(story: VisitStory, query: VisitQuery, pool: readonly PoolDrink[], used: Set<string>, random: () => number): PickedDrink[] {
+  const wanted = story.slugs.length >= 3 ? 3 : 2;
+  const found = matchingPool(story, query, pool, used, 2);
   if (found.length < 2) {
     return [];
   }
@@ -325,6 +325,27 @@ function drawFor(story: VisitStory, query: VisitQuery, pool: readonly PoolDrink[
     used.add(drink.slug);
   }
   return picked.map(toPicked);
+}
+
+/** One more drink for the same story, when a still on the table failed to load. */
+export function replacementDrink(
+  storyId: string,
+  query: VisitQuery,
+  avoid: readonly string[],
+  pool: readonly PoolDrink[] = VISIT_POOL,
+): PickedDrink | undefined {
+  const story = storyById(storyId);
+  if (!story) {
+    return undefined;
+  }
+  const random = query.random ?? Math.random;
+  const found = matchingPool(story, query, pool, new Set(avoid), 1);
+  const featured = shuffle(
+    found.filter((drink) => !drink.generic),
+    random,
+  );
+  const choice = featured[0] ?? shuffle(found, random)[0];
+  return choice ? toPicked(choice) : undefined;
 }
 
 /** Per-request drinks for the stories on this page. The same drink is not repeated. */

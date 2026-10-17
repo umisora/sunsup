@@ -1,4 +1,4 @@
-import { pickVisitStories, VISIT_POOL } from "../lib/visit-picks.ts";
+import { pickVisitStories, replacementDrink, VISIT_POOL } from "../lib/visit-picks.ts";
 import type { VisitQuery } from "../lib/visit.ts";
 
 const bySlug = new Map(VISIT_POOL.map((drink) => [drink.slug, drink]));
@@ -122,6 +122,20 @@ const formalKeyA = formalLeadA?.drinks.map((drink) => drink.slug).join("|");
 const formalKeyB = formalLeadB?.drinks.map((drink) => drink.slug).join("|");
 if (formalKeyA && formalKeyA === formalKeyB) {
   fail("two autumn formal visits picked the same bottles");
+}
+
+const formalSlugs = formalLeadA?.drinks.map((drink) => drink.slug) ?? [];
+const swapped = replacementDrink("autumn-formal", { season: "autumn", daypart: "evening" }, formalSlugs);
+if (!swapped) {
+  fail("a failed formal still had no replacement");
+} else {
+  const row = bySlug.get(swapped.slug);
+  if (!row || formalSlugs.includes(swapped.slug) || row.generic || row.vessel !== "大瓶" || row.name.includes("シロップ")) {
+    fail(`formal replacement was ${swapped.slug}`);
+  }
+}
+if (replacementDrink("missing-story", { season: "autumn", daypart: "evening" }, [])) {
+  fail("missing story returned a replacement");
 }
 
 if (failures.length > 0) {
