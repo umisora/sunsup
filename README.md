@@ -50,7 +50,11 @@ npm run preview
 
 ### 訪問ごとの卓
 
-トップの卓は、静的 HTML に秋の午後の初期表示を書いてある。`functions/api/visit.ts` は `request.cf` の地域・緯度・経度だけを読み、Open-Meteo で天気を見て物語の id を返す。Cookie は置かず、IP は読まない。ブラウザの位置情報ダイアログは出さない。地域か天気が取れないときは、季節と時間帯から選ぶ。
+トップの卓は、静的 HTML に秋の午後の初期表示を書いてある。`functions/api/visit.ts` は `request.cf` の地域・緯度・経度だけを読み、Open-Meteo で気温と天気を見て、その場に合う話を2つか3つ返す。各話のドリンクはリクエストのたびに引き直す。Cookie は置かず、IP は読まない。ブラウザの位置情報ダイアログは出さない。応答は `cache-control: private, no-store` で、選んだドリンクをキャッシュに固定しない。地域か天気が取れないときは、季節と時間帯から選ぶ。同じページの話では、同じドリンクを繰り返さない。
+
+話に出すドリンクは、公開中で、白い背景の実物の静物があるものだけ。`/drinks/fallback-*.webp` は出さない。季節・天気（暑い、寒い、雨、穏やか）・地域は品名から取り、`data/visit-pool.json` にまとめる。このファイルは `npm run build` が CSV から作り直す。
+
+コンビニの定番は、話の主役にしない。地域のもの、輸入、クラフト、茶の専門のもの、割材、シロップは残す。定番かどうかは `data/drinks.csv` の列 `定番`（1 が定番）。判定は [`scripts/generic-rule.mjs`](scripts/generic-rule.mjs)。全国のコンビニに普通に並ぶ大手の茶、炭酸、水、スポーツドリンク、缶コーヒー、いつもの果汁を 1 にする。ご当地のコラボ（品名に都道府県がある野菜生活やカゴメ）は 0。迷うものは 0。一覧と詳細からは消さない。条件に合う定番以外が2本に満たないときだけ、定番を最後の控えに使う。
 - プロジェクト `sunsup` がまだ無いときは、同じ secret で Direct Upload 用に作成する。production branch は `main`。
 
 リポジトリの Settings → Secrets and variables → Actions に、次の名前で repository secret を作る。値はここに書かない。
