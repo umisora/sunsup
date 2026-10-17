@@ -22,6 +22,7 @@ export type PoolDrink = {
   weather: Weather[];
   region: Region | null;
   generic: boolean;
+  vessel: string;
   stand: ArrivalStand;
   frame: PoolFrame;
 };
@@ -80,6 +81,7 @@ function readPool(raw: unknown): PoolDrink[] {
     const region = row.region;
     const stand = row.stand;
     const frame = row.frame;
+    const vessel = row.vessel;
     if (typeof slug !== "string" || typeof name !== "string" || typeof src !== "string") {
       throw new Error("visit pool row is missing its name");
     }
@@ -97,6 +99,9 @@ function readPool(raw: unknown): PoolDrink[] {
     }
     if (region !== null && (typeof region !== "string" || !isRegion(region))) {
       throw new Error(`visit pool region is invalid: ${slug}`);
+    }
+    if (typeof vessel !== "string" || vessel === "") {
+      throw new Error(`visit pool vessel is missing: ${slug}`);
     }
     if (typeof stand !== "string" || !isStand(stand)) {
       throw new Error(`visit pool stand is invalid: ${slug}`);
@@ -119,6 +124,7 @@ function readPool(raw: unknown): PoolDrink[] {
       weather: weather as Weather[],
       region: region as Region | null,
       generic: row.generic,
+      vessel,
       stand,
       frame: { nw: box.nw as number, nh: box.nh as number, l: box.l as number, t: box.t as number, cw: box.cw as number, ch: box.ch as number },
     };
@@ -272,13 +278,20 @@ function toPicked(drink: PoolDrink): PickedDrink {
   };
 }
 
+function formalBottle(drink: PoolDrink): boolean {
+  return drink.vessel === "大瓶" && !drink.name.includes("シロップ");
+}
+
 function drawFor(story: VisitStory, query: VisitQuery, pool: readonly PoolDrink[], used: Set<string>, random: () => number): PickedDrink[] {
   const wanted = story.slugs.length >= 3 ? 3 : 2;
+  const formal = story.pairing === "formal";
+  const source = formal ? pool.filter(formalBottle) : pool;
   const modes: readonly FitMode[] = ["strict", "any-weather", "any-region", "versatile"];
   let found: PoolDrink[] = [];
-  for (const allowGeneric of [false, true]) {
+  const genericPasses = formal ? [false] : [false, true];
+  for (const allowGeneric of genericPasses) {
     for (const mode of modes) {
-      const next = pool.filter((drink) => !used.has(drink.slug) && (allowGeneric || !drink.generic) && eligible(drink, story, query, mode));
+      const next = source.filter((drink) => !used.has(drink.slug) && (allowGeneric || !drink.generic) && eligible(drink, story, query, mode));
       if (next.length >= 2) {
         found = next;
         break;

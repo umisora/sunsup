@@ -400,6 +400,7 @@ for (const drink of drinks) {
     weather: fit.weather,
     region: regionOf(drink["品名"]),
     generic: drink["定番"] === "1",
+    vessel: drink["容器"],
     stand: hand ? hand.stand : standFor(frame),
     frame,
   });
