@@ -243,6 +243,20 @@ for (const drink of drinks) {
   if (size.replaceAll("大さじ一杯", "").replaceAll("小さじ一杯", "").includes("一杯")) {
     fail(`${drink.slug} サイズ uses the jargon 一杯`);
   }
+  if (size.includes("中身は")) {
+    fail(`${drink.slug} サイズ uses 中身は`);
+  }
+  if (/PET/.test(size)) {
+    fail(`${drink.slug} サイズ uses bare PET`);
+  }
+  if (/ペット(?!ボトル)/.test(size)) {
+    fail(`${drink.slug} サイズ uses ペット without ボトル`);
+  }
+  for (const bolt of ["注がなくていい量", "注いで分ける量", "一人に一本の量", "飲みきりの量"]) {
+    if (size.includes(bolt)) {
+      fail(`${drink.slug} サイズ bolts a fragment onto 量: ${bolt}`);
+    }
+  }
   if (size !== "" && !size.endsWith("。")) {
     fail(`${drink.slug} サイズ does not finish a sentence`);
   }
