@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { SITE_NAME, SiteFooter, SiteHeader, SkipLink } from "@/design-system";
@@ -30,6 +30,12 @@ const zen = localFont({
   variable: "--font-zen",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunsup-dv4.pages.dev"),

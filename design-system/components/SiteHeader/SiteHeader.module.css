@@ -98,41 +98,20 @@
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 767px) {
+  .header {
+    height: var(--layout-header-height);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
   .bar {
-    gap: var(--space-3);
+    gap: 4px;
   }
 
   .brand {
-    gap: 8px;
-  }
-
-  .emblem {
-    height: 36px;
-  }
-
-  .wordmark {
-    height: 16px;
-  }
-
-  .link {
-    padding-inline: 12px;
-    letter-spacing: 0.1em;
-  }
-
-  .link::after {
-    inset-inline: 12px calc(12px + 0.1em);
-  }
-}
-
-@media (max-width: 420px) {
-  .bar {
-    gap: var(--space-2);
-    width: min(var(--layout-wrap), 100% - 24px);
-  }
-
-  .brand {
+    flex: 0 1 auto;
     gap: 6px;
+    min-width: 0;
   }
 
   .emblem {
@@ -140,34 +119,28 @@
   }
 
   .wordmark {
-    height: 15px;
+    height: 16px;
+    max-width: 112px;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  .nav {
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    min-width: 0;
+    gap: 0;
   }
 
   .link {
+    flex: none;
+    min-height: 44px;
     padding-inline: 8px;
+    font-size: 13px;
     letter-spacing: 0.04em;
   }
 
   .link::after {
     inset-inline: 8px calc(8px + 0.04em);
-  }
-}
-
-@media (max-width: 340px) {
-  .emblem {
-    height: 28px;
-  }
-
-  .wordmark {
-    height: 13px;
-  }
-
-  .link {
-    padding-inline: 6px;
-    letter-spacing: 0;
-  }
-
-  .link::after {
-    inset-inline: 6px;
   }
 }

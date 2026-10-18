@@ -39,3 +39,41 @@
     order: -1;
   }
 }
+
+@media (max-width: 767px) {
+  .intro {
+    padding-top: 16px;
+  }
+
+  .compact {
+    padding-top: 12px;
+  }
+
+  .withMedia {
+    gap: 20px;
+    padding-top: 0;
+  }
+
+  .titleOnly {
+    gap: 14px;
+    padding-bottom: 8px;
+  }
+
+  .intro h1 {
+    font-size: clamp(34px, 8.8vw, 44px);
+    line-height: 1.22;
+  }
+
+  .media {
+    order: -1;
+    width: calc(100% + 2 * var(--layout-gutter));
+    max-height: none;
+    margin-inline: calc(-1 * var(--layout-gutter));
+  }
+
+  .media > * {
+    height: min(48svh, 420px);
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+}

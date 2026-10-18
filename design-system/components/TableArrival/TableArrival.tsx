@@ -84,7 +84,7 @@ export function TableArrival({ pieces, onStillError }: TableArrivalProps) {
       }
 
       const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      mm.add("(prefers-reduced-motion: no-preference) and (min-width: 768px)", () => {
         const stills = gsap.utils.toArray<HTMLElement>("[data-arrive]", scope);
         const timeline = gsap.timeline({
           defaults: { ease: "power3.out" },
@@ -183,19 +183,21 @@ export function TableArrival({ pieces, onStillError }: TableArrivalProps) {
             >
               <span className={styles.shadow} data-floor="" data-arrive-floor={piece.anchor ? undefined : ""} aria-hidden="true" />
               <Link href={`/drink/${piece.slug}/`} className={styles.hit}>
-                <img
-                  className={styles.still}
-                  src={piece.src}
-                  alt=""
-                  width={piece.nw}
-                  height={piece.nh}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  onError={() => onStillError?.(piece.slug)}
-                  data-arrive={piece.anchor ? undefined : ""}
-                  data-toast={piece.toast}
-                />
+                <span className={styles.frame}>
+                  <img
+                    className={styles.still}
+                    src={piece.src}
+                    alt=""
+                    width={piece.nw}
+                    height={piece.nh}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                    onError={() => onStillError?.(piece.slug)}
+                    data-arrive={piece.anchor ? undefined : ""}
+                    data-toast={piece.toast}
+                  />
+                </span>
                 <span className={styles.name}>{piece.name}</span>
               </Link>
             </li>

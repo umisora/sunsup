@@ -147,9 +147,23 @@
   color: var(--text-link);
 }
 
-@media (max-width: 599px) {
+@media (max-width: 767px) {
   .item {
-    width: 124px;
+    width: min(64vw, 220px);
+  }
+
+  .row {
+    width: calc(100% + 2 * var(--layout-gutter));
+    margin-inline: calc(-1 * var(--layout-gutter));
+    padding-inline: var(--layout-gutter);
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--layout-gutter);
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .name {
+    font-size: 15px;
   }
 
   .note {

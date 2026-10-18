@@ -142,11 +142,24 @@
 
 @container (max-width: 519px) {
   .entry {
-    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-columns: 120px minmax(0, 1fr);
+    column-gap: 14px;
+    min-height: 96px;
+    padding-block: 14px;
+  }
+
+  .name {
+    font-size: 16px;
   }
 
   .go {
     display: none;
+  }
+
+  .plain {
+    min-height: 56px;
+    align-items: center;
+    padding-block: 16px;
   }
 }
 
