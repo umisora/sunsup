@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 export async function resolve(specifier, context, nextResolve) {
   if (specifier.startsWith("./") || specifier.startsWith("../")) {
     try {
@@ -10,4 +12,18 @@ export async function resolve(specifier, context, nextResolve) {
     }
   }
   return nextResolve(specifier, context);
+}
+
+// Node refuses a JSON import that has no `type: json` attribute. Pages cannot
+// accept the attribute, so the build check supplies the module here.
+export async function load(url, context, nextLoad) {
+  if (url.endsWith(".json")) {
+    const source = readFileSync(new URL(url), "utf8");
+    return {
+      format: "module",
+      source: `export default JSON.parse(${JSON.stringify(source)})`,
+      shortCircuit: true,
+    };
+  }
+  return nextLoad(url, context);
 }
