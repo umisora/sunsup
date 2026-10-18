@@ -1,4 +1,6 @@
-import poolData from "../data/visit-pool.json" with { type: "json" };
+// No import attribute. Pages compiles functions with Wrangler 3.114's esbuild,
+// which rejects `with { type: "json" }`. The Node check loads this JSON itself.
+import poolData from "../data/visit-pool.json";
 import { STORIES, storyById, type Region, type Season, type VisitQuery, type VisitStory, type Weather } from "./visit";
 
 export type ArrivalStand = "full" | "can";
