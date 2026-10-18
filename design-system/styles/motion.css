@@ -37,6 +37,19 @@
       html.js [data-arrive-floor] {
         opacity: 1;
       }
+
+      /* The phone first screen is the product. A closed clip or hidden type
+         would leave a blank page if the intro tween never finishes. */
+      html.js [data-intro],
+      html.js [data-line],
+      html.js [data-reveal],
+      html.js [data-stagger-item] {
+        visibility: visible;
+      }
+
+      html.js [data-intro-media] {
+        clip-path: none;
+      }
     }
   }
 }

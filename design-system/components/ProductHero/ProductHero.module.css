@@ -183,9 +183,14 @@
 
   .media > * {
     width: 100%;
-    height: min(86vw, 48svh);
+    height: min(60svh, 65svh, 520px);
+    max-height: 65svh;
     aspect-ratio: auto;
     border-radius: 0;
+  }
+
+  .textOnly {
+    padding-top: 8px;
   }
 
   .body {

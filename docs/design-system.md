@@ -89,11 +89,11 @@ design-system/
 
 | Attribute | Set by | Behaviour | Hidden before it runs |
 |---|---|---|---|
-| `data-intro-media` | `StillLife intro` | clip-path wipe + image settle on load | yes (clip) |
-| `data-line` | `DisplayLines` | lines rise from a mask on load | yes |
-| `data-intro` | `intro` props | fade up on load, after lines | yes |
-| `data-reveal` | `SectionHead`, `InfoRow`, `Surface reveal` | fade up once on scroll | yes |
-| `data-stagger-item` | `Tile`, `Surface staggerItem` | batched card entrance (`ScrollTrigger.batch`) | yes |
+| `data-intro-media` | `StillLife intro` | clip-path wipe + image settle on load. At ≤767px the frame stays open. | desktop only |
+| `data-line` | `DisplayLines` | lines rise from a mask on load. At ≤767px the lines stay in place. | desktop only |
+| `data-intro` | `intro` props | fade up on load, after lines. At ≤767px the type stays visible. | desktop only |
+| `data-reveal` | `SectionHead`, `InfoRow`, `Surface reveal` | fade up once on scroll. At ≤767px, anything already in the first screen stays visible. | yes, except the phone first screen |
+| `data-stagger-item` | `Tile`, `Surface staggerItem` | batched card entrance (`ScrollTrigger.batch`). At ≤767px, anything already in the first screen stays visible. | yes, except the phone first screen |
 | `data-rise` | `FeatureCard`, `MediaPanel`, `ClosingPanel`, `Surface rise` | slide up on scroll | **never** |
 | `data-fill` | `FillText` | per-character ink, scrubbed | no (dimmed only) |
 | `data-parallax` | `StillLife parallax` | image drifts ±5%, scrubbed | no |
@@ -101,6 +101,8 @@ design-system/
 | `data-arrive` | `TableArrival` | stills slide onto the table on load, then two toast and settle (~8s). Own timeline, not `playIntro` | off-table until it runs |
 | `data-arrive-floor` | `TableArrival` | contact shadow fades in as that still lands | yes (opacity) |
 | `data-peak-*` | `PeakStage` | pin + clip-path open (≥768px), scrub open (narrow) | no |
+
+If setup throws, or a node is still hidden while it sits in the viewport after the intro window, `Motion` shows it. Scroll-triggered nodes below the fold still wait for their entrance.
 
 ## Page recipes
 
