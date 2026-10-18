@@ -109,6 +109,26 @@
   }
 }
 
+@media (max-width: 767px) {
+  .footer {
+    margin-inline: 0;
+    border-radius: 0;
+  }
+
+  .inner {
+    gap: var(--space-6);
+    padding-top: 48px;
+  }
+
+  .oneliner {
+    font-size: var(--step-2);
+  }
+
+  .giant {
+    font-size: clamp(52px, 18vw, 96px);
+  }
+}
+
 @media (max-width: 599px) {
   .columns {
     grid-template-columns: 1fr;

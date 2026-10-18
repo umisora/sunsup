@@ -145,4 +145,15 @@
 
     color-scheme: light;
   }
+
+  /* Phone magazine. Desktop tokens stay on the wider layout. */
+  @media (max-width: 767px) {
+    :root {
+      --layout-header-height: calc(52px + env(safe-area-inset-top, 0px));
+      --layout-gutter: 20px;
+      --layout-subnav-height: 48px;
+      --space-section: 72px;
+      --space-9: 56px;
+    }
+  }
 }

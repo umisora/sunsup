@@ -28,11 +28,23 @@ export function Motion({ children }: { children: ReactNode }) {
         if (!allowed) {
           return;
         }
-        playIntro(scope);
-        // Created top-to-bottom: the peak pin spacer must exist before triggers below it are measured.
-        openPeak(scope, Boolean(wide));
-        driftMedia(scope);
-        revealOnScroll(scope);
+        try {
+          // Phones paint the still and the name immediately. The load tween's from-state
+          // would clip them again via immediateRender.
+          if (wide) {
+            playIntro(scope);
+          }
+          // Created top-to-bottom: the peak pin spacer must exist before triggers below it are measured.
+          openPeak(scope, Boolean(wide));
+          driftMedia(scope);
+          revealOnScroll(scope, Boolean(wide));
+        } catch {
+          forceVisible(scope, "all");
+        }
+        const disarm = armFailOpen(scope);
+        return () => {
+          disarm();
+        };
       });
 
       const refresh = () => ScrollTrigger.refresh();
@@ -144,7 +156,7 @@ function driftMedia(scope: HTMLElement) {
   });
 }
 
-function revealOnScroll(scope: HTMLElement) {
+function revealOnScroll(scope: HTMLElement, wide: boolean) {
   scope.querySelectorAll<HTMLElement>("[data-fill]").forEach((element) => {
     gsap.fromTo(
       element.querySelectorAll("[data-fill-char]"),
@@ -159,6 +171,9 @@ function revealOnScroll(scope: HTMLElement) {
   });
 
   scope.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
+    if (!wide && inFirstScreen(element)) {
+      return;
+    }
     gsap.fromTo(
       element,
       { y: motion.distance.reveal, autoAlpha: 0 },
@@ -183,8 +198,11 @@ function revealOnScroll(scope: HTMLElement) {
   });
 
   const items = gsap.utils.toArray<HTMLElement>("[data-stagger-item]", scope);
+  const staged = wide ? items : items.filter((item) => !inFirstScreen(item));
+  if (staged.length > 0) {
+    gsap.set(staged, { y: motion.distance.card, autoAlpha: 0 });
+  }
   if (items.length > 0) {
-    gsap.set(items, { y: motion.distance.card, autoAlpha: 0 });
     ScrollTrigger.batch(items, {
       start: "top 90%",
       once: true,
@@ -199,4 +217,105 @@ function revealOnScroll(scope: HTMLElement) {
         }),
     });
   }
+}
+
+const HIDDEN_MOTION = "[data-intro], [data-line], [data-reveal], [data-stagger-item], [data-intro-media]";
+
+function inFirstScreen(element: HTMLElement): boolean {
+  const rect = element.getBoundingClientRect();
+  const height = window.innerHeight;
+  return rect.bottom > 0 && rect.top < height * 0.92;
+}
+
+function clipClosed(element: HTMLElement): boolean {
+  const clipPath = getComputedStyle(element).clipPath;
+  if (clipPath === "none" || clipPath === "") {
+    return false;
+  }
+  const match = /inset\(\s*([-\d.]+)(px|%)\s+[-\d.]+(?:px|%)\s+([-\d.]+)(px|%)/i.exec(clipPath);
+  if (!match) {
+    return clipPath.includes("100%");
+  }
+  const bottom = Number(match[3]);
+  if (match[4] === "%") {
+    return bottom >= 99;
+  }
+  const height = element.getBoundingClientRect().height;
+  return height > 0 && bottom >= height - 1;
+}
+
+function isHidden(element: HTMLElement): boolean {
+  const style = getComputedStyle(element);
+  if (style.visibility === "hidden" || Number.parseFloat(style.opacity) < 0.05) {
+    return true;
+  }
+  return element.hasAttribute("data-intro-media") && clipClosed(element);
+}
+
+function showElement(element: HTMLElement) {
+  element.style.setProperty("visibility", "visible", "important");
+  element.style.setProperty("opacity", "1", "important");
+  element.style.removeProperty("transform");
+  if (!element.hasAttribute("data-intro-media")) {
+    return;
+  }
+  element.style.setProperty("clip-path", "none", "important");
+  const image = element.querySelector("img");
+  if (image instanceof HTMLElement) {
+    image.style.removeProperty("transform");
+  }
+}
+
+function forceVisible(scope: HTMLElement, mode: "all" | "in-view") {
+  scope.querySelectorAll<HTMLElement>(HIDDEN_MOTION).forEach((element) => {
+    if (mode === "in-view" && !inFirstScreen(element)) {
+      return;
+    }
+    if (!isHidden(element)) {
+      return;
+    }
+    showElement(element);
+  });
+}
+
+/** In-view motion nodes that never leave their hidden start state become visible. */
+function armFailOpen(scope: HTMLElement): () => void {
+  const timers = new Set<number>();
+  const watch = scope.querySelectorAll<HTMLElement>(HIDDEN_MOTION);
+  const later = (element: HTMLElement, delay: number) => {
+    const timer = window.setTimeout(() => {
+      timers.delete(timer);
+      if (isHidden(element)) {
+        showElement(element);
+      }
+    }, delay);
+    timers.add(timer);
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) {
+          return;
+        }
+        later(entry.target, 2600);
+      });
+    },
+    { threshold: 0.2 },
+  );
+  watch.forEach((element) => observer.observe(element));
+  laterTimeout(timers, () => forceVisible(scope, "in-view"), 3200);
+
+  return () => {
+    observer.disconnect();
+    timers.forEach((timer) => window.clearTimeout(timer));
+  };
+}
+
+function laterTimeout(timers: Set<number>, run: () => void, delay: number) {
+  const timer = window.setTimeout(() => {
+    timers.delete(timer);
+    run();
+  }, delay);
+  timers.add(timer);
 }

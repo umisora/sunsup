@@ -66,4 +66,9 @@
   .slot {
     max-width: none;
   }
+
+  .more {
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+  }
 }

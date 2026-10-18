@@ -229,7 +229,22 @@
 
 @media (max-width: 767px) {
   .bar {
-    margin-top: var(--space-5);
+    top: var(--layout-header-height);
+    margin-top: var(--space-4);
+    height: var(--layout-subnav-height);
+  }
+
+  .link {
+    min-height: 40px;
+    padding-inline: 12px;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    scroll-snap-align: start;
+  }
+
+  .list {
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 12px;
   }
 
   .total {

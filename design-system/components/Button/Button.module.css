@@ -66,6 +66,15 @@
   color: var(--text-primary);
 }
 
+@media (max-width: 767px) {
+  .primary,
+  .secondary,
+  .inverse {
+    width: 100%;
+    max-width: none;
+  }
+}
+
 .primary:hover,
 :global(a):hover > .primary {
   background: var(--action-primary-hover);

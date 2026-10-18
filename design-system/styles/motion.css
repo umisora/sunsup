@@ -17,7 +17,8 @@
       clip-path: inset(0% 0% 100% 0%);
     }
 
-    /* Hero stills wait off the table until GSAP sets them down. The anchor bottle is not marked. */
+    /* Hero stills wait off the table until GSAP sets them down. The anchor bottle is not marked.
+       Phones use a settled row, so the off-table offset would leave bottles mid-swipe. */
     html.js [data-arrive] {
       transform: translate3d(var(--from-x), var(--from-y), 0) rotate(var(--from-r));
       will-change: transform;
@@ -25,6 +26,30 @@
 
     html.js [data-arrive-floor] {
       opacity: 0;
+    }
+
+    @media (max-width: 767px) {
+      html.js [data-arrive] {
+        transform: none;
+        will-change: auto;
+      }
+
+      html.js [data-arrive-floor] {
+        opacity: 1;
+      }
+
+      /* The phone first screen is the product. A closed clip or hidden type
+         would leave a blank page if the intro tween never finishes. */
+      html.js [data-intro],
+      html.js [data-line],
+      html.js [data-reveal],
+      html.js [data-stagger-item] {
+        visibility: visible;
+      }
+
+      html.js [data-intro-media] {
+        clip-path: none;
+      }
     }
   }
 }

@@ -76,11 +76,37 @@
 @media (max-width: 767px) {
   .grid,
   .four {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-3);
+    display: flex;
+    grid-template-columns: none;
+    gap: 14px;
+    width: calc(100% + 2 * var(--layout-gutter));
+    margin-inline: calc(-1 * var(--layout-gutter));
+    padding-inline: var(--layout-gutter);
+    padding-bottom: 4px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--layout-gutter);
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .grid::-webkit-scrollbar,
+  .four::-webkit-scrollbar {
+    display: none;
+  }
+
+  .item {
+    flex: 0 0 min(74vw, 280px);
+    width: min(74vw, 280px);
+    scroll-snap-align: start;
   }
 
   .name {
-    font-size: var(--step-small);
+    font-size: 17px;
+    line-height: 1.45;
+  }
+
+  .card {
+    gap: 12px;
   }
 }

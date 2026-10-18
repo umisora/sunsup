@@ -110,7 +110,8 @@
   }
 
   .card .media > * {
-    width: min(100%, 22rem);
+    width: 100%;
+    border-radius: var(--radius-md);
   }
 
   .body {

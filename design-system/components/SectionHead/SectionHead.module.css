@@ -30,13 +30,23 @@
   padding-bottom: 0.3em;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 767px) {
+  .head {
+    margin-bottom: 20px;
+  }
+
   .glyph {
-    font-size: 72px;
+    font-size: 64px;
   }
 
   .withGlyph {
-    gap: var(--space-4);
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .glyphCopy {
+    gap: 10px;
+    padding-bottom: 0;
   }
 }
 
