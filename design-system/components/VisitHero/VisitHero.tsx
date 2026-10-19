@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { daypartOf, DEFAULT_STORY_ID, seasonOf, storyById, type VisitStory } from "@/lib/visit";
+import { seasonStillUrl } from "@/lib/still-seasons";
 import { pickVisitStories, replacementDrink, type PickedDrink, type PickedStory } from "@/lib/visit-picks";
 import { Chip } from "../Chip/Chip";
 import { DrinkShowcase } from "../DrinkShowcase/DrinkShowcase";
@@ -218,6 +219,8 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
   }, []);
 
   const more = (page ?? []).slice(1);
+  // Stories only render after the visit is picked on the client, so today's JST season is safe here.
+  const season = seasonOf(new Date());
 
   return (
     <div data-visit-ready={page ? "1" : "0"}>
@@ -257,10 +260,12 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
                 </Text>
                 <DrinkShowcase
                   label={extra.kicker}
+                  stagger={false}
                   drinks={item.drinks.map((drink) => ({
                     slug: drink.slug,
                     name: drink.name,
                     stillUrl: drink.src,
+                    seasonUrl: seasonStillUrl(drink.slug, season),
                     size: drink.size,
                     label: drink.category,
                   }))}

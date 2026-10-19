@@ -1,0 +1,11 @@
+{
+  "note": "Drinks with seasonal studio stills. Each slug has public/drinks/<slug>.webp (white cutout) and public/drinks/season/<slug>_<season>.webp for all four seasons. Paths follow this convention; drinks.csv is unchanged. Rebuild with scripts/compose-season-stills.py.",
+  "seasons": ["spring", "summer", "autumn", "winter"],
+  "drinks": {
+    "cc-lemon-pet": { "tint": [250, 236, 170] },
+    "noda-shio-cider": { "tint": [214, 236, 238] },
+    "fever-tree-tonic": { "tint": [240, 232, 210] },
+    "tennensui-sparkling-lemon-500": { "tint": [250, 246, 214] },
+    "ishigaki-ginger-ale-200": { "tint": [240, 206, 166] }
+  }
+}

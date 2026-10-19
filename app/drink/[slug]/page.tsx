@@ -12,6 +12,7 @@ import {
   ProductHero,
   Section,
   SectionHead,
+  SeasonStill,
   ShareRow,
   SITE_NAME,
   Stack,
@@ -37,6 +38,8 @@ import {
   shelfNeighbours,
   storeRows,
 } from "@/lib/drinks";
+import { hasSeasonStills } from "@/lib/still-seasons";
+import { seasonOf } from "@/lib/visit";
 
 type DrinkPageProps = {
   params: Promise<{ slug: string }>;
@@ -101,6 +104,12 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         <ExternalPhoto src={drink.stillUrl} alt={priority ? drink.name : ""} priority={priority} />
       </StillLife>
     ) : undefined;
+  // Drinks with seasonal studio stills open on today's season; the white cutout stays for the close-up card.
+  const hero = hasSeasonStills(drink.slug) ? (
+    <SeasonStill slug={drink.slug} alt={drink.name} season={seasonOf(new Date())} priority intro />
+  ) : (
+    still(true)
+  );
 
   return (
     <Motion>
@@ -113,7 +122,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         folio={folio}
         title={drink.name}
         meta={drink.size}
-        media={still(true)}
+        media={hero}
         extra={<TableToggle drink={{ slug: drink.slug, name: drink.name, stillUrl: drink.stillUrl, category: drink.category }} />}
       >
         {rows.length > 0 ? <StoreSlot rows={rows} /> : null}

@@ -534,6 +534,81 @@ for (const drink of hiddenDrinks) {
   }
 }
 
+// Seasonal studio stills (data/still-seasons.json): every listed drink keeps its white cutout,
+// its transparent master and all four season photos, and its page is routed through the season function.
+const STILL_SEASONS = ["spring", "summer", "autumn", "winter"];
+const seasonManifest = JSON.parse(readFileSync(join("data", "still-seasons.json"), "utf8"));
+const seasonSlugs = Object.keys(seasonManifest.drinks ?? {});
+if (seasonSlugs.length === 0) {
+  fail("data/still-seasons.json lists no drinks");
+}
+if (JSON.stringify(seasonManifest.seasons) !== JSON.stringify(STILL_SEASONS)) {
+  fail("data/still-seasons.json seasons must be spring, summer, autumn, winter");
+}
+const bySlug = new Map(drinks.map((drink) => [drink.slug, drink]));
+let seasonRoutes = { include: [] };
+if (existsSync(join("out", "_routes.json"))) {
+  seasonRoutes = JSON.parse(readFileSync(join("out", "_routes.json"), "utf8"));
+} else {
+  fail("missing out/_routes.json");
+}
+if (!seasonRoutes.include?.includes("/api/*")) {
+  fail("_routes.json no longer routes /api/*");
+}
+if ((seasonRoutes.include?.length ?? 0) + (seasonRoutes.exclude?.length ?? 0) > 100) {
+  fail("_routes.json has more than 100 rules");
+}
+for (const slug of seasonSlugs) {
+  const drink = bySlug.get(slug);
+  if (!drink) {
+    fail(`still-seasons lists unknown drink ${slug}`);
+    continue;
+  }
+  const cutout = `/drinks/${slug}.webp`;
+  if (drink["静物URL"] !== cutout) {
+    fail(`${slug} 静物URL must stay the white cutout ${cutout}`);
+  }
+  if (!existsSync(join("out", cutout.slice(1)))) {
+    fail(`${slug} is missing its cutout out${cutout}`);
+  }
+  if (!existsSync(join("stills", "masters", `${slug}.png`))) {
+    fail(`${slug} is missing its master stills/masters/${slug}.png`);
+  }
+  for (const season of STILL_SEASONS) {
+    const file = join("out", "drinks", "season", `${slug}_${season}.webp`);
+    if (!existsSync(file) || readFileSync(file).length < 10000) {
+      fail(`${slug} is missing its ${season} still ${file}`);
+    }
+  }
+  if (!seasonRoutes.include?.includes(`/drink/${slug}/`)) {
+    fail(`_routes.json does not send /drink/${slug}/ to the season function`);
+  }
+  if (drink["公開"] === "1") {
+    const page = read(`drink/${slug}/index.html`);
+    const hero = page.match(new RegExp(`<img\\b[^>]*data-season-still="${slug}"[^>]*>`));
+    if (!hero) {
+      fail(`/drink/${slug}/ hero is not a season still`);
+    } else if (!new RegExp(`src="/drinks/season/${slug}_(?:spring|summer|autumn|winter)\\.webp"`).test(hero[0])) {
+      fail(`/drink/${slug}/ season still has the wrong src`);
+    }
+    if (!page.includes(`src="${cutout}"`)) {
+      fail(`/drink/${slug}/ lost its white cutout card`);
+    }
+  }
+}
+const seasonDir = join("out", "drinks", "season");
+if (existsSync(seasonDir)) {
+  for (const file of readdirSync(seasonDir)) {
+    const match = file.match(/^(.+)_(spring|summer|autumn|winter)\.webp$/);
+    if (!match || !seasonSlugs.includes(match[1])) {
+      fail(`out/drinks/season/${file} is not listed in data/still-seasons.json`);
+    }
+  }
+}
+if (!existsSync(join("functions", "drink", "[[path]].ts"))) {
+  fail("missing the season function functions/drink/[[path]].ts");
+}
+
 if (failures.length > 0) {
   for (const message of failures) {
     console.error(message);
