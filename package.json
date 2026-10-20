@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/build-visit-pool.mjs && node --experimental-strip-types --import ./scripts/register-ts.mjs scripts/check-visit-picks.mts && next build",
+    "build": "node scripts/build-visit-pool.mjs && node scripts/build-season-routes.mjs && node --experimental-strip-types --import ./scripts/register-ts.mjs scripts/check-visit-picks.mts && next build",
     "preview": "serve out",
     "fonts": "node scripts/subset-fonts.mjs"
   },

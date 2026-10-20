@@ -93,6 +93,8 @@ secret を置かず、Workers & Pages → Create → Pages → Connect to Git �
 
 静物URLは `http://` または `https://` の画像か、`/drinks/` 配下のその一杯の `.webp`（`public/drinks/` に置いたファイル）。`fallback-` は静物にしない。それ以外は警告して出さない。写真の出典は [`data/photo-credits.json`](data/photo-credits.json)。ページには出さない。
 
+四季の静物があるドリンクは [`data/still-seasons.json`](data/still-seasons.json) に並べる。白抜きの単品画像は静物URLのまま `public/drinks/<slug>.webp`、四季の画像は `public/drinks/season/<slug>_<spring|summer|autumn|winter>.webp` に置く。パスは決まった形から作るので、CSVの列は増やさない。一杯のページの最初の静物と、トップの二つ目以降の話のカードは、日本時間で今の季節の画像を出す（春は3〜5月、夏は6〜8月、秋は9〜11月、冬は12〜2月）。季節は配信のときに Pages Function（`functions/drink/[[path]].ts`）が差し替える。この関数を通るのは `public/_routes.json` に載ったページだけで、ビルドが書く。一覧のカード、トップの卓の場面、締めのカードは白抜きのまま。透過の元画像は `stills/masters/` にあり、四季の画像は `scripts/compose-season-stills.py` で作る。
+
 `/drink/` は六つのカテゴリを、場の入口と同じ順で並べる。各カテゴリでは静物のある一杯が先、静物のない一杯は文章だけが後ろに続く。行は消さない。`sitemap.xml` と `robots.txt` はビルドが書く。
 
 `/ba/office` の「一杯へ」は `/drink/kimino-yuzu/`。同じページから、カテゴリごとに一杯を開ける。殻 `/drink/shell` は商品ページではなく、店のリンクも置かない。

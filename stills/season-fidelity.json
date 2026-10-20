@@ -1,0 +1,382 @@
+{
+  "cc-lemon-pet_autumn": {
+    "print_px": 134823,
+    "print_maxdiff": 0.0,
+    "opaque_px": 136465,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5576,
+    "ssim_print": 0.99539,
+    "ssim_inner": 0.99453,
+    "layout": {
+      "scale": 0.7171,
+      "x": 481,
+      "y": 342,
+      "w": 237,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "cc-lemon-pet_spring": {
+    "print_px": 134823,
+    "print_maxdiff": 0.0,
+    "opaque_px": 136465,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5576,
+    "ssim_print": 0.99569,
+    "ssim_inner": 0.99436,
+    "layout": {
+      "scale": 0.7171,
+      "x": 481,
+      "y": 342,
+      "w": 237,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "cc-lemon-pet_summer": {
+    "print_px": 134823,
+    "print_maxdiff": 0.0,
+    "opaque_px": 136465,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5576,
+    "ssim_print": 0.99477,
+    "ssim_inner": 0.99323,
+    "layout": {
+      "scale": 0.7171,
+      "x": 481,
+      "y": 342,
+      "w": 237,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "cc-lemon-pet_winter": {
+    "print_px": 134823,
+    "print_maxdiff": 0.0,
+    "opaque_px": 136465,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5576,
+    "ssim_print": 0.99623,
+    "ssim_inner": 0.99553,
+    "layout": {
+      "scale": 0.7171,
+      "x": 481,
+      "y": 342,
+      "w": 237,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "fever-tree-tonic_autumn": {
+    "print_px": 68610,
+    "print_maxdiff": 0.0,
+    "opaque_px": 68750,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.3493,
+    "seethrough_meandiff": 61.05,
+    "edge_band_px": 5654,
+    "ssim_print": 0.98173,
+    "ssim_inner": 0.91662,
+    "layout": {
+      "scale": 0.7171,
+      "x": 503,
+      "y": 342,
+      "w": 194,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "fever-tree-tonic_spring": {
+    "print_px": 68610,
+    "print_maxdiff": 0.0,
+    "opaque_px": 68750,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.3493,
+    "seethrough_meandiff": 27.29,
+    "edge_band_px": 5654,
+    "ssim_print": 0.98945,
+    "ssim_inner": 0.9506,
+    "layout": {
+      "scale": 0.7171,
+      "x": 503,
+      "y": 342,
+      "w": 194,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "fever-tree-tonic_summer": {
+    "print_px": 68610,
+    "print_maxdiff": 0.0,
+    "opaque_px": 68750,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.3493,
+    "seethrough_meandiff": 17.16,
+    "edge_band_px": 5654,
+    "ssim_print": 0.99236,
+    "ssim_inner": 0.96811,
+    "layout": {
+      "scale": 0.7171,
+      "x": 503,
+      "y": 342,
+      "w": 194,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "fever-tree-tonic_winter": {
+    "print_px": 68610,
+    "print_maxdiff": 0.0,
+    "opaque_px": 68750,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.3493,
+    "seethrough_meandiff": 44.07,
+    "edge_band_px": 5654,
+    "ssim_print": 0.98281,
+    "ssim_inner": 0.91967,
+    "layout": {
+      "scale": 0.7171,
+      "x": 503,
+      "y": 342,
+      "w": 194,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "ishigaki-ginger-ale-200_autumn": {
+    "print_px": 94276,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95579,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1015,
+    "seethrough_meandiff": 86.92,
+    "edge_band_px": 5292,
+    "ssim_print": 0.99633,
+    "ssim_inner": 0.97658,
+    "layout": {
+      "scale": 0.7136,
+      "x": 508,
+      "y": 342,
+      "w": 184,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "ishigaki-ginger-ale-200_spring": {
+    "print_px": 94276,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95579,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1015,
+    "seethrough_meandiff": 34.52,
+    "edge_band_px": 5292,
+    "ssim_print": 0.99776,
+    "ssim_inner": 0.98643,
+    "layout": {
+      "scale": 0.7136,
+      "x": 508,
+      "y": 342,
+      "w": 184,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "ishigaki-ginger-ale-200_summer": {
+    "print_px": 94276,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95579,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1015,
+    "seethrough_meandiff": 25.56,
+    "edge_band_px": 5292,
+    "ssim_print": 0.9981,
+    "ssim_inner": 0.99113,
+    "layout": {
+      "scale": 0.7136,
+      "x": 508,
+      "y": 342,
+      "w": 184,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "ishigaki-ginger-ale-200_winter": {
+    "print_px": 94276,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95579,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1015,
+    "seethrough_meandiff": 53.95,
+    "edge_band_px": 5292,
+    "ssim_print": 0.9967,
+    "ssim_inner": 0.97895,
+    "layout": {
+      "scale": 0.7136,
+      "x": 508,
+      "y": 342,
+      "w": 184,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "noda-shio-cider_autumn": {
+    "print_px": 80538,
+    "print_maxdiff": 0.0,
+    "opaque_px": 82616,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.267,
+    "seethrough_meandiff": 58.49,
+    "edge_band_px": 5922,
+    "ssim_print": 0.99243,
+    "ssim_inner": 0.96403,
+    "layout": {
+      "scale": 0.7143,
+      "x": 500,
+      "y": 342,
+      "w": 199,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "noda-shio-cider_spring": {
+    "print_px": 80538,
+    "print_maxdiff": 0.0,
+    "opaque_px": 82616,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.267,
+    "seethrough_meandiff": 24.51,
+    "edge_band_px": 5922,
+    "ssim_print": 0.99465,
+    "ssim_inner": 0.98239,
+    "layout": {
+      "scale": 0.7143,
+      "x": 500,
+      "y": 342,
+      "w": 199,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "noda-shio-cider_summer": {
+    "print_px": 80538,
+    "print_maxdiff": 0.0,
+    "opaque_px": 82616,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.267,
+    "seethrough_meandiff": 18.72,
+    "edge_band_px": 5922,
+    "ssim_print": 0.99492,
+    "ssim_inner": 0.99038,
+    "layout": {
+      "scale": 0.7143,
+      "x": 500,
+      "y": 342,
+      "w": 199,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "noda-shio-cider_winter": {
+    "print_px": 80538,
+    "print_maxdiff": 0.0,
+    "opaque_px": 82616,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.267,
+    "seethrough_meandiff": 46.36,
+    "edge_band_px": 5922,
+    "ssim_print": 0.99284,
+    "ssim_inner": 0.9655,
+    "layout": {
+      "scale": 0.7143,
+      "x": 500,
+      "y": 342,
+      "w": 199,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "tennensui-sparkling-lemon-500_autumn": {
+    "print_px": 58739,
+    "print_maxdiff": 0.0,
+    "opaque_px": 59316,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.5653,
+    "seethrough_meandiff": 81.43,
+    "edge_band_px": 5910,
+    "ssim_print": 0.98315,
+    "ssim_inner": 0.91399,
+    "layout": {
+      "scale": 0.7143,
+      "x": 481,
+      "y": 342,
+      "w": 237,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "tennensui-sparkling-lemon-500_spring": {
+    "print_px": 58739,
+    "print_maxdiff": 0.0,
+    "opaque_px": 59316,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.5653,
+    "seethrough_meandiff": 36.63,
+    "edge_band_px": 5910,
+    "ssim_print": 0.9893,
+    "ssim_inner": 0.94894,
+    "layout": {
+      "scale": 0.7143,
+      "x": 481,
+      "y": 342,
+      "w": 237,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "tennensui-sparkling-lemon-500_summer": {
+    "print_px": 58739,
+    "print_maxdiff": 0.0,
+    "opaque_px": 59316,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.5653,
+    "seethrough_meandiff": 28.53,
+    "edge_band_px": 5910,
+    "ssim_print": 0.99118,
+    "ssim_inner": 0.96096,
+    "layout": {
+      "scale": 0.7143,
+      "x": 481,
+      "y": 342,
+      "w": 237,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "tennensui-sparkling-lemon-500_winter": {
+    "print_px": 58739,
+    "print_maxdiff": 0.0,
+    "opaque_px": 59316,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.5653,
+    "seethrough_meandiff": 55.94,
+    "edge_band_px": 5910,
+    "ssim_print": 0.98511,
+    "ssim_inner": 0.92397,
+    "layout": {
+      "scale": 0.7143,
+      "x": 481,
+      "y": 342,
+      "w": 237,
+      "h": 720,
+      "base_y": 1061
+    }
+  }
+}

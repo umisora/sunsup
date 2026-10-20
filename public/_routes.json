@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "include": [
+    "/api/*",
+    "/drink/cc-lemon-pet/",
+    "/drink/fever-tree-tonic/",
+    "/drink/ishigaki-ginger-ale-200/",
+    "/drink/noda-shio-cider/",
+    "/drink/tennensui-sparkling-lemon-500/"
+  ],
+  "exclude": []
+}
