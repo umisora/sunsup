@@ -10,21 +10,21 @@ import { isGenericProduct } from "./generic-rule.mjs";
  */
 
 const HAND = {
-  "kimino-yuzu": { stand: "full", frame: { nw: 1000, nh: 1000, l: 351, t: 103, cw: 405, ch: 834 } },
-  "kimino-ringo": { stand: "full", frame: { nw: 1100, nh: 1100, l: 383, t: 113, cw: 455, ch: 920 } },
-  "kimino-ume": { stand: "full", frame: { nw: 1100, nh: 1100, l: 385, t: 118, cw: 451, ch: 919 } },
+  "kimino-yuzu": { stand: "full", frame: { nw: 1200, nh: 1200, l: 413, t: 96, cw: 374, ch: 1008 } },
+  "kimino-ringo": { stand: "full", frame: { nw: 1200, nh: 1200, l: 414, t: 96, cw: 372, ch: 1008 } },
+  "kimino-ume": { stand: "full", frame: { nw: 1200, nh: 1200, l: 412, t: 96, cw: 375, ch: 1008 } },
   "fujiya-nectar-peach": { stand: "can", frame: { nw: 350, nh: 350, l: 92, t: 25, cw: 164, ch: 310 } },
   "fujiya-sparkling-peach": { stand: "full", frame: { nw: 750, nh: 750, l: 248, t: 49, cw: 255, ch: 650 } },
   "sanpellegrino-aranciata": { stand: "full", frame: { nw: 380, nh: 1000, l: 0, t: 1, cw: 380, ch: 998 } },
   "suntory-oolong-340": { stand: "can", frame: { nw: 528, nh: 1000, l: 0, t: 0, cw: 528, ch: 1000 } },
-  "kimura-akafuji": { stand: "full", frame: { nw: 750, nh: 750, l: 287, t: 32, cw: 180, ch: 684 } },
-  "kimura-shine-muscat": { stand: "full", frame: { nw: 750, nh: 750, l: 275, t: 31, cw: 199, ch: 688 } },
-  "kimura-yamanashi-budo": { stand: "full", frame: { nw: 750, nh: 750, l: 282, t: 28, cw: 190, ch: 687 } },
-  "kimura-mikan100-200": { stand: "full", frame: { nw: 750, nh: 750, l: 281, t: 34, cw: 180, ch: 684 } },
-  "kimura-momo-cider": { stand: "full", frame: { nw: 750, nh: 750, l: 280, t: 27, cw: 189, ch: 705 } },
-  "kimura-fuji-yuzu": { stand: "full", frame: { nw: 750, nh: 750, l: 286, t: 32, cw: 180, ch: 688 } },
-  "kodama-ginger-250": { stand: "full", frame: { nw: 1000, nh: 1000, l: 319, t: 14, cw: 357, ch: 972 } },
-  "maison-perrier-lime-ginger-330": { stand: "can", frame: { nw: 1000, nh: 1000, l: 318, t: 40, cw: 362, ch: 915 } },
+  "kimura-akafuji": { stand: "full", frame: { nw: 1200, nh: 1200, l: 466, t: 96, cw: 268, ch: 1008 } },
+  "kimura-shine-muscat": { stand: "full", frame: { nw: 1200, nh: 1200, l: 453, t: 96, cw: 293, ch: 1008 } },
+  "kimura-yamanashi-budo": { stand: "full", frame: { nw: 1200, nh: 1200, l: 457, t: 96, cw: 285, ch: 1008 } },
+  "kimura-mikan100-200": { stand: "full", frame: { nw: 1200, nh: 1200, l: 466, t: 96, cw: 267, ch: 1008 } },
+  "kimura-momo-cider": { stand: "full", frame: { nw: 1200, nh: 1200, l: 464, t: 96, cw: 272, ch: 1008 } },
+  "kimura-fuji-yuzu": { stand: "full", frame: { nw: 1200, nh: 1200, l: 468, t: 96, cw: 264, ch: 1009 } },
+  "kodama-ginger-250": { stand: "full", frame: { nw: 1200, nh: 1200, l: 413, t: 96, cw: 372, ch: 1008 } },
+  "maison-perrier-lime-ginger-330": { stand: "can", frame: { nw: 1200, nh: 1200, l: 400, t: 96, cw: 400, ch: 1008 } },
   "aoren-shun-ringo-195": { stand: "can", frame: { nw: 432, nh: 376, l: 142, t: 28, cw: 150, ch: 320 } },
 };
 
