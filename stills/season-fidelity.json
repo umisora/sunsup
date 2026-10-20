@@ -75,6 +75,82 @@
       "base_y": 1061
     }
   },
+  "fever-tree-ginger-beer-200_autumn": {
+    "print_px": 107565,
+    "print_maxdiff": 0.0,
+    "opaque_px": 108171,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5334,
+    "ssim_print": 0.99227,
+    "ssim_inner": 0.99213,
+    "layout": {
+      "scale": 0.715,
+      "x": 501,
+      "y": 342,
+      "w": 198,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "fever-tree-ginger-beer-200_spring": {
+    "print_px": 107565,
+    "print_maxdiff": 0.0,
+    "opaque_px": 108171,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5334,
+    "ssim_print": 0.98965,
+    "ssim_inner": 0.98921,
+    "layout": {
+      "scale": 0.715,
+      "x": 501,
+      "y": 342,
+      "w": 198,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "fever-tree-ginger-beer-200_summer": {
+    "print_px": 107565,
+    "print_maxdiff": 0.0,
+    "opaque_px": 108171,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5334,
+    "ssim_print": 0.98784,
+    "ssim_inner": 0.98722,
+    "layout": {
+      "scale": 0.715,
+      "x": 501,
+      "y": 342,
+      "w": 198,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "fever-tree-ginger-beer-200_winter": {
+    "print_px": 107565,
+    "print_maxdiff": 0.0,
+    "opaque_px": 108171,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5334,
+    "ssim_print": 0.99206,
+    "ssim_inner": 0.99183,
+    "layout": {
+      "scale": 0.715,
+      "x": 501,
+      "y": 342,
+      "w": 198,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
   "fever-tree-tonic_autumn": {
     "print_px": 68610,
     "print_maxdiff": 0.0,
@@ -227,6 +303,1298 @@
       "base_y": 1061
     }
   },
+  "kimino-mikan_autumn": {
+    "print_px": 157668,
+    "print_maxdiff": 0.0,
+    "opaque_px": 158185,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5886,
+    "ssim_print": 0.99633,
+    "ssim_inner": 0.99628,
+    "layout": {
+      "scale": 0.7157,
+      "x": 466,
+      "y": 342,
+      "w": 267,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-mikan_spring": {
+    "print_px": 157668,
+    "print_maxdiff": 0.0,
+    "opaque_px": 158185,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5886,
+    "ssim_print": 0.99656,
+    "ssim_inner": 0.99646,
+    "layout": {
+      "scale": 0.7157,
+      "x": 466,
+      "y": 342,
+      "w": 267,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-mikan_summer": {
+    "print_px": 157668,
+    "print_maxdiff": 0.0,
+    "opaque_px": 158185,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5886,
+    "ssim_print": 0.99643,
+    "ssim_inner": 0.99629,
+    "layout": {
+      "scale": 0.7157,
+      "x": 466,
+      "y": 342,
+      "w": 267,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-mikan_winter": {
+    "print_px": 157668,
+    "print_maxdiff": 0.0,
+    "opaque_px": 158185,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5886,
+    "ssim_print": 0.99629,
+    "ssim_inner": 0.99623,
+    "layout": {
+      "scale": 0.7157,
+      "x": 466,
+      "y": 342,
+      "w": 267,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-momo_autumn": {
+    "print_px": 159602,
+    "print_maxdiff": 0.0,
+    "opaque_px": 160002,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5883,
+    "ssim_print": 0.99585,
+    "ssim_inner": 0.99585,
+    "layout": {
+      "scale": 0.7157,
+      "x": 465,
+      "y": 342,
+      "w": 270,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-momo_spring": {
+    "print_px": 159602,
+    "print_maxdiff": 0.0,
+    "opaque_px": 160002,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5883,
+    "ssim_print": 0.99613,
+    "ssim_inner": 0.9961,
+    "layout": {
+      "scale": 0.7157,
+      "x": 465,
+      "y": 342,
+      "w": 270,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-momo_summer": {
+    "print_px": 159602,
+    "print_maxdiff": 0.0,
+    "opaque_px": 160002,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5883,
+    "ssim_print": 0.99578,
+    "ssim_inner": 0.99572,
+    "layout": {
+      "scale": 0.7157,
+      "x": 465,
+      "y": 342,
+      "w": 270,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-momo_winter": {
+    "print_px": 159602,
+    "print_maxdiff": 0.0,
+    "opaque_px": 160002,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5883,
+    "ssim_print": 0.99596,
+    "ssim_inner": 0.99595,
+    "layout": {
+      "scale": 0.7157,
+      "x": 465,
+      "y": 342,
+      "w": 270,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-ringo_autumn": {
+    "print_px": 156854,
+    "print_maxdiff": 0.0,
+    "opaque_px": 157346,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6334,
+    "ssim_print": 0.99619,
+    "ssim_inner": 0.99618,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 266,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-ringo_spring": {
+    "print_px": 156854,
+    "print_maxdiff": 0.0,
+    "opaque_px": 157346,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6334,
+    "ssim_print": 0.99649,
+    "ssim_inner": 0.99643,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 266,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-ringo_summer": {
+    "print_px": 156854,
+    "print_maxdiff": 0.0,
+    "opaque_px": 157346,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6334,
+    "ssim_print": 0.99607,
+    "ssim_inner": 0.99595,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 266,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-ringo_winter": {
+    "print_px": 156854,
+    "print_maxdiff": 0.0,
+    "opaque_px": 157346,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6334,
+    "ssim_print": 0.99624,
+    "ssim_inner": 0.99623,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 266,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-ume_autumn": {
+    "print_px": 158656,
+    "print_maxdiff": 0.0,
+    "opaque_px": 159214,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6362,
+    "ssim_print": 0.99711,
+    "ssim_inner": 0.99708,
+    "layout": {
+      "scale": 0.7171,
+      "x": 466,
+      "y": 342,
+      "w": 268,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-ume_spring": {
+    "print_px": 158656,
+    "print_maxdiff": 0.0,
+    "opaque_px": 159214,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6362,
+    "ssim_print": 0.99723,
+    "ssim_inner": 0.99718,
+    "layout": {
+      "scale": 0.7171,
+      "x": 466,
+      "y": 342,
+      "w": 268,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-ume_summer": {
+    "print_px": 158656,
+    "print_maxdiff": 0.0,
+    "opaque_px": 159214,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6362,
+    "ssim_print": 0.99709,
+    "ssim_inner": 0.99701,
+    "layout": {
+      "scale": 0.7171,
+      "x": 466,
+      "y": 342,
+      "w": 268,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-ume_winter": {
+    "print_px": 158656,
+    "print_maxdiff": 0.0,
+    "opaque_px": 159214,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6362,
+    "ssim_print": 0.99718,
+    "ssim_inner": 0.99715,
+    "layout": {
+      "scale": 0.7171,
+      "x": 466,
+      "y": 342,
+      "w": 268,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-yuzu-water_autumn": {
+    "print_px": 253869,
+    "print_maxdiff": 0.0,
+    "opaque_px": 255552,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6894,
+    "ssim_print": 0.99815,
+    "ssim_inner": 0.99805,
+    "layout": {
+      "scale": 0.715,
+      "x": 411,
+      "y": 342,
+      "w": 378,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-yuzu-water_spring": {
+    "print_px": 253869,
+    "print_maxdiff": 0.0,
+    "opaque_px": 255552,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6894,
+    "ssim_print": 0.99833,
+    "ssim_inner": 0.99804,
+    "layout": {
+      "scale": 0.715,
+      "x": 411,
+      "y": 342,
+      "w": 378,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-yuzu-water_summer": {
+    "print_px": 253869,
+    "print_maxdiff": 0.0,
+    "opaque_px": 255552,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6894,
+    "ssim_print": 0.99801,
+    "ssim_inner": 0.99764,
+    "layout": {
+      "scale": 0.715,
+      "x": 411,
+      "y": 342,
+      "w": 378,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-yuzu-water_winter": {
+    "print_px": 253869,
+    "print_maxdiff": 0.0,
+    "opaque_px": 255552,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6894,
+    "ssim_print": 0.99805,
+    "ssim_inner": 0.99789,
+    "layout": {
+      "scale": 0.715,
+      "x": 411,
+      "y": 342,
+      "w": 378,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-yuzu_autumn": {
+    "print_px": 157417,
+    "print_maxdiff": 0.0,
+    "opaque_px": 157813,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6462,
+    "ssim_print": 0.99729,
+    "ssim_inner": 0.99722,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 265,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-yuzu_spring": {
+    "print_px": 157417,
+    "print_maxdiff": 0.0,
+    "opaque_px": 157813,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6462,
+    "ssim_print": 0.9976,
+    "ssim_inner": 0.99752,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 265,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-yuzu_summer": {
+    "print_px": 157417,
+    "print_maxdiff": 0.0,
+    "opaque_px": 157813,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6462,
+    "ssim_print": 0.99693,
+    "ssim_inner": 0.99676,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 265,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimino-yuzu_winter": {
+    "print_px": 157417,
+    "print_maxdiff": 0.0,
+    "opaque_px": 157813,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6462,
+    "ssim_print": 0.99738,
+    "ssim_inner": 0.99731,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 265,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-akafuji_autumn": {
+    "print_px": 94585,
+    "print_maxdiff": 0.0,
+    "opaque_px": 94991,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.059,
+    "seethrough_meandiff": 86.38,
+    "edge_band_px": 6286,
+    "ssim_print": 0.99409,
+    "ssim_inner": 0.97518,
+    "layout": {
+      "scale": 0.7164,
+      "x": 505,
+      "y": 342,
+      "w": 190,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-akafuji_spring": {
+    "print_px": 94585,
+    "print_maxdiff": 0.0,
+    "opaque_px": 94991,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.059,
+    "seethrough_meandiff": 31.08,
+    "edge_band_px": 6286,
+    "ssim_print": 0.99584,
+    "ssim_inner": 0.98677,
+    "layout": {
+      "scale": 0.7164,
+      "x": 505,
+      "y": 342,
+      "w": 190,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-akafuji_summer": {
+    "print_px": 94585,
+    "print_maxdiff": 0.0,
+    "opaque_px": 94991,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.059,
+    "seethrough_meandiff": 17.46,
+    "edge_band_px": 6286,
+    "ssim_print": 0.99544,
+    "ssim_inner": 0.99205,
+    "layout": {
+      "scale": 0.7164,
+      "x": 505,
+      "y": 342,
+      "w": 190,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-akafuji_winter": {
+    "print_px": 94585,
+    "print_maxdiff": 0.0,
+    "opaque_px": 94991,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.059,
+    "seethrough_meandiff": 55.78,
+    "edge_band_px": 6286,
+    "ssim_print": 0.99458,
+    "ssim_inner": 0.97772,
+    "layout": {
+      "scale": 0.7164,
+      "x": 505,
+      "y": 342,
+      "w": 190,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-fuji-yuzu_autumn": {
+    "print_px": 99694,
+    "print_maxdiff": 0.0,
+    "opaque_px": 100369,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5688,
+    "ssim_print": 0.99542,
+    "ssim_inner": 0.99524,
+    "layout": {
+      "scale": 0.715,
+      "x": 506,
+      "y": 342,
+      "w": 187,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-fuji-yuzu_spring": {
+    "print_px": 99694,
+    "print_maxdiff": 0.0,
+    "opaque_px": 100369,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5688,
+    "ssim_print": 0.99457,
+    "ssim_inner": 0.99429,
+    "layout": {
+      "scale": 0.715,
+      "x": 506,
+      "y": 342,
+      "w": 187,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-fuji-yuzu_summer": {
+    "print_px": 99694,
+    "print_maxdiff": 0.0,
+    "opaque_px": 100369,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5688,
+    "ssim_print": 0.99369,
+    "ssim_inner": 0.99331,
+    "layout": {
+      "scale": 0.715,
+      "x": 506,
+      "y": 342,
+      "w": 187,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-fuji-yuzu_winter": {
+    "print_px": 99694,
+    "print_maxdiff": 0.0,
+    "opaque_px": 100369,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5688,
+    "ssim_print": 0.99537,
+    "ssim_inner": 0.9952,
+    "layout": {
+      "scale": 0.715,
+      "x": 506,
+      "y": 342,
+      "w": 187,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-mikan100-200_autumn": {
+    "print_px": 107391,
+    "print_maxdiff": 0.0,
+    "opaque_px": 107722,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6087,
+    "ssim_print": 0.99561,
+    "ssim_inner": 0.99561,
+    "layout": {
+      "scale": 0.7157,
+      "x": 505,
+      "y": 342,
+      "w": 190,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-mikan100-200_spring": {
+    "print_px": 107391,
+    "print_maxdiff": 0.0,
+    "opaque_px": 107722,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6087,
+    "ssim_print": 0.99615,
+    "ssim_inner": 0.99613,
+    "layout": {
+      "scale": 0.7157,
+      "x": 505,
+      "y": 342,
+      "w": 190,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-mikan100-200_summer": {
+    "print_px": 107391,
+    "print_maxdiff": 0.0,
+    "opaque_px": 107722,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6087,
+    "ssim_print": 0.99565,
+    "ssim_inner": 0.99559,
+    "layout": {
+      "scale": 0.7157,
+      "x": 505,
+      "y": 342,
+      "w": 190,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-mikan100-200_winter": {
+    "print_px": 107391,
+    "print_maxdiff": 0.0,
+    "opaque_px": 107722,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 6087,
+    "ssim_print": 0.9959,
+    "ssim_inner": 0.99589,
+    "layout": {
+      "scale": 0.7157,
+      "x": 505,
+      "y": 342,
+      "w": 190,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-momo-cider_autumn": {
+    "print_px": 99596,
+    "print_maxdiff": 0.0,
+    "opaque_px": 100163,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5822,
+    "ssim_print": 0.99116,
+    "ssim_inner": 0.99081,
+    "layout": {
+      "scale": 0.715,
+      "x": 503,
+      "y": 342,
+      "w": 193,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-momo-cider_spring": {
+    "print_px": 99596,
+    "print_maxdiff": 0.0,
+    "opaque_px": 100163,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5822,
+    "ssim_print": 0.98846,
+    "ssim_inner": 0.98814,
+    "layout": {
+      "scale": 0.715,
+      "x": 503,
+      "y": 342,
+      "w": 193,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-momo-cider_summer": {
+    "print_px": 99596,
+    "print_maxdiff": 0.0,
+    "opaque_px": 100163,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5822,
+    "ssim_print": 0.98756,
+    "ssim_inner": 0.98714,
+    "layout": {
+      "scale": 0.715,
+      "x": 503,
+      "y": 342,
+      "w": 193,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-momo-cider_winter": {
+    "print_px": 99596,
+    "print_maxdiff": 0.0,
+    "opaque_px": 100163,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5822,
+    "ssim_print": 0.99033,
+    "ssim_inner": 0.99003,
+    "layout": {
+      "scale": 0.715,
+      "x": 503,
+      "y": 342,
+      "w": 193,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kimura-shine-muscat_autumn": {
+    "print_px": 111906,
+    "print_maxdiff": 0.0,
+    "opaque_px": 112312,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5842,
+    "ssim_print": 0.99514,
+    "ssim_inner": 0.99489,
+    "layout": {
+      "scale": 0.7164,
+      "x": 496,
+      "y": 342,
+      "w": 207,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-shine-muscat_spring": {
+    "print_px": 111906,
+    "print_maxdiff": 0.0,
+    "opaque_px": 112312,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5842,
+    "ssim_print": 0.99456,
+    "ssim_inner": 0.99432,
+    "layout": {
+      "scale": 0.7164,
+      "x": 496,
+      "y": 342,
+      "w": 207,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-shine-muscat_summer": {
+    "print_px": 111906,
+    "print_maxdiff": 0.0,
+    "opaque_px": 112312,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5842,
+    "ssim_print": 0.99423,
+    "ssim_inner": 0.99396,
+    "layout": {
+      "scale": 0.7164,
+      "x": 496,
+      "y": 342,
+      "w": 207,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-shine-muscat_winter": {
+    "print_px": 111906,
+    "print_maxdiff": 0.0,
+    "opaque_px": 112312,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5842,
+    "ssim_print": 0.99492,
+    "ssim_inner": 0.99464,
+    "layout": {
+      "scale": 0.7164,
+      "x": 496,
+      "y": 342,
+      "w": 207,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-yamanashi-budo_autumn": {
+    "print_px": 107069,
+    "print_maxdiff": 0.0,
+    "opaque_px": 107367,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5919,
+    "ssim_print": 0.99372,
+    "ssim_inner": 0.9935,
+    "layout": {
+      "scale": 0.715,
+      "x": 499,
+      "y": 342,
+      "w": 202,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-yamanashi-budo_spring": {
+    "print_px": 107069,
+    "print_maxdiff": 0.0,
+    "opaque_px": 107367,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5919,
+    "ssim_print": 0.99124,
+    "ssim_inner": 0.99088,
+    "layout": {
+      "scale": 0.715,
+      "x": 499,
+      "y": 342,
+      "w": 202,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-yamanashi-budo_summer": {
+    "print_px": 107069,
+    "print_maxdiff": 0.0,
+    "opaque_px": 107367,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5919,
+    "ssim_print": 0.99084,
+    "ssim_inner": 0.99049,
+    "layout": {
+      "scale": 0.715,
+      "x": 499,
+      "y": 342,
+      "w": 202,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kimura-yamanashi-budo_winter": {
+    "print_px": 107069,
+    "print_maxdiff": 0.0,
+    "opaque_px": 107367,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5919,
+    "ssim_print": 0.99322,
+    "ssim_inner": 0.993,
+    "layout": {
+      "scale": 0.715,
+      "x": 499,
+      "y": 342,
+      "w": 202,
+      "h": 720,
+      "base_y": 1060
+    }
+  },
+  "kodama-ginger-250_autumn": {
+    "print_px": 148185,
+    "print_maxdiff": 0.0,
+    "opaque_px": 149947,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0536,
+    "seethrough_meandiff": 87.91,
+    "edge_band_px": 5886,
+    "ssim_print": 0.99576,
+    "ssim_inner": 0.98091,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 266,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kodama-ginger-250_spring": {
+    "print_px": 148185,
+    "print_maxdiff": 0.0,
+    "opaque_px": 149947,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0536,
+    "seethrough_meandiff": 27.69,
+    "edge_band_px": 5886,
+    "ssim_print": 0.99609,
+    "ssim_inner": 0.99018,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 266,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kodama-ginger-250_summer": {
+    "print_px": 148185,
+    "print_maxdiff": 0.0,
+    "opaque_px": 149947,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0536,
+    "seethrough_meandiff": 14.35,
+    "edge_band_px": 5886,
+    "ssim_print": 0.99592,
+    "ssim_inner": 0.99356,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 266,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kodama-ginger-250_winter": {
+    "print_px": 148185,
+    "print_maxdiff": 0.0,
+    "opaque_px": 149947,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0536,
+    "seethrough_meandiff": 57.07,
+    "edge_band_px": 5886,
+    "ssim_print": 0.99605,
+    "ssim_inner": 0.98303,
+    "layout": {
+      "scale": 0.7157,
+      "x": 467,
+      "y": 342,
+      "w": 266,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "maison-perrier-lime-ginger-330_autumn": {
+    "print_px": 54730,
+    "print_maxdiff": 0.0,
+    "opaque_px": 54943,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.6201,
+    "seethrough_meandiff": 79.73,
+    "edge_band_px": 6513,
+    "ssim_print": 0.97286,
+    "ssim_inner": 0.89103,
+    "layout": {
+      "scale": 0.7157,
+      "x": 457,
+      "y": 342,
+      "w": 285,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "maison-perrier-lime-ginger-330_spring": {
+    "print_px": 54730,
+    "print_maxdiff": 0.0,
+    "opaque_px": 54943,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.6201,
+    "seethrough_meandiff": 33.32,
+    "edge_band_px": 6513,
+    "ssim_print": 0.97962,
+    "ssim_inner": 0.93456,
+    "layout": {
+      "scale": 0.7157,
+      "x": 457,
+      "y": 342,
+      "w": 285,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "maison-perrier-lime-ginger-330_summer": {
+    "print_px": 54730,
+    "print_maxdiff": 0.0,
+    "opaque_px": 54943,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.6201,
+    "seethrough_meandiff": 24.15,
+    "edge_band_px": 6513,
+    "ssim_print": 0.982,
+    "ssim_inner": 0.95417,
+    "layout": {
+      "scale": 0.7157,
+      "x": 457,
+      "y": 342,
+      "w": 285,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "maison-perrier-lime-ginger-330_winter": {
+    "print_px": 54730,
+    "print_maxdiff": 0.0,
+    "opaque_px": 54943,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.6201,
+    "seethrough_meandiff": 58.57,
+    "edge_band_px": 6513,
+    "ssim_print": 0.97448,
+    "ssim_inner": 0.8962,
+    "layout": {
+      "scale": 0.7157,
+      "x": 457,
+      "y": 342,
+      "w": 285,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "neo-ginger-200_autumn": {
+    "print_px": 94879,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95433,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1351,
+    "seethrough_meandiff": 73.85,
+    "edge_band_px": 8174,
+    "ssim_print": 0.98525,
+    "ssim_inner": 0.94869,
+    "layout": {
+      "scale": 0.7164,
+      "x": 502,
+      "y": 342,
+      "w": 195,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "neo-ginger-200_spring": {
+    "print_px": 94879,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95433,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1351,
+    "seethrough_meandiff": 25.62,
+    "edge_band_px": 8174,
+    "ssim_print": 0.99119,
+    "ssim_inner": 0.97264,
+    "layout": {
+      "scale": 0.7164,
+      "x": 502,
+      "y": 342,
+      "w": 195,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "neo-ginger-200_summer": {
+    "print_px": 94879,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95433,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1351,
+    "seethrough_meandiff": 16.86,
+    "edge_band_px": 8174,
+    "ssim_print": 0.99308,
+    "ssim_inner": 0.985,
+    "layout": {
+      "scale": 0.7164,
+      "x": 502,
+      "y": 342,
+      "w": 195,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "neo-ginger-200_winter": {
+    "print_px": 94879,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95433,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1351,
+    "seethrough_meandiff": 52.0,
+    "edge_band_px": 8174,
+    "ssim_print": 0.98532,
+    "ssim_inner": 0.95091,
+    "layout": {
+      "scale": 0.7164,
+      "x": 502,
+      "y": 342,
+      "w": 195,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "neo-tonic-200_autumn": {
+    "print_px": 16916,
+    "print_maxdiff": 0.0,
+    "opaque_px": 17083,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.8482,
+    "seethrough_meandiff": 73.98,
+    "edge_band_px": 5878,
+    "ssim_print": 0.93451,
+    "ssim_inner": 0.8842,
+    "layout": {
+      "scale": 0.7157,
+      "x": 502,
+      "y": 342,
+      "w": 195,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "neo-tonic-200_spring": {
+    "print_px": 16916,
+    "print_maxdiff": 0.0,
+    "opaque_px": 17083,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.8482,
+    "seethrough_meandiff": 30.31,
+    "edge_band_px": 5878,
+    "ssim_print": 0.9578,
+    "ssim_inner": 0.93534,
+    "layout": {
+      "scale": 0.7157,
+      "x": 502,
+      "y": 342,
+      "w": 195,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "neo-tonic-200_summer": {
+    "print_px": 16916,
+    "print_maxdiff": 0.0,
+    "opaque_px": 17083,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.8482,
+    "seethrough_meandiff": 19.77,
+    "edge_band_px": 5878,
+    "ssim_print": 0.96679,
+    "ssim_inner": 0.95844,
+    "layout": {
+      "scale": 0.7157,
+      "x": 502,
+      "y": 342,
+      "w": 195,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "neo-tonic-200_winter": {
+    "print_px": 16916,
+    "print_maxdiff": 0.0,
+    "opaque_px": 17083,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.8482,
+    "seethrough_meandiff": 48.45,
+    "edge_band_px": 5878,
+    "ssim_print": 0.93934,
+    "ssim_inner": 0.89431,
+    "layout": {
+      "scale": 0.7157,
+      "x": 502,
+      "y": 342,
+      "w": 195,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "nfs-tomato-720_autumn": {
+    "print_px": 94036,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95649,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5737,
+    "ssim_print": 0.98952,
+    "ssim_inner": 0.98867,
+    "layout": {
+      "scale": 0.7164,
+      "x": 507,
+      "y": 342,
+      "w": 186,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "nfs-tomato-720_spring": {
+    "print_px": 94036,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95649,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5737,
+    "ssim_print": 0.98443,
+    "ssim_inner": 0.98343,
+    "layout": {
+      "scale": 0.7164,
+      "x": 507,
+      "y": 342,
+      "w": 186,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "nfs-tomato-720_summer": {
+    "print_px": 94036,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95649,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5737,
+    "ssim_print": 0.98265,
+    "ssim_inner": 0.98138,
+    "layout": {
+      "scale": 0.7164,
+      "x": 507,
+      "y": 342,
+      "w": 186,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "nfs-tomato-720_winter": {
+    "print_px": 94036,
+    "print_maxdiff": 0.0,
+    "opaque_px": 95649,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5737,
+    "ssim_print": 0.98834,
+    "ssim_inner": 0.98762,
+    "layout": {
+      "scale": 0.7164,
+      "x": 507,
+      "y": 342,
+      "w": 186,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
   "noda-shio-cider_autumn": {
     "print_px": 80538,
     "print_maxdiff": 0.0,
@@ -299,6 +1667,158 @@
       "x": 500,
       "y": 342,
       "w": 199,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "perrier-glass-750_autumn": {
+    "print_px": 112638,
+    "print_maxdiff": 0.0,
+    "opaque_px": 113623,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5166,
+    "ssim_print": 0.98752,
+    "ssim_inner": 0.98638,
+    "layout": {
+      "scale": 0.715,
+      "x": 486,
+      "y": 342,
+      "w": 227,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "perrier-glass-750_spring": {
+    "print_px": 112638,
+    "print_maxdiff": 0.0,
+    "opaque_px": 113623,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5166,
+    "ssim_print": 0.9839,
+    "ssim_inner": 0.98243,
+    "layout": {
+      "scale": 0.715,
+      "x": 486,
+      "y": 342,
+      "w": 227,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "perrier-glass-750_summer": {
+    "print_px": 112638,
+    "print_maxdiff": 0.0,
+    "opaque_px": 113623,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5166,
+    "ssim_print": 0.98226,
+    "ssim_inner": 0.98058,
+    "layout": {
+      "scale": 0.715,
+      "x": 486,
+      "y": 342,
+      "w": 227,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "perrier-glass-750_winter": {
+    "print_px": 112638,
+    "print_maxdiff": 0.0,
+    "opaque_px": 113623,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5166,
+    "ssim_print": 0.98691,
+    "ssim_inner": 0.98585,
+    "layout": {
+      "scale": 0.715,
+      "x": 486,
+      "y": 342,
+      "w": 227,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "shodoshima-olive-cider-200_autumn": {
+    "print_px": 110145,
+    "print_maxdiff": 0.0,
+    "opaque_px": 110614,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1752,
+    "seethrough_meandiff": 67.1,
+    "edge_band_px": 6056,
+    "ssim_print": 0.98751,
+    "ssim_inner": 0.94029,
+    "layout": {
+      "scale": 0.7157,
+      "x": 481,
+      "y": 342,
+      "w": 238,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "shodoshima-olive-cider-200_spring": {
+    "print_px": 110145,
+    "print_maxdiff": 0.0,
+    "opaque_px": 110614,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1752,
+    "seethrough_meandiff": 26.18,
+    "edge_band_px": 6056,
+    "ssim_print": 0.99202,
+    "ssim_inner": 0.96645,
+    "layout": {
+      "scale": 0.7157,
+      "x": 481,
+      "y": 342,
+      "w": 238,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "shodoshima-olive-cider-200_summer": {
+    "print_px": 110145,
+    "print_maxdiff": 0.0,
+    "opaque_px": 110614,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1752,
+    "seethrough_meandiff": 17.42,
+    "edge_band_px": 6056,
+    "ssim_print": 0.99457,
+    "ssim_inner": 0.98289,
+    "layout": {
+      "scale": 0.7157,
+      "x": 481,
+      "y": 342,
+      "w": 238,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "shodoshima-olive-cider-200_winter": {
+    "print_px": 110145,
+    "print_maxdiff": 0.0,
+    "opaque_px": 110614,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.1752,
+    "seethrough_meandiff": 49.26,
+    "edge_band_px": 6056,
+    "ssim_print": 0.98763,
+    "ssim_inner": 0.94271,
+    "layout": {
+      "scale": 0.7157,
+      "x": 481,
+      "y": 342,
+      "w": 238,
       "h": 720,
       "base_y": 1061
     }

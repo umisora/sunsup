@@ -8,7 +8,8 @@ Output: public/drinks/season/<slug>_<spring|summer|autumn|winter>.webp
 The backdrop is procedural: plaster wall, one upper-left window, a table. The product pixels are
 never repainted: label, logo, print and cap stay identical to the master (print_maxdiff must be 0).
 Only large clear-glass areas let the wall show through, and the 2px rim gets fringe clean-up and
-window-side light wrap.
+window-side light wrap. Set "glass": false on a drink in the manifest when it is a can or carries
+a white paper label: white print reads as clear glass otherwise and picks up the wall colour.
 
 Usage (repo root):  python3 scripts/compose-season-stills.py [slug ...]
 Needs numpy, scipy, scikit-image and Pillow.
@@ -158,6 +159,9 @@ def compose(slug, look):
     protect=binary_dilation(binary_closing(printed,iterations=10),iterations=4)
     glass=(~protect)&(A>0.5)&(sat<0.14)&(mn>=150)
     lab,n=cc_label(glass); sizes=np.bincount(lab.ravel()); keep=sizes>=4000; keep[0]=False
+    if not MANIFEST['drinks'][slug].get('glass',True):
+        # opaque drink (can, white paper label): nothing shows the wall through
+        keep[:]=False
     protect=protect|(glass&~keep[lab]); glass=glass&keep[lab]
     trans=np.clip(distance_transform_edt(glass)/4.0,0,1)*np.clip((mn-150)/40,0,1)
     trans=gaussian_filter(trans,1.0)*glass
