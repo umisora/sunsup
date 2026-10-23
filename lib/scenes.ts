@@ -3,6 +3,7 @@
  * in the site's order: how it looks on the table, then size, then taste.
  * Only public drinks with a real product still may be listed (checked in scripts/check-scenes.mjs).
  */
+import { isDemoted } from "./demote";
 import { getDrink, hasRealStill, SITE_ORIGIN, type Drink } from "./drinks";
 import type { PhotoName } from "@/design-system/components/StillLife/photos";
 
@@ -307,10 +308,17 @@ export function getScene(slug: string): Scene | undefined {
 }
 
 /** The drinks of a group that are public and have a real still, in the order written. */
+/** A scene group is one row of four, so a demoted drink (data/demote-rule.json) would open it. */
 export function groupDrinks(group: SceneGroup): Drink[] {
-  return group.slugs
+  const drinks = group.slugs
     .map((slug) => getDrink(slug))
     .filter((drink): drink is Drink => Boolean(drink && hasRealStill(drink)));
+  for (const drink of drinks) {
+    if (isDemoted(drink)) {
+      throw new Error(`scene group ${group.id} lists demoted ${drink.slug}`);
+    }
+  }
+  return drinks;
 }
 
 export function sceneDrinks(scene: Scene): Drink[] {
