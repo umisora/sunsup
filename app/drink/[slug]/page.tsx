@@ -189,7 +189,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         <Section key={scene.slug} space="md" label={scene.short}>
           <VenueLink
             href={scenePath(scene)}
-            media={<Photo name="table" sizes="(min-width: 768px) 420px, 100vw" position="50% 50%" decorative />}
+            media={<Photo name={scene.hero} sizes="(min-width: 768px) 420px, 100vw" position="50% 50%" decorative />}
             eyebrow={scene.short}
             title={<Phrase>{scene.title}</Phrase>}
             body={scene.backLink}
