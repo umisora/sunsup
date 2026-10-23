@@ -38,6 +38,7 @@ import {
   shelfNeighbours,
   storeRows,
 } from "@/lib/drinks";
+import { OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
 import { hasSeasonStills } from "@/lib/still-seasons";
 import { seasonOf } from "@/lib/visit";
 
@@ -111,8 +112,12 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
     still(true)
   );
 
+  // Read by the click beacon to tell which store a link goes to. "<" is escaped so the JSON cannot close the tag.
+  const outLinks = JSON.stringify(outLinkMap(drink.slug, rows)).replace(/</g, "\\u003c");
+
   return (
     <Motion>
+      {rows.length > 0 ? <script type="application/json" id={OUT_LINKS_ID} dangerouslySetInnerHTML={{ __html: outLinks }} /> : null}
       <ProductHero
         id="drink-title"
         crumbs={[
