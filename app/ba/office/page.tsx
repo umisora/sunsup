@@ -97,7 +97,13 @@ export default function OfficePage() {
             同じカテゴリの他の商品は、<TextLink href="/drink/">ドリンク一覧</TextLink>にあります。
           </Text>
           <Text variant="body">
-            年末と年始の飲み会は、<TextLink href="/ba/bonenkai/">忘年会・新年会のノンアルコール</TextLink>にまとめています。
+            お店で開く会社の飲み会は<TextLink href="/ba/kaisha/">会社の飲み会のノンアルコール</TextLink>に、年末と年始の飲み会は
+            <TextLink href="/ba/bonenkai/">忘年会・新年会のノンアルコール</TextLink>に、春の歓迎会と送別会は
+            <TextLink href="/ba/kansougeikai/">歓送迎会のノンアルコール</TextLink>にまとめています。
+          </Text>
+          <Text variant="body">
+            飲み会のほかに、<TextLink href="/ba/sashiire/">差し入れ・手土産</TextLink>と
+            <TextLink href="/ba/nomanai-hito/">お酒を飲まない人に渡す一本</TextLink>のページもあります。
           </Text>
         </Stack>
       </Section>

@@ -1,4 +1,4 @@
-export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai";
+export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai" | "scene-kaisha" | "scene-kansougeikai" | "scene-sashiire" | "scene-nomanai-hito";
 
 type PhotoSpec = {
   widths: readonly number[];
@@ -51,5 +51,29 @@ export const PHOTOS: Record<PhotoName, PhotoSpec> = {
     width: 1152,
     height: 1440,
     alt: "明るい壁の前のテーブルに、KIMINO YUZU、りんごワーク研究所のりんごジュース、WASABIジンジャーエール、メゾンペリエ ラズベリーローズの瓶が並んでいます。",
+  },
+  "scene-kaisha": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "秋の光が差す壁の前のテーブルに、KIMINO RINGO、POM 愛媛はれひめの缶、KIMINO MIKAN、神戸居留地 ぶどうと微炭酸の缶が並んでいます。",
+  },
+  "scene-kansougeikai": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "春の淡い光の壁の前に、KIMINO UME、幕別いちごサイダー、KIMINO MOMO、完熟ももサイダーの瓶が並んでいます。",
+  },
+  "scene-sashiire": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "夏の明るい壁の前に、片浦レモンサイダー、神戸居留地 レモネードソーダの缶、伊豆レモンサイダー、POM 愛媛河内晩柑の缶が並んでいます。",
+  },
+  "scene-nomanai-hito": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "冬の壁の前のテーブルに、福招き猫サイダー、のだ塩サイダー、小豆島オリーブサイダー、サンペレグリノの瓶が並んでいます。",
   },
 };

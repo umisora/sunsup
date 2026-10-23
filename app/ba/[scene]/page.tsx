@@ -61,7 +61,9 @@ export default async function ScenePage({ params }: ScenePageProps) {
   if (!scene) {
     notFound();
   }
-  const [lineA, lineB] = scene.title.split("の");
+  // Break after the last の: 「会社の飲み会の」「ノンアルコール」
+  const cut = scene.title.lastIndexOf("の") + 1;
+  const titleLines = scene.titleLines ? [...scene.titleLines] : cut > 0 && cut < scene.title.length ? [scene.title.slice(0, cut), scene.title.slice(cut)] : [scene.title];
 
   return (
     <Motion>
@@ -71,15 +73,15 @@ export default async function ScenePage({ params }: ScenePageProps) {
       <PageIntro
         id="scene-intro-title"
         step="ba"
-        eyebrow="飲み会"
-        title={lineB ? [`${lineA}の`, lineB] : [scene.title]}
+        eyebrow={scene.eyebrow}
+        title={titleLines}
         lead={scene.lead}
         media={<Photo name={scene.hero} sizes="(min-width: 960px) 720px, calc(100vw - 32px)" position="50% 50%" priority />}
       />
 
       <Section labelledBy="scene-title">
         <Grid columns="aside" gap="wide">
-          <Eyebrow id="scene-title">この飲み会</Eyebrow>
+          <Eyebrow id="scene-title">{scene.proseLabel}</Eyebrow>
           <FillText variant="prose" lines={[scene.prose]} />
         </Grid>
       </Section>
@@ -109,11 +111,23 @@ export default async function ScenePage({ params }: ScenePageProps) {
         );
       })}
 
-      <Section space="md" label="ほかの飲み会">
-        <Text variant="body">
-          ほかのドリンクは<TextLink href="/drink/">ドリンク一覧</TextLink>に、定時後の社内の飲み会は
-          <TextLink href="/ba/office/">オフィスのオープンな飲み会</TextLink>にあります。
-        </Text>
+      <Section space="md" label="ほかの場面">
+        <Stack gap={3}>
+          <Text variant="body">
+            ほかのドリンクは<TextLink href="/drink/">ドリンク一覧</TextLink>に、定時後の社内の飲み会は
+            <TextLink href="/ba/office/">オフィスのオープンな飲み会</TextLink>にあります。
+          </Text>
+          <Text variant="body">
+            ほかの場面は、
+            {SCENES.filter((other) => other.slug !== scene.slug).map((other, index, list) => (
+              <span key={other.slug}>
+                <TextLink href={scenePath(other)}>{other.title}</TextLink>
+                {index < list.length - 1 ? "、" : ""}
+              </span>
+            ))}
+            です。
+          </Text>
+        </Stack>
       </Section>
 
       <Section width="full" labelledBy="scene-invite-title">
@@ -121,12 +135,12 @@ export default async function ScenePage({ params }: ScenePageProps) {
           <Stack gap={4}>
             <Eyebrow>ドリンクを選ぶ</Eyebrow>
             <Text variant="small" tone="muted">
-              人数と、お酒を飲まない人の数がわかったら、本数を決めます。
+              {scene.invite.note}
             </Text>
             <Text as="h2" id="scene-invite-title" variant="headline">
-              大きな瓶を一本と、
+              {scene.invite.headline[0]}
               <br />
-              小さな瓶を人数分。
+              {scene.invite.headline[1]}
             </Text>
             <JourneyCta to="drink">ドリンクを見る</JourneyCta>
             <ShareRow url={`${SITE_ORIGIN}${scenePath(scene)}`} text={`${scene.title}｜${SITE_NAME}`} />

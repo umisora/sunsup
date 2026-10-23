@@ -2,19 +2,111 @@
   "bonenkai": {
     "kimino-yuzu": {
       "print_px": 50370,
-      "print_maxdiff": 0.0
+      "print_maxdiff": 0.0,
+      "upscale": 0.6
     },
     "ringowork-original-720": {
       "print_px": 122196,
-      "print_maxdiff": 0.0
+      "print_maxdiff": 0.0,
+      "upscale": 1.58
     },
     "kimura-wasabi-ginger": {
       "print_px": 58498,
-      "print_maxdiff": 0.0
+      "print_maxdiff": 0.0,
+      "upscale": 0.72
     },
     "maison-perrier-raspberry-330": {
       "print_px": 34507,
-      "print_maxdiff": 0.0
+      "print_maxdiff": 0.0,
+      "upscale": 0.57
+    }
+  },
+  "kaisha": {
+    "kimino-ringo": {
+      "print_px": 80010,
+      "print_maxdiff": 0.0,
+      "upscale": 0.67
+    },
+    "pom-harehime-190": {
+      "print_px": 56306,
+      "print_maxdiff": 0.0,
+      "upscale": 0.28
+    },
+    "kimino-mikan": {
+      "print_px": 77903,
+      "print_maxdiff": 0.0,
+      "upscale": 0.53
+    },
+    "kobe-grape-bitan-185": {
+      "print_px": 78477,
+      "print_maxdiff": 0.0,
+      "upscale": 0.35
+    }
+  },
+  "kansougeikai": {
+    "kimino-ume": {
+      "print_px": 79162,
+      "print_maxdiff": 0.0,
+      "upscale": 0.68
+    },
+    "makubetsu-ichigo-cider": {
+      "print_px": 94560,
+      "print_maxdiff": 0.0,
+      "upscale": 0.79
+    },
+    "kimino-momo": {
+      "print_px": 79325,
+      "print_maxdiff": 0.0,
+      "upscale": 0.53
+    },
+    "kimura-momo-cider": {
+      "print_px": 69120,
+      "print_maxdiff": 0.0,
+      "upscale": 0.82
+    }
+  },
+  "sashiire": {
+    "kataura-lemon-cider-330": {
+      "print_px": 99256,
+      "print_maxdiff": 0.0,
+      "upscale": 1.22
+    },
+    "kobe-lemonade-soda-185": {
+      "print_px": 102360,
+      "print_maxdiff": 0.0,
+      "upscale": 0.37
+    },
+    "kimura-izu-lemon": {
+      "print_px": 67864,
+      "print_maxdiff": 0.0,
+      "upscale": 0.94
+    },
+    "pom-kawachi-190": {
+      "print_px": 78200,
+      "print_maxdiff": 0.0,
+      "upscale": 0.33
+    }
+  },
+  "nomanai-hito": {
+    "kimura-fukuneko": {
+      "print_px": 90677,
+      "print_maxdiff": 0.0,
+      "upscale": 1.03
+    },
+    "noda-shio-cider": {
+      "print_px": 83252,
+      "print_maxdiff": 0.0,
+      "upscale": 0.68
+    },
+    "shodoshima-olive-cider-200": {
+      "print_px": 86294,
+      "print_maxdiff": 0.0,
+      "upscale": 0.56
+    },
+    "sanpellegrino-sparkling-250": {
+      "print_px": 141475,
+      "print_maxdiff": 0.0,
+      "upscale": 0.7
     }
   }
 }
