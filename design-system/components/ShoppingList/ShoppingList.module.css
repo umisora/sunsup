@@ -201,9 +201,9 @@
 
 .times {
   color: var(--text-muted);
-  font-family: var(--font-mark);
-  font-size: 22px;
-  margin-right: 2px;
+  font-family: var(--font-text);
+  font-size: 15px;
+  margin-left: 3px;
 }
 
 .units {

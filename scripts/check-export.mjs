@@ -657,6 +657,27 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
   fail("home og:url is not https://stylish.sunsup.me/");
 }
 
+// The 「本文へ」 skip link must stay clipped out of view until it has keyboard focus, at any scroll
+// position or capture size (a transform alone showed it over the list in full-page captures).
+{
+  const cssFiles = [];
+  const walkCss = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walkCss(full);
+      else if (entry.name.endsWith(".css")) cssFiles.push(full);
+    }
+  };
+  walkCss("out/_next/static");
+  const css = cssFiles.map((file) => readFileSync(file, "utf8")).join("\n");
+  const hidden = css.match(/\.(SkipLink_skip__[\w-]+):not\(:focus-visible\)\{([^}]*)\}/);
+  if (!hidden || !/(^|;)clip-path:inset\(50%\)/.test(hidden[2]) || !/width:1px/.test(hidden[2]) || !/height:1px/.test(hidden[2])) {
+    fail("the 本文へ skip link is not clipped out of view until it has keyboard focus");
+  } else if (!homeHtml.includes(`class="${hidden[1]}" href="#main"`)) {
+    fail("the 本文へ skip link on the home page does not use the clipped style");
+  }
+}
+
 if (failures.length > 0) {
   for (const message of failures) {
     console.error(message);

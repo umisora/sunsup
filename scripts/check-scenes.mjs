@@ -86,7 +86,7 @@ if (existsSync(fidelityPath)) {
   }
 }
 
-// The organiser's shopping list, told by layout: the heading is the answer (「10人なら、7本。」) for the
+// The organiser's shopping list, told by layout: the heading is the answer (「10人分で7本」) for the
 // first paint of 10 people, every scene drink is a row, picked rows show units rounded up from people per
 // bottle and the drink page's own store links (same URL, same kind) tagged source=list with no affiliate
 // parameters, unpicked rows show no count and no store, and the LINE link carries the list.
@@ -101,8 +101,8 @@ for (const slug of scenes) {
   const path = `/ba/${slug}/`;
   const html = read(`ba/${slug}/index.html`);
   const start = html.indexOf('data-shopping-list=""');
-  if (start < 0 || !html.includes('id="list"') || !/<a href="#list"[^>]*>何本いる？/.test(html)) {
-    fail(`${path} has no shopping list, or no 何本いる？ link to it`);
+  if (start < 0 || !html.includes('id="list"') || !/<a href="#list"[^>]*>何本買えばいい？/.test(html)) {
+    fail(`${path} has no shopping list, or no 何本買えばいい？ link to it`);
     continue;
   }
   if (!/data-shopping-list="" data-headcount="10"/.test(html)) {
@@ -157,12 +157,12 @@ for (const slug of scenes) {
     }
   }
   const heading = /<h2 id="list-title"[^>]*data-total="(\d+)"[^>]*>([\s\S]*?)<\/h2>/.exec(part);
-  if (!heading || Number(heading[1]) !== total || strip(heading[2]) !== `10人なら、${total}本。`) {
-    fail(`${path} heading is not 「10人なら、${total}本。」: ${heading ? strip(heading[2]) : "missing"}`);
+  if (!heading || Number(heading[1]) !== total || strip(heading[2]) !== `10人分で${total}本`) {
+    fail(`${path} heading is not 「10人分で${total}本」: ${heading ? strip(heading[2]) : "missing"}`);
   }
   const line = /<a href="(https:\/\/line\.me\/R\/share\?text=[^"]+)"[^>]*data-list-line=""/.exec(part);
   const text = line ? decodeURIComponent(unescape(line[1]).split("text=")[1]) : "";
-  if (!text.includes("　10人分\n") || !text.includes(`\n計${total}本\n`) || !text.endsWith(`${origin}${path}`) || picked.some((row) => !text.includes(` ×${row[5]}\n`))) {
+  if (!text.includes("（10人分）\n") || !text.includes(`\n合計${total}本\n`) || !text.endsWith(`${origin}${path}`) || picked.some((row) => !text.includes(`　${row[5]}本\n`))) {
     fail(`${path} LINE link does not carry the list: ${JSON.stringify(text.slice(0, 80))}`);
   }
 }

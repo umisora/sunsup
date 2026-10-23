@@ -30,7 +30,7 @@ type ShoppingListProps = {
 };
 
 /**
- * 幹事's list, told by layout: the heading is the answer (「10人なら、7本。」), the headcount is the one big
+ * 幹事's list, told by layout: the heading is the answer (「10人分で7本」), the headcount is the one big
  * control, and every drink is a row that toggles in and out of the list. Rows stay in place when toggled.
  * Store links carry data-out-* so app/_metrics/Beacons.tsx counts them with source=list. Nothing is stored.
  */
@@ -77,10 +77,10 @@ export function ShoppingList({ headingId, title, items, picked, url }: ShoppingL
       <h2 id={headingId} className={styles.key} aria-live="polite" data-total={lines.length > 0 ? total : undefined}>
         {lines.length > 0 ? (
           <>
-            <span className={styles.num}>{headcount}</span>人なら、<span className={styles.num}>{total}</span>本。
+            <span className={styles.num}>{headcount}</span>人分で<span className={styles.num}>{total}</span>本
           </>
         ) : (
-          <>ドリンクを選んで</>
+          <>ドリンクを選んでください</>
         )}
       </h2>
 
@@ -132,7 +132,7 @@ export function ShoppingList({ headingId, title, items, picked, url }: ShoppingL
                 type="button"
                 className={styles.pick}
                 aria-pressed={on}
-                aria-label={on ? `${item.name}を外す` : `${item.name}を入れる`}
+                aria-label={on ? `${item.name}をリストから外す` : `${item.name}をリストに入れる`}
                 onClick={() => toggle(item.slug)}
               >
                 <span className={styles.thumb}>
@@ -147,8 +147,8 @@ export function ShoppingList({ headingId, title, items, picked, url }: ShoppingL
                 <span className={styles.mark} aria-hidden="true">
                   {on ? (
                     <>
-                      <span className={styles.times}>×</span>
                       <span className={styles.units}>{count}</span>
+                      <span className={styles.times}>本</span>
                     </>
                   ) : (
                     <span className={styles.add}>＋</span>
@@ -156,7 +156,7 @@ export function ShoppingList({ headingId, title, items, picked, url }: ShoppingL
                 </span>
               </button>
               {on ? (
-                <ul className={styles.stores} aria-label={`${item.name}を買う`}>
+                <ul className={styles.stores} aria-label={`${item.name}を買えるお店`}>
                   {item.stores.map((store) => (
                     <li key={store.href}>
                       <a
@@ -198,7 +198,7 @@ export function ShoppingList({ headingId, title, items, picked, url }: ShoppingL
 export function ShoppingListCta({ href = "#list" }: { href?: string }) {
   return (
     <a href={href} className={styles.cta}>
-      何本いる？<span className={styles.ctaArrow} aria-hidden="true">↓</span>
+      何本買えばいい？<span className={styles.ctaArrow} aria-hidden="true">↓</span>
     </a>
   );
 }
