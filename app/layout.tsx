@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { SITE_NAME, SiteFooter, SiteHeader, SkipLink } from "@/design-system";
-import { categorySummaries } from "@/lib/drinks";
+import { categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import "@/design-system/styles/index.css";
 import { Beacons } from "./_metrics/Beacons";
 import { Clarity } from "./_metrics/Clarity";
@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sunsup-dv4.pages.dev"),
+  metadataBase: new URL(SITE_ORIGIN),
   title: {
     default: SITE_NAME,
     template: `%s｜${SITE_NAME}`,

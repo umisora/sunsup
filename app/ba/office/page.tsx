@@ -23,6 +23,7 @@ import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drink
 
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
+  alternates: { canonical: "/ba/office/" },
   description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒を飲まない人にも渡せる缶と瓶を紹介しています。",
   openGraph: {
     title: `オフィスのオープンな飲み会｜${SITE_NAME}`,

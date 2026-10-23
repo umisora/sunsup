@@ -28,6 +28,7 @@ import { DEFAULT_STORY_ID, STORIES, storyById, type Daypart, type Season } from 
 
 export const metadata: Metadata = {
   title: { absolute: SITE_NAME },
+  alternates: { canonical: "/" },
   openGraph: {
     title: `${SITE_NAME}｜飲み会向けのノンアルコール`,
     description: "オフィスの飲み会を任された人が、定時後に出すノンアルコールを選ぶサイトです。",
