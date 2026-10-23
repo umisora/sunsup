@@ -20,5 +20,115 @@
       "print_maxdiff": 0.0,
       "upscale": 0.34
     }
+  },
+  "grape": {
+    "kimura-ichigo-cider": {
+      "print_px": 58275,
+      "print_maxdiff": 0.0,
+      "upscale": 0.73
+    },
+    "pom-grape-800": {
+      "print_px": 142207,
+      "print_maxdiff": 0.0,
+      "upscale": 0.53
+    },
+    "sanpellegrino-melograno-330": {
+      "print_px": 110289,
+      "print_maxdiff": 0.0,
+      "upscale": 0.53
+    },
+    "hata-awawa-blueberry-500": {
+      "print_px": 118437,
+      "print_maxdiff": 0.0,
+      "upscale": 0.79
+    }
+  },
+  "nectar": {
+    "kimura-mikan100-200": {
+      "print_px": 47447,
+      "print_maxdiff": 0.0,
+      "upscale": 0.7
+    },
+    "fujiya-kodawari-peach": {
+      "print_px": 82990,
+      "print_maxdiff": 0.0,
+      "upscale": 0.63
+    },
+    "pom-juice-280": {
+      "print_px": 82329,
+      "print_maxdiff": 0.0,
+      "upscale": 0.4
+    },
+    "dydo-peach-nectar": {
+      "print_px": 94613,
+      "print_maxdiff": 0.0,
+      "upscale": 0.74
+    }
+  },
+  "craft": {
+    "chichibu-cider-340": {
+      "print_px": 77800,
+      "print_maxdiff": 0.0,
+      "upscale": 0.93
+    },
+    "swan-cider": {
+      "print_px": 87293,
+      "print_maxdiff": 0.0,
+      "upscale": 0.98
+    },
+    "ashoro-onneto-cider-240": {
+      "print_px": 75897,
+      "print_maxdiff": 0.0,
+      "upscale": 0.77
+    },
+    "kodama-ramune-200": {
+      "print_px": 53182,
+      "print_maxdiff": 0.0,
+      "upscale": 0.69
+    }
+  },
+  "tea": {
+    "twining-earl-grey": {
+      "print_px": 179321,
+      "print_maxdiff": 0.0,
+      "upscale": 1.07
+    },
+    "kobe-chabo-jasmine-500": {
+      "print_px": 84396,
+      "print_maxdiff": 0.0,
+      "upscale": 0.52
+    },
+    "kimino-sencha": {
+      "print_px": 19846,
+      "print_maxdiff": 0.0,
+      "upscale": 0.78
+    },
+    "pokka-maroyaka-195": {
+      "print_px": 29996,
+      "print_maxdiff": 0.0,
+      "upscale": 0.65
+    }
+  },
+  "party": {
+    "craftboss-black-500": {
+      "print_px": 189428,
+      "print_maxdiff": 0.0,
+      "upscale": 0.79
+    },
+    "hata-soda-ramune": {
+      "print_px": 88862,
+      "print_maxdiff": 0.0,
+      "upscale": 1.2
+    },
+    "sanpellegrino-limonata": {
+      "print_px": 95510,
+      "print_maxdiff": 0.0,
+      "upscale": 0.4
+    },
+    "kobe-gatsun-185": {
+      "print_px": 79662,
+      "print_maxdiff": 0.0,
+      "upscale": 0.66
+    }
   }
 }

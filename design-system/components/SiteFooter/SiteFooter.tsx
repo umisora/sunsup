@@ -25,7 +25,7 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
             <ul className={styles.links}>
               {categories.map((item) => (
                 <li key={item.id}>
-                  <Link href={item.href ?? `/drink/#${item.id}`} className={styles.link}>
+                  <Link href={item.href} className={styles.link}>
                     {item.category}
                     <span className={styles.count}>{item.count}</span>
                   </Link>

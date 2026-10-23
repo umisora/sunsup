@@ -22,6 +22,39 @@ if (ids.length === 0) {
   fail("no category pages under out/category/");
 }
 
+// Tonics and ginger beers stay listed, but never open a shelf and never stand in a first image.
+const MIXER = /トニック|ジンジャー ?ビア|tonic|ginger ?beer/i;
+const FIRST_ROW = 4;
+const names = new Map();
+
+/** Drink slugs in page order inside each <section id="...">. */
+function shelves(html) {
+  const out = new Map();
+  for (const part of html.split(/<section\b/).slice(1)) {
+    const id = part.match(/^[^>]*\bid="([^"]+)"/)?.[1];
+    if (!id) {
+      continue;
+    }
+    out.set(id, [...new Set([...part.matchAll(/href="\/drink\/([a-z0-9-]+)\/"/g)].map((m) => m[1]))]);
+  }
+  return out;
+}
+
+function checkFirstRows(path, html, ids) {
+  for (const [id, slugs] of shelves(html)) {
+    if (ids && !ids.includes(id)) {
+      continue;
+    }
+    if (slugs.length <= FIRST_ROW) {
+      continue;
+    }
+    const opening = slugs.slice(0, FIRST_ROW).filter((slug) => MIXER.test(names.get(slug) ?? ""));
+    if (opening.length > 0) {
+      fail(`${path} opens the #${id} shelf with ${opening.join(", ")}`);
+    }
+  }
+}
+
 const fidelityPath = join(process.cwd(), "stills", "category-hero-fidelity.json");
 const fidelity = existsSync(fidelityPath) ? JSON.parse(readFileSync(fidelityPath, "utf8")) : {};
 const drinkList = read("drink/index.html");
@@ -59,8 +92,16 @@ for (const id of ids) {
     if (item["@type"] !== "ListItem" || item.position !== index + 1) {
       fail(`${path} ItemList entry ${index + 1} is not a numbered ListItem`);
     }
-    return item.url.replace(`${origin}/drink/`, "").replace(/\/$/, "");
+    const slug = item.url.replace(`${origin}/drink/`, "").replace(/\/$/, "");
+    names.set(slug, item.name);
+    return slug;
   });
+  checkFirstRows(path, html, ["bottle", "big", "can", "pet", "carton", "other"]);
+  // In list order (the shelf shows drinks with a photo first, then the rest), tonics and ginger beers come last.
+  const firstMixer = listed.findIndex((slug) => MIXER.test(names.get(slug) ?? ""));
+  if (firstMixer >= 0 && listed.slice(firstMixer).some((slug) => !MIXER.test(names.get(slug) ?? ""))) {
+    fail(`${path}: tonics and ginger beers must come after every other drink`);
+  }
   if (list.numberOfItems !== listed.length || new Set(listed).size !== listed.length) {
     fail(`${path} ItemList count or entries are off`);
   }
@@ -103,10 +144,42 @@ for (const id of ids) {
     if (!listed.includes(drink)) {
       fail(`hero of ${path} shows ${drink}, which the page does not list`);
     }
+    if (MIXER.test(names.get(drink) ?? "")) {
+      fail(`hero of ${path} shows ${drink}, a tonic or ginger beer`);
+    }
     if (result.print_maxdiff !== 0) {
       fail(`hero of ${path} repainted the print of ${drink}`);
     }
   }
+}
+
+// The drink list opens each shelf the same way.
+checkFirstRows("/drink/", drinkList);
+
+// Scene heroes: no tonic or ginger beer either.
+const scenePath = join(process.cwd(), "stills", "scene-hero-fidelity.json");
+if (existsSync(scenePath)) {
+  for (const [scene, drinks] of Object.entries(JSON.parse(readFileSync(scenePath, "utf8")))) {
+    for (const drink of Object.keys(drinks)) {
+      if (MIXER.test(names.get(drink) ?? "")) {
+        fail(`hero of /ba/${scene}/ shows ${drink}, a tonic or ginger beer`);
+      }
+    }
+  }
+}
+
+// Category links go to the category pages, not to shelves of the list.
+function walk(dir) {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+    entry.isDirectory() ? walk(join(dir, entry.name)) : entry.name.endsWith(".html") ? [join(dir, entry.name)] : [],
+  );
+}
+const stale = walk("out").filter((file) => readFileSync(file, "utf8").includes('href="/drink/#'));
+if (stale.length > 0) {
+  fail(`${stale.length} page(s) still link to /drink/#<category>, e.g. ${stale[0]}`);
+}
+if (ids.length !== 6) {
+  fail(`expected 6 category pages, found ${ids.length}`);
 }
 
 if (failures.length > 0) {

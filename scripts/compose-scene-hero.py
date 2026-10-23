@@ -70,6 +70,41 @@ CATEGORY_HEROES = {
         ("sanpellegrino-aranciata-rossa-330", 0.74),
         ("kimino-yuzu-water", 0.58),
     ]),
+    # Autumn: the grape harvest. No dark tall bottle (it reads as wine); no tonic or ginger beer in any hero.
+    "grape": dict(season="autumn", drinks=[
+        ("kimura-ichigo-cider", 0.72),
+        ("pom-grape-800", 1.0),
+        ("sanpellegrino-melograno-330", 0.70),
+        ("hata-awawa-blueberry-500", 0.95),
+    ]),
+    # Summer: peaches and cold juice.
+    "nectar": dict(season="summer", drinks=[
+        ("kimura-mikan100-200", 0.80),
+        ("fujiya-kodawari-peach", 0.70),
+        ("pom-juice-280", 0.80),
+        ("dydo-peach-nectar", 0.62),
+    ]),
+    # Spring: the new-tea season.
+    "tea": dict(season="spring", drinks=[
+        ("twining-earl-grey", 1.0),
+        ("kobe-chabo-jasmine-500", 0.95),
+        ("kimino-sencha", 0.70),
+        ("pokka-maroyaka-195", 0.55),
+    ]),
+    # Autumn: local ciders; only bottles, as the category name says.
+    "craft": dict(season="autumn", drinks=[
+        ("chichibu-cider-340", 0.95),
+        ("swan-cider", 0.95),
+        ("ashoro-onneto-cider-240", 0.80),
+        ("kodama-ramune-200", 0.85),
+    ]),
+    # Winter: year-end parties with many people.
+    "party": dict(season="winter", drinks=[
+        ("craftboss-black-500", 1.0),
+        ("hata-soda-ramune", 0.80),
+        ("sanpellegrino-limonata", 0.62),
+        ("kobe-gatsun-185", 0.50),
+    ]),
 }
 MAX_UPSCALE = 1.6   # a cutout drawn bigger than this over its source pixels looks soft; pick another still
 S = 1600          # square backdrop; the hero is its middle 4:5 (1280 x 1600), the PageIntro frame on wide

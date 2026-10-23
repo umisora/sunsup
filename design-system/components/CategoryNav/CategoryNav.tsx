@@ -7,8 +7,8 @@ export type CategoryLink = {
   id: string;
   category: string;
   count: number;
-  /** Its own page when it has one. Without it the link opens the shelf on /drink/. */
-  href?: string;
+  /** The category's own page. */
+  href: string;
 };
 
 function folio(index: number): string {
@@ -66,7 +66,7 @@ export function CategoryIndex({ categories }: { categories: readonly CategoryLin
     <ol className={styles.index}>
       {categories.map((item, index) => (
         <li key={item.id}>
-          <Link href={item.href ?? `/drink/#${item.id}`} className={styles.stop}>
+          <Link href={item.href} className={styles.stop}>
             <span className={styles.stopNo} aria-hidden="true">
               {folio(index)}
             </span>

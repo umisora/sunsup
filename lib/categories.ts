@@ -32,6 +32,56 @@ export const CATEGORY_PAGES: readonly CategoryPage[] = [
       "冷やしておけば、乾杯にも、食事のあいだにも出せます。瓶なら一人に一本。缶は人数分を配れて、ペットボトルはふたを閉めれば持ち帰れます。甘いサイダーもあれば、甘さのない炭酸水もあります。",
     hero: "category-citrus",
   },
+  {
+    id: "grape",
+    title: "ぶどう・ベリーのノンアルコール",
+    titleLines: ["ぶどう・ベリーの", "ノンアルコール"],
+    lead: "ぶどうやマスカット、いちご、ベリーの飲みものを中心に、野菜ジュースやラムネも集めたページです。",
+    description: "ぶどう、マスカット、いちご、ベリーの飲みもの、野菜ジュース、ラムネなどの{n}本です。容器ごとに分けて並べています。",
+    prose:
+      "注ぐと、色がよく見えます。小さな紙パックやカップは一人分なので、人数に合わせて数をそろえれば、配るだけで準備が終わります。味は、果汁の濃いジュースから軽い炭酸まで。",
+    hero: "category-grape",
+  },
+  {
+    id: "nectar",
+    title: "果汁・ネクターのノンアルコール",
+    titleLines: ["果汁・ネクターの", "ノンアルコール"],
+    lead: "りんご、みかん、オレンジの果汁を中心に、トマトや野菜のジュース、桃やマンゴーのネクターも集めたページです。",
+    description: "りんご、みかん、オレンジの果汁、トマトや野菜のジュース、桃やマンゴーのネクターなどの{n}本です。容器ごとに分けて並べています。",
+    prose:
+      "甘いものが欲しい人の前に置ける種類です。大きな瓶は注いで分けます。小さな缶や紙パックなら一人に一本ずつ渡せるので、席の数だけ並べておけば足ります。とろりとしたネクターも、さらっとした果汁もあります。",
+    hero: "category-nectar",
+  },
+  {
+    id: "tea",
+    title: "茶・ハーブのノンアルコール",
+    titleLines: ["茶・ハーブの", "ノンアルコール"],
+    lead: "ほうじ茶、紅茶、緑茶、抹茶、麦茶を中心に、ジャスミン茶や烏龍茶、ミルクティーやラテも集めたページです。",
+    description: "ほうじ茶、紅茶、緑茶、抹茶、麦茶、ジャスミン茶、烏龍茶、ミルクティーやラテなどの{n}本です。容器ごとに分けて並べています。",
+    prose:
+      "食事の席に、いちばん合わせやすい種類です。ペットボトルなら人数分を並べておくだけで済みますし、大きな瓶なら注いで分けられます。甘さは一本ごとに違います。甘くないお茶もあれば、ミルクティーやラテのように甘いものもあります。",
+    hero: "category-tea",
+  },
+  {
+    id: "craft",
+    title: "クラフト・瓶もののノンアルコール",
+    titleLines: ["クラフト・瓶ものの", "ノンアルコール"],
+    lead: "土地のサイダーやラムネ、クラフトコーラを中心に、割って飲むシロップや甘酒も集めたページです。",
+    description: "土地のサイダーやラムネ、クラフトコーラ、割って飲むシロップ、甘酒などの{n}本です。容器ごとに分けて並べています。",
+    prose:
+      "ラベルや土地の名前が目に入るので、持っていくと話のきっかけになります。小さな瓶は一人に一本。大きな瓶とシロップは、注いで分けます。シロップは水や炭酸で割って飲みます。サイダーの甘さから、コーラのスパイスまで、味はさまざまです。",
+    hero: "category-craft",
+  },
+  {
+    id: "party",
+    title: "缶・パーティー向きのノンアルコール",
+    titleLines: ["缶・パーティー向きの", "ノンアルコール"],
+    lead: "缶や大きな容器のコーヒーを中心に、コーラやサイダー、野菜ジュースも集めたページです。",
+    description: "缶や大きな容器のコーヒー、コーラ、サイダー、野菜ジュースなどの{n}本です。容器ごとに分けて並べています。",
+    prose:
+      "人数の多い会で、まとめて用意しやすい種類です。缶は冷やして配るだけ。1Lの紙パックやペットボトルは、グラスに注いで何人かで分けます。コーヒーは、無糖から甘いものまであります。",
+    hero: "category-party",
+  },
 ];
 
 for (const page of CATEGORY_PAGES) {
@@ -63,11 +113,14 @@ export function categoryDrinks(page: CategoryPage): { category: string; drinks: 
 type Vessel = { id: string; title: string; short: string; noun: string; match: readonly string[] };
 
 const VESSELS: readonly Vessel[] = [
-  { id: "bottle", title: "一人に一本ずつ渡せる瓶", short: "瓶", noun: "瓶", match: ["ビン"] },
-  { id: "can", title: "人数分を配れる缶", short: "缶", noun: "缶", match: ["缶", "ミニ缶"] },
+  { id: "bottle", title: "そのまま手渡せる瓶", short: "瓶", noun: "瓶", match: ["ビン"] },
+  { id: "big", title: "注いで分ける大きな瓶", short: "大きな瓶", noun: "大きな瓶", match: ["大瓶"] },
+  { id: "can", title: "人数分を配れる缶", short: "缶", noun: "缶", match: ["缶", "ミニ缶", "ボトル缶"] },
   { id: "pet", title: "ふたを閉められるペットボトル", short: "ペットボトル", noun: "ペットボトル", match: ["ペットボトル"] },
+  { id: "carton", title: "紙パック", short: "紙パック", noun: "紙パック", match: ["紙パック"] },
 ];
-const OTHER: Vessel = { id: "other", title: "紙パックとそのほか", short: "紙パックなど", noun: "紙パックとそのほかの容器", match: [] };
+/** A container with fewer drinks than this joins the last group, so no group is one or two cards. */
+const MIN_GROUP = 4;
 
 function amount(ml: number): string {
   return ml >= 1000 ? `${ml / 1000}L` : `${ml}ml`;
@@ -87,17 +140,39 @@ function vesselLine(noun: string, drinks: readonly Drink[]): string {
 
 export type VesselGroup = { id: string; title: string; short: string; line: string; drinks: Drink[] };
 
-/** Container groups in the order 瓶, 缶, ペットボトル, then the rest. Every drink lands in exactly one. */
+/**
+ * Container groups in the order 瓶, 大きな瓶, 缶, ペットボトル, 紙パック, then the rest.
+ * Every drink lands in exactly one. Small groups fold into the last one.
+ */
 export function vesselGroups(drinks: readonly Drink[]): VesselGroup[] {
   const known = new Set(VESSELS.flatMap((vessel) => vessel.match));
-  const groups = [...VESSELS, OTHER].map((vessel) => {
-    const members = drinks.filter((drink) => (vessel === OTHER ? !known.has(drink.vessel) : vessel.match.includes(drink.vessel)));
-    return { id: vessel.id, title: vessel.title, short: vessel.short, line: vesselLine(vessel.noun, members), drinks: members };
-  });
+  const rest: Drink[] = drinks.filter((drink) => !known.has(drink.vessel));
+  const restKinds = new Set<string>();
+  if (rest.length > 0) {
+    restKinds.add("other");
+  }
+  const groups: VesselGroup[] = [];
+  for (const vessel of VESSELS) {
+    const members = drinks.filter((drink) => vessel.match.includes(drink.vessel));
+    if (members.length >= MIN_GROUP) {
+      groups.push({ id: vessel.id, title: vessel.title, short: vessel.short, line: vesselLine(vessel.noun, members), drinks: members });
+    } else if (members.length > 0) {
+      rest.push(...members);
+      restKinds.add(vessel.id);
+    }
+  }
+  if (rest.length > 0) {
+    const order = new Map(drinks.map((drink, index) => [drink.slug, index]));
+    rest.sort((a, b) => (order.get(a.slug) ?? 0) - (order.get(b.slug) ?? 0));
+    const carton = restKinds.has("carton");
+    const title = carton ? "紙パックとそのほか" : "そのほかの容器";
+    const noun = carton ? "紙パックとそのほかの容器" : "そのほかの容器";
+    groups.push({ id: "other", title, short: carton ? "紙パックなど" : "そのほか", line: vesselLine(noun, rest), drinks: rest });
+  }
   if (groups.reduce((sum, group) => sum + group.drinks.length, 0) !== drinks.length) {
     throw new Error("vessel groups dropped a drink");
   }
-  return groups.filter((group) => group.drinks.length > 0);
+  return groups;
 }
 
 /** Scenes that list drinks of this category, with how many. */
