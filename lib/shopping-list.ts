@@ -65,15 +65,15 @@ export function listTotal(lines: readonly ListLine[]): number {
 
 /** The heading: 「10人なら、7本。」 */
 export function keyMessage(headcount: number, lines: readonly ListLine[]): string {
-  return `${clampHeadcount(headcount)}人なら、${listTotal(lines)}本。`;
+  return `${clampHeadcount(headcount)}人分で${listTotal(lines)}本`;
 }
 
 /** The list as plain text, for LINE and the copy button. */
 export function listText(title: string, headcount: number, lines: readonly ListLine[], url: string): string {
   return [
-    `${title}　${clampHeadcount(headcount)}人分`,
-    ...lines.map((line) => `${line.item.name} ×${line.units}`),
-    `計${listTotal(lines)}本`,
+    `${title}（${clampHeadcount(headcount)}人分）`,
+    ...lines.map((line) => `・${line.item.name}　${line.units}本`),
+    `合計${listTotal(lines)}本`,
     url,
   ].join("\n");
 }

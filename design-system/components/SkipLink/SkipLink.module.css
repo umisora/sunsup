@@ -1,3 +1,5 @@
+/* Hidden until it gets keyboard focus. Clipping (not a transform) keeps it
+   out of view at any scroll position, viewport size or capture mode. */
 .skip {
   position: fixed;
   inset-inline-start: var(--space-4);
@@ -8,9 +10,14 @@
   background: var(--surface-raised);
   color: var(--text-primary);
   text-decoration: none;
-  transform: translateY(-150%);
 }
 
-.skip:focus {
-  transform: none;
+.skip:not(:focus-visible) {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+  pointer-events: none;
 }

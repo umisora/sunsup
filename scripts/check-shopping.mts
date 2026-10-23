@@ -35,9 +35,9 @@ expect(listLines([item("s", 0, true)], 30)[0]?.units === 1, "a syrup with no cou
 expect(unitsFor(9, 4) === 3 && unitsFor(8, 4) === 2, "units round up");
 expect(listLines([item("a", 1)], 0)[0]?.people === 1 && listLines([item("a", 1)], 999)[0]?.people === 200, "headcount is kept between 1 and 200");
 const text = listText("忘年会のノンアルコール", 10, lines, "https://stylish.sunsup.me/ba/bonenkai/");
-expect(text === "忘年会のノンアルコール　10人分\na ×4\nb ×1\nc ×3\n計8本\nhttps://stylish.sunsup.me/ba/bonenkai/", `list text: ${JSON.stringify(text)}`);
-expect(keyMessage(10, lines) === "10人なら、8本。", `key message: ${keyMessage(10, lines)}`);
-expect(keyMessage(1, listLines([item("a", 4)], 1)) === "1人なら、1本。", "one person still buys one bottle");
+expect(text === "忘年会のノンアルコール（10人分）\n・a　4本\n・b　1本\n・c　3本\n合計8本\nhttps://stylish.sunsup.me/ba/bonenkai/", `list text: ${JSON.stringify(text)}`);
+expect(keyMessage(10, lines) === "10人分で8本", `key message: ${keyMessage(10, lines)}`);
+expect(keyMessage(1, listLines([item("a", 4)], 1)) === "1人分で1本", "one person still buys one bottle");
 const share = lineShareUrl(text);
 expect(share.startsWith("https://line.me/R/share?text=") && decodeURIComponent(share.split("text=")[1] ?? "") === text, "LINE link carries the list text");
 
