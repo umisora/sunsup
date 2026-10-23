@@ -1,11 +1,17 @@
 {
-  "about": "Drinks that stay listed but sort to the end of their shelf, never open a first row, never stand in a hero, and never take an office-entry lead. A drink is demoted when any rule matches. name tests 品名; look tests 見た目; vessels limits a rule to those 容器 values. Patterns are case-insensitive. slugs lists drinks judged by eye that the patterns miss.",
+  "about": "Drinks that stay listed but sort to the end of their shelf, never open a first row, never stand in a hero, and never take an office-entry lead. A drink is demoted when a name rule matches its 品名 (case-insensitive), or when it is in look. look lists drinks whose still reads as wine, judged by eye against public/drinks/<slug>.webp; the catalog text alone cannot tell a wine bottle from a red soda. allow lists drinks a name rule catches but whose still does not look like alcohol. Every look and allow entry says why; the export check fails on a slug missing from the catalog, an allow entry no rule catches, or a slug in both lists.",
   "rules": [
     { "id": "mixer", "why": "tonic or ginger beer: a mixer, not a drink to hand out", "name": "トニック|ジンジャー ?ビア|tonic|ginger ?beer" },
     { "id": "alcohol-style", "why": "styled as a party drink for toasting: シャンメリー and メゾンペリエ シック", "name": "シャンメリー|メゾンペリエ シック|maison perrier chic" },
-    { "id": "wine-name", "why": "wine words or wine grape names in the name or on the label", "name": "ワイン|ワイナリー|winery|甲州|シャルドネ|メルロ|カベルネ|ピノ|ソーヴィニ|リースリング|ベーリー", "look": "ワイン|ワイナリー|winery|甲州|シャルドネ|メルロ|カベルネ|ピノ|ソーヴィニ|リースリング|ベーリー" },
-    { "id": "wine-colour-bottle", "why": "dark red or purple liquid in a glass bottle reads as red wine", "vessels": ["ビン", "大瓶"], "look": "(中身|液)は?(濃い赤|赤紫|ぶどう色)|(濃い赤|赤紫|ぶどう色)の(中身|液)" },
-    { "id": "red-big-bottle", "why": "red liquid in a large glass bottle reads as a wine bottle", "vessels": ["大瓶"], "look": "(中身|液)は赤|赤い(中身|液)" }
+    { "id": "wine-name", "why": "a winery or a wine grape in the product name", "name": "ワイン|ワイナリー|winery|甲州|シャルドネ|メルロ|カベルネ|ピノ|ソーヴィニ|リースリング|ベーリー" }
   ],
-  "slugs": []
+  "look": {
+    "kimura-yamanashi-budo": "slim dark bottle with dark red juice: reads as a small red-wine bottle",
+    "rbt-irika-ruby-750": "slim-necked 750ml bottle shown beside a stemmed wine glass",
+    "rbt-darjeeling-rajah-grand-750": "slim-necked 750ml bottle shown beside a stemmed wine glass",
+    "nfs-tomato-720": "tall bottle, gold cap, black label and red liquid: reads as a wine bottle"
+  },
+  "allow": {
+    "fujiya-sparkling-peach": "シャルドネ is on the label, but the still is a bright NECTAR bottle can with peaches and reads as fruit juice"
+  }
 }
