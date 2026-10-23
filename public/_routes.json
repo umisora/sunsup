@@ -6,6 +6,7 @@
   "exclude": [
     "/_next/*",
     "/brand/*",
+    "/fonts/*",
     "/drinks/*",
     "/images/*",
     "/og/*",

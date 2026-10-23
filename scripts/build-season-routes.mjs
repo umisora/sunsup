@@ -13,6 +13,7 @@ const slugs = Object.keys(manifest.drinks).sort();
 export const STATIC_EXCLUDES = [
   "/_next/*",
   "/brand/*",
+  "/fonts/*",
   "/drinks/*",
   "/images/*",
   "/og/*",
