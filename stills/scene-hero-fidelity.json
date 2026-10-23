@@ -1,0 +1,20 @@
+{
+  "bonenkai": {
+    "kimino-yuzu": {
+      "print_px": 50370,
+      "print_maxdiff": 0.0
+    },
+    "ringowork-original-720": {
+      "print_px": 122196,
+      "print_maxdiff": 0.0
+    },
+    "kimura-wasabi-ginger": {
+      "print_px": 58498,
+      "print_maxdiff": 0.0
+    },
+    "maison-perrier-raspberry-330": {
+      "print_px": 34507,
+      "print_maxdiff": 0.0
+    }
+  }
+}

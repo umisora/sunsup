@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { isGenericProduct } from "./generic-rule.mjs";
 // JSON-LD on drink pages has its own checker; importing runs it first.
 import "./check-jsonld.mjs";
+import "./check-scenes.mjs";
 
 const failures = [];
 

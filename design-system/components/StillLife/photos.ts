@@ -1,4 +1,4 @@
-export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide";
+export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai";
 
 type PhotoSpec = {
   widths: readonly number[];
@@ -44,5 +44,12 @@ export const PHOTOS: Record<PhotoName, PhotoSpec> = {
     width: 1280,
     height: 720,
     alt: "リネンのテーブルに、緑のガラス瓶、グレープフルーツを添えた炭酸のグラス、真鍮の栓抜きがあります。",
+  },
+  /** Made by scripts/compose-scene-hero.py from the real product stills only. */
+  "scene-bonenkai": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "明るい壁の前のテーブルに、KIMINO YUZU、りんごワーク研究所のりんごジュース、WASABIジンジャーエール、メゾンペリエ ラズベリーローズの瓶が並んでいます。",
   },
 };
