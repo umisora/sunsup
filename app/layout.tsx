@@ -22,6 +22,8 @@ const shippori = localFont({
   style: "normal",
   variable: "--font-shippori",
   display: "swap",
+  // 130KB+ of Japanese glyphs. Preloading it made the drink still wait on phones; it still loads from CSS.
+  preload: false,
 });
 
 const zen = localFont({
@@ -31,6 +33,8 @@ const zen = localFont({
   ],
   variable: "--font-zen",
   display: "swap",
+  // Same as Shippori: let the hero still go first.
+  preload: false,
 });
 
 export const viewport: Viewport = {

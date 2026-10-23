@@ -13,6 +13,8 @@ type ProductHeroProps = {
   title: ReactNode;
   /** One quiet line under the name, e.g. the size. */
   meta?: ReactNode;
+  /** Short facts set as tags under the name, e.g. ["250ml", "瓶", "ひとり分"]. */
+  specs?: readonly string[];
   /** Collection number, set in the corner like a catalog plate. */
   folio?: string;
   /** The drink's own still in a plinth <StillLife>. Omitted when the drink has none: the hero is type only. */
@@ -24,7 +26,7 @@ type ProductHeroProps = {
 };
 
 /** Top of a drink page: the still on its plinth beside the name and the way to the store. */
-export function ProductHero({ id, crumbs, title, meta, folio, media, children, extra }: ProductHeroProps) {
+export function ProductHero({ id, crumbs, title, meta, specs, folio, media, children, extra }: ProductHeroProps) {
   return (
     <section className={cx(layout.wrap, styles.hero, !media && styles.textOnly)} aria-labelledby={id}>
       {media ? <div className={styles.media}>{media}</div> : null}
@@ -46,6 +48,15 @@ export function ProductHero({ id, crumbs, title, meta, folio, media, children, e
         <h1 id={id} className={styles.title} data-intro>
           {typeof title === "string" ? <SoftBreak text={title} /> : title}
         </h1>
+        {specs && specs.length > 0 ? (
+          <ul className={styles.specs} aria-label="容量と人数" data-intro>
+            {specs.map((spec) => (
+              <li key={spec} className={styles.spec}>
+                {spec}
+              </li>
+            ))}
+          </ul>
+        ) : null}
         {meta ? (
           <p className={styles.meta} data-intro>
             {meta}
