@@ -20,7 +20,7 @@ import {
   TextLink,
   Tile,
 } from "@/design-system";
-import { CATEGORY_PAGE_IDS, categoryHref, categoryId, categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
+import { categoryHref, categoryId, categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText } from "@/lib/jsonld";
 import { getScene, groupDrinks, sceneDrinks, sceneJsonLd, scenePath, SCENES } from "@/lib/scenes";
 
@@ -67,7 +67,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
 
   // Categories of this page's drinks that have their own page.
   const used = new Set(sceneDrinks(scene).map(categoryId));
-  const categoryPages = categorySummaries().filter((item) => used.has(item.id) && CATEGORY_PAGE_IDS.has(item.id));
+  const categoryPages = categorySummaries().filter((item) => used.has(item.id));
 
   return (
     <Motion>

@@ -1,4 +1,4 @@
-export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai" | "scene-kaisha" | "scene-kansougeikai" | "scene-sashiire" | "scene-nomanai-hito" | "category-citrus";
+export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai" | "scene-kaisha" | "scene-kansougeikai" | "scene-sashiire" | "scene-nomanai-hito" | "category-citrus" | "category-grape" | "category-nectar" | "category-tea" | "category-craft" | "category-party";
 
 type PhotoSpec = {
   widths: readonly number[];
@@ -81,5 +81,35 @@ export const PHOTOS: Record<PhotoName, PhotoSpec> = {
     width: 1152,
     height: 1440,
     alt: "夏の光が差す壁の前のテーブルに、馬路村のゆずサイダー、和ノチカラ ゆず炭酸水のペットボトル、サンペレグリノ アランチャータ・ロッサの缶、KIMINO YUZUスパークリングウォーターの缶が並んでいます。",
+  },
+  "category-grape": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "秋の光が差す壁の前のテーブルに、静岡いちごサイダーの瓶、POM グレープジュースのペットボトル、サンペレグリノ メログラーノ＆アランチャの缶、ハタ びっくりあわわ ブルーベリー味の瓶が並んでいます。",
+  },
+  "category-nectar": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "夏の光が差す壁の前のテーブルに、静岡県産みかん100%の瓶、ネクターこだわり白桃の紙パック、ポンジュースのペットボトル、とろけるピーチネクターの缶が並んでいます。",
+  },
+  "category-tea": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "春の光が差す壁の前のテーブルに、トワイニング アールグレイの紙パック、神戸茶房 ジャスミン茶のペットボトル、KIMINO Sencha Still Teaの瓶、旨みまろやか緑茶の紙パックが並んでいます。",
+  },
+  "category-craft": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "秋の光が差す壁の前のテーブルに、秩父サイダー、スワンサイダー、足寄オンネトーブルー、コダマ印ラムネの瓶が並んでいます。",
+  },
+  "category-party": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "冬の壁の前のテーブルに、クラフトボス ブラックのペットボトル、HATASODA ラムネ味のボトル缶、サンペレグリノ リモナータの缶、ガツンゴールドの缶が並んでいます。",
   },
 };

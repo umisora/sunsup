@@ -432,12 +432,15 @@ const CATEGORY_IDS: Record<string, string> = {
   "缶・パーティー向き": "party",
 };
 
-/** Categories that have their own page at /category/<id>/. The rest still open their shelf of /drink/. */
-export const CATEGORY_PAGE_IDS: ReadonlySet<string> = new Set(["citrus"]);
+/** Categories with their own page at /category/<id>/. All six. */
+export const CATEGORY_PAGE_IDS: ReadonlySet<string> = new Set(["citrus", "grape", "nectar", "tea", "craft", "party"]);
 
-/** Where a category link goes: its own page when it has one, else its shelf on the drink list. */
+/** Every category has its own page. */
 export function categoryHref(id: string): string {
-  return CATEGORY_PAGE_IDS.has(id) ? `/category/${id}/` : `/drink/#${id}`;
+  if (!CATEGORY_PAGE_IDS.has(id)) {
+    throw new Error(`category ${id} has no page`);
+  }
+  return `/category/${id}/`;
 }
 
 export type DrinkGroup = {
@@ -446,7 +449,17 @@ export type DrinkGroup = {
   drinks: Drink[];
 };
 
+/** Tonics and ginger beers stay listed, but sort to the end of their shelf and never open one. */
+const MIXER_NAME = /トニック|ジンジャー ?ビア|tonic|ginger ?beer/i;
+
+export function isMixer(drink: Pick<Drink, "name">): boolean {
+  return MIXER_NAME.test(drink.name);
+}
+
 function discoveryRank(drink: Drink): number {
+  if (isMixer(drink)) {
+    return 3;
+  }
   const entry = (OFFICE_ENTRY_SLUGS as readonly string[]).includes(drink.slug);
   if (hasRealStill(drink) && entry) {
     return 0;
