@@ -27,6 +27,7 @@ import {
 } from "@/design-system";
 import {
   catalogNumber,
+  categoryHref,
   categoryId,
   SITE_ORIGIN,
   drinkDescription,
@@ -100,7 +101,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
   const [primary] = rows;
   const related = relatedDrinks(drink);
   const neighbours = shelfNeighbours(drink);
-  const shelf = `/drink/#${categoryId(drink)}`;
+  const shelf = categoryHref(categoryId(drink));
   const folio = `No. ${String(catalogNumber(drink)).padStart(3, "0")} / ${loadDrinks().length}`;
   const still = (priority: boolean) =>
     drink.stillUrl ? (

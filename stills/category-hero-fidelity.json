@@ -1,0 +1,24 @@
+{
+  "citrus": {
+    "umaji-yuzu-cider-280": {
+      "print_px": 85137,
+      "print_maxdiff": 0.0,
+      "upscale": 0.46
+    },
+    "dydo-wano-yuzu": {
+      "print_px": 89193,
+      "print_maxdiff": 0.0,
+      "upscale": 0.79
+    },
+    "sanpellegrino-aranciata-rossa-330": {
+      "print_px": 95549,
+      "print_maxdiff": 0.0,
+      "upscale": 0.5
+    },
+    "kimino-yuzu-water": {
+      "print_px": 31886,
+      "print_maxdiff": 0.0,
+      "upscale": 0.34
+    }
+  }
+}

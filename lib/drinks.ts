@@ -432,6 +432,14 @@ const CATEGORY_IDS: Record<string, string> = {
   "缶・パーティー向き": "party",
 };
 
+/** Categories that have their own page at /category/<id>/. The rest still open their shelf of /drink/. */
+export const CATEGORY_PAGE_IDS: ReadonlySet<string> = new Set(["citrus"]);
+
+/** Where a category link goes: its own page when it has one, else its shelf on the drink list. */
+export function categoryHref(id: string): string {
+  return CATEGORY_PAGE_IDS.has(id) ? `/category/${id}/` : `/drink/#${id}`;
+}
+
 export type DrinkGroup = {
   id: string;
   category: string;
@@ -476,10 +484,11 @@ export type CategorySummary = {
   id: string;
   category: string;
   count: number;
+  href: string;
 };
 
 export function categorySummaries(): CategorySummary[] {
-  return drinkGroups().map((group) => ({ id: group.id, category: group.category, count: group.drinks.length }));
+  return drinkGroups().map((group) => ({ id: group.id, category: group.category, count: group.drinks.length, href: categoryHref(group.id) }));
 }
 
 export function categoryId(drink: Drink): string {

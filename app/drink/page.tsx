@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead, SITE_NAME, TableShelf } from "@/design-system";
-import { drinkGroups } from "@/lib/drinks";
+import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead, SITE_NAME, TableShelf, Text, TextLink } from "@/design-system";
+import { CATEGORY_PAGE_IDS, categoryHref, drinkGroups } from "@/lib/drinks";
 
 export const metadata: Metadata = {
   title: "ドリンク一覧",
@@ -37,6 +37,11 @@ export default function DrinkIndexPage() {
       {groups.map((group, index) => (
         <Section key={group.id} id={group.id} space={index === 0 ? "sm" : "md"} labelledBy={`cat-${group.id}`}>
           <ShelfHead id={`cat-${group.id}`} index={index} title={<Phrase>{group.category}</Phrase>} count={group.drinks.length} />
+          {CATEGORY_PAGE_IDS.has(group.id) ? (
+            <Text variant="body">
+              瓶、缶、ペットボトルに分けた<TextLink href={categoryHref(group.id)}>{group.category}のページ</TextLink>もあります。
+            </Text>
+          ) : null}
           <DrinkShelf drinks={group.drinks} opening={index === 0} defer={index > 0} />
         </Section>
       ))}
