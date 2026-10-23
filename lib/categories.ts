@@ -75,7 +75,7 @@ export const CATEGORY_PAGES: readonly CategoryPage[] = [
   {
     id: "party",
     title: "缶・パーティー向きのノンアルコール",
-    titleLines: ["缶・パーティー向きの", "ノンアルコール"],
+    titleLines: ["缶・パーティー", "向きの", "ノンアルコール"],
     lead: "缶や大きな容器のコーヒーを中心に、コーラやサイダー、野菜ジュースも集めたページです。",
     description: "缶や大きな容器のコーヒー、コーラ、サイダー、野菜ジュースなどの{n}本です。容器ごとに分けて並べています。",
     prose:
