@@ -46,7 +46,7 @@ export const SCENES: readonly Scene[] = [
       {
         no: "02",
         title: "サイズ",
-        lines: ["720mlの大きな瓶なら、3〜4人で分けられます。", "ひとりで飲む人には、200〜250mlの小さな瓶を一本ずつ渡します。"],
+        lines: ["720〜780mlの大きな瓶なら、3〜4人で分けられます。", "ひとりで飲む人には、200〜280mlの小さな瓶を一本ずつ渡します。"],
       },
       {
         no: "03",
@@ -59,7 +59,7 @@ export const SCENES: readonly Scene[] = [
         id: "table",
         title: "テーブルに置く大きな瓶",
         line: "乾杯の前に、テーブルの真ん中へ。グラスに注いで分けます。",
-        slugs: ["kuranooto-koshu", "nfs-apple-720", "knk-kanjuku-apple-720", "ringowork-original-720"],
+        slugs: ["pom-mikan-straight-780", "nfs-apple-720", "knk-kanjuku-apple-720", "ringowork-original-720"],
       },
       {
         id: "single",
