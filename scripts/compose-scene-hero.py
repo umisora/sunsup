@@ -7,7 +7,7 @@ Product pixels are never repainted: label, logo, print and cap stay identical to
 
 Input:  stills/masters/<slug>.png (transparent cutout; made from public/drinks/<slug>.webp with
         rembg when missing, RGB kept as is, only alpha added)
-Output: public/images/scene-<scene>-{768,1280}.webp and stills/scene-hero-fidelity.json
+Output: public/images/scene-<scene>-{768,1152}.webp (4:5) and stills/scene-hero-fidelity.json
 
 Usage (repo root):  python3 scripts/compose-scene-hero.py bonenkai
 Needs numpy, scipy, scikit-image, Pillow (and rembg for new cutouts).
@@ -32,9 +32,12 @@ HEROES = {
         ("maison-perrier-raspberry-330", 0.70),
     ],
 }
-S = 1600          # square backdrop; the hero is the lower 16:9 band of it
-CROP_TOP = 700    # rows 700..1600
-TALLEST = 0.40    # tallest bottle as a share of S
+S = 1600          # square backdrop; the hero is its middle 4:5 (1280 x 1600), the PageIntro frame on wide
+                  # screens. On phones the frame is about square, so the drinks stay inside the middle 80%.
+CROP_W = 1280
+TALLEST = 0.52    # tallest bottle as a share of S
+HORIZON = 0.64    # table edge, a little higher than the single stills so the row sits in the middle
+BASE_Y = 0.79
 
 
 def master(slug):
@@ -100,7 +103,7 @@ def place(out, L, P, A, inner, px, py):
 
 
 def compose(scene):
-    season.S = S
+    season.S = S; season.HORIZON = HORIZON; season.BASE_Y = BASE_Y
     p = dict(season.SEASONS["winter"])
     bg, L = season.render_bg(p)
     out = bg.copy()
@@ -127,15 +130,16 @@ def compose(scene):
     for slug, P, prot, px, py, w, h in checks:
         d = np.abs(out[py:py + h, px:px + w].astype(np.float32) - np.clip(P, 0, 255).astype(np.uint8).astype(np.float32)).max(2)
         res[slug] = dict(print_px=int(prot.sum()), print_maxdiff=float(d[prot].max()))
-    return out[CROP_TOP:CROP_TOP + 900], res
+    left = (S - CROP_W) // 2
+    return out[:, left:left + CROP_W], res
 
 
 if __name__ == "__main__":
     scene = sys.argv[1]
     img, res = compose(scene)
     im = Image.fromarray(img)
-    for width in (768, 1280):
-        im.resize((width, width * 9 // 16), Image.Resampling.LANCZOS).save(
+    for width in (768, 1152):
+        im.resize((width, width * 5 // 4), Image.Resampling.LANCZOS).save(
             os.path.join(ROOT, "public", "images", f"scene-{scene}-{width}.webp"), quality=86, method=6)
     path = os.path.join(ROOT, "stills", "scene-hero-fidelity.json")
     allres = json.load(open(path)) if os.path.exists(path) else {}

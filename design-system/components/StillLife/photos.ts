@@ -47,9 +47,9 @@ export const PHOTOS: Record<PhotoName, PhotoSpec> = {
   },
   /** Made by scripts/compose-scene-hero.py from the real product stills only. */
   "scene-bonenkai": {
-    widths: [768, 1280],
-    width: 1280,
-    height: 720,
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
     alt: "明るい壁の前のテーブルに、KIMINO YUZU、りんごワーク研究所のりんごジュース、WASABIジンジャーエール、メゾンペリエ ラズベリーローズの瓶が並んでいます。",
   },
 };
