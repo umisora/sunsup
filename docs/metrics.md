@@ -14,6 +14,7 @@ STYLISH! の数字は、出どころが3つあります。どれを見ている�
 
 - ドリンクのページには、購入リンクの URL と種類（amazon / rakuten / direct / other / official）を JSON で埋め込んでいます（`#out-links`）。
 - `app/_metrics/Beacons.tsx` がクリックを拾い、`navigator.sendBeacon` で `/api/click` に送ります。リンクの動きには触れないので、送れなくても普通に開きます。
+- 場面のページ（`/ba/<場面>/`）の「人数から、買う本数を出す」リストの購入リンクは、リンクそのものに `data-out-slug`・`data-out-kind`・`data-out-source="list"` を持っています。同じ `/api/click` に送り、`clicks.source` が `list` になります。ドリンクのページから押されたものは `page` です。
 - ページを開くたびに `/api/view` にパスを送ります。
 - Pages Functions（`functions/api/click.ts`, `functions/api/view.ts`）は、同じオリジンからの送信だけを受け付け、クローラーの User-Agent は捨てます。保存するのは日付（JST）・ホスト・パス・ドリンク・リンクの種類・回数だけで、IP や User-Agent は残しません。
 - D1 はプロジェクト `sunsup` に `METRICS` という名前でつないでいます（本番とプレビューの両方）。プレビューの数字は `host` が `*.sunsup-dv4.pages.dev` になるので、本番と分けて読めます。
@@ -25,6 +26,10 @@ CLOUDFLARE_API_TOKEN=<D1 を読めるトークン> node scripts/metrics-report.m
 ```
 
 `--json` をつけると JSON で出ます。SQL は `scripts/metrics-report.mjs` の `QUERIES` にあり、ダッシュボードの D1 コンソールにもそのまま貼れます（`?1` をホスト、`?2` と `?3` を日付に置き換えてください）。
+
+リストから押された数は `bySource` で見られます。`source = 'list'` の行が、場面のページのリストから押された購入リンクです。
+
+`clicks.source` の列は `docs/metrics-migrations/0002-clicks-source.sql` で足しました。この列を書くコードが本番に出てから流します。それまでは `functions/api/click.ts` が古い書き方に戻して数えます。
 
 ## ヒートマップ（Microsoft Clarity）
 

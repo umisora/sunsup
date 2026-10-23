@@ -45,6 +45,9 @@ export const QUERIES = {
             FROM clicks WHERE host = ?1 AND day BETWEEN ?2 AND ?3 GROUP BY month ORDER BY month`,
   byKind: `SELECT kind, goal, SUM(n) AS clicks FROM clicks
            WHERE host = ?1 AND day BETWEEN ?2 AND ?3 GROUP BY kind, goal ORDER BY clicks DESC`,
+  bySource: `SELECT source, SUM(CASE WHEN goal = 1 THEN n ELSE 0 END) AS goal_clicks,
+                    SUM(CASE WHEN goal = 0 THEN n ELSE 0 END) AS official_clicks
+             FROM clicks WHERE host = ?1 AND day BETWEEN ?2 AND ?3 GROUP BY source ORDER BY goal_clicks DESC`,
   byDrink: `WITH c AS (
               SELECT slug, SUM(CASE WHEN goal = 1 THEN n ELSE 0 END) AS goal_clicks,
                      SUM(CASE WHEN goal = 0 THEN n ELSE 0 END) AS official_clicks
@@ -93,7 +96,7 @@ if (asJson) {
   console.log(`  ページビュー（ブラウザで開かれた数）: ${views}（うちドリンクのページ ${drinkViews}）`);
   console.log(`  商品リンクのクリック率: ${drinkViews ? ((100 * goal) / drinkViews).toFixed(1) : "-"}%（ドリンクのページ1回あたり）`);
   console.log(`  30日換算: ${pace} / 目標 ${GOAL_PER_MONTH}（あと ${Math.max(0, GOAL_PER_MONTH - pace)}）`);
-  for (const name of ["byMonth", "byWeek", "byDay", "byKind", "byDrink"]) {
+  for (const name of ["byMonth", "byWeek", "byDay", "byKind", "bySource", "byDrink"]) {
     console.log(`\n[${name}]`);
     console.table(report[name]);
   }

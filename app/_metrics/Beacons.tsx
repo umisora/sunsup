@@ -40,7 +40,14 @@ function onClick(event: MouseEvent): void {
     }
     const target = event.target instanceof Element ? event.target.closest("a[href]") : null;
     const href = target?.getAttribute("href");
-    if (!href) {
+    if (!target || !href) {
+      return;
+    }
+    // Links outside a drink page (the scene shopping list) name their drink and kind on the link itself.
+    const slug = target.getAttribute("data-out-slug");
+    const tagged = target.getAttribute("data-out-kind");
+    if (slug && isOutKind(tagged)) {
+      send("/api/click", { slug, kind: tagged, path: window.location.pathname, source: target.getAttribute("data-out-source") ?? "page" });
       return;
     }
     const map = linkMap();
@@ -48,7 +55,7 @@ function onClick(event: MouseEvent): void {
     if (!map || !isOutKind(kind)) {
       return;
     }
-    send("/api/click", { slug: map.slug, kind, path: window.location.pathname });
+    send("/api/click", { slug: map.slug, kind, path: window.location.pathname, source: "page" });
   } catch {
     // Never get in the way of the link.
   }

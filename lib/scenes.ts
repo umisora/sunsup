@@ -4,7 +4,10 @@
  * Only public drinks with a real product still may be listed (checked in scripts/check-scenes.mjs).
  */
 import { isDemoted } from "./demote";
-import { getDrink, hasRealStill, SITE_ORIGIN, type Drink } from "./drinks";
+import { getDrink, hasRealStill, SITE_ORIGIN, storeRows, type Drink } from "./drinks";
+import { isGoalKind, outKind } from "./out-links";
+import { servingUnit } from "./servings";
+import type { ListItem } from "./shopping-list";
 import type { PhotoName } from "@/design-system/components/StillLife/photos";
 
 
@@ -361,4 +364,36 @@ export function sceneJsonLd(scene: Scene): object[] {
       ],
     },
   ];
+}
+
+/**
+ * Items for the organiser's shopping list: every drink on the page whose people-per-bottle is known
+ * and that has a store link. The first drink of each group is picked to start with.
+ */
+export function sceneListItems(scene: Scene): { items: ListItem[]; picked: string[] } {
+  const items: ListItem[] = [];
+  const picked: string[] = [];
+  const seen = new Set<string>();
+  for (const group of scene.groups) {
+    let first = true;
+    for (const drink of groupDrinks(group)) {
+      if (seen.has(drink.slug)) {
+        continue;
+      }
+      const unit = servingUnit(drink);
+      const stores = storeRows(drink)
+        .filter((row) => isGoalKind(outKind(row.label)))
+        .map((row) => ({ text: row.text, href: row.href, kind: outKind(row.label) }));
+      if (!unit || stores.length === 0) {
+        continue;
+      }
+      seen.add(drink.slug);
+      items.push({ slug: drink.slug, name: drink.name, people: unit.people, dilute: unit.dilute, servingText: unit.text, stores });
+      if (first) {
+        picked.push(drink.slug);
+        first = false;
+      }
+    }
+  }
+  return { items, picked };
 }

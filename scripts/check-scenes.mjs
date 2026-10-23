@@ -86,10 +86,78 @@ if (existsSync(fidelityPath)) {
   }
 }
 
+// The organiser's shopping list: on every scene page, first painted for 10 people, units rounded up
+// from each drink's people per bottle, store links that are the drink page's own (same URL, same kind),
+// tagged for /api/click with source=list, no affiliate parameters, and a LINE link carrying the list.
+const AFFILIATE = /[?&](tag|ascsubtag|linkCode|aff(iliate)?(_?id)?|scid|a8|afid)=/i;
+const unescape = (text) => text.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+const attr = (tag, name) => {
+  const match = new RegExp(`\\s${name}="([^"]*)"`).exec(tag);
+  return match ? unescape(match[1]) : undefined;
+};
+for (const slug of scenes) {
+  const path = `/ba/${slug}/`;
+  const html = read(`ba/${slug}/index.html`);
+  const start = html.indexOf('data-shopping-list=""');
+  if (start < 0 || !html.includes('id="list"') || !html.includes('href="#list"')) {
+    fail(`${path} has no shopping list, or no link to it`);
+    continue;
+  }
+  if (!/data-shopping-list="" data-headcount="10"/.test(html)) {
+    fail(`${path} shopping list is not first painted for 10 people`);
+  }
+  const part = html.slice(start);
+  const lines = [...part.matchAll(/<li[^>]*data-list-slug="([a-z0-9-]+)" data-people="(\d+)" data-share="(\d+)" data-units="(\d+)"[^>]*>([\s\S]*?)<\/ul><\/li>/g)];
+  if (lines.length === 0) {
+    fail(`${path} shopping list has no lines`);
+  }
+  const shares = lines.reduce((sum, line) => sum + Number(line[3]), 0);
+  if (lines.length > 0 && shares !== 10) {
+    fail(`${path} shopping list shares add up to ${shares}, not 10`);
+  }
+  let total = 0;
+  for (const [, drink, people, share, units, body] of lines) {
+    const expected = Number(people) === 0 ? 1 : Math.max(1, Math.ceil(Number(share) / Number(people)));
+    if (Number(units) !== expected) {
+      fail(`${path} list: ${drink} is ${units} bottles for ${share} people at ${people} a bottle, expected ${expected}`);
+    }
+    total += Number(units);
+    if (!html.includes(`href="/drink/${drink}/"`)) {
+      fail(`${path} list names ${drink}, which the page does not show`);
+    }
+    const drinkPage = join("out", "drink", drink, "index.html");
+    const map = existsSync(drinkPage) ? JSON.parse((readFileSync(drinkPage, "utf8").match(/<script[^>]*id="out-links"[^>]*>([\s\S]*?)<\/script>/) ?? [])[1] ?? "{}") : {};
+    const stores = [...body.matchAll(/<a [^>]*data-out-source="[^"]*"[^>]*>/g)].map((m) => m[0]);
+    if (stores.length === 0) {
+      fail(`${path} list: ${drink} has no store link`);
+    }
+    for (const tag of stores) {
+      const href = attr(tag, "href") ?? "";
+      if (attr(tag, "data-out-slug") !== drink || attr(tag, "data-out-source") !== "list") {
+        fail(`${path} list: ${href} is not tagged as ${drink} from the list`);
+      }
+      if (map.links?.[href] !== attr(tag, "data-out-kind") || attr(tag, "data-out-kind") === "official") {
+        fail(`${path} list: ${drink} links ${href} as ${attr(tag, "data-out-kind")}, the drink page has ${map.links?.[href]}`);
+      }
+      if (AFFILIATE.test(href)) {
+        fail(`${path} list: affiliate parameter in ${href}`);
+      }
+    }
+  }
+  if (!part.includes(`合計 <strong>${total}<!-- -->本</strong>`) && !part.includes(`合計 <strong>${total}本</strong>`)) {
+    fail(`${path} list total is not ${total}`);
+  }
+  const line = /<a href="(https:\/\/line\.me\/R\/share\?text=[^"]+)"[^>]*data-list-line=""/.exec(part);
+  const text = line ? decodeURIComponent(unescape(line[1]).split("text=")[1]) : "";
+  if (!text.includes("（10人分）") || !text.includes(`合計 ${total}本`) || !text.endsWith(`${origin}${path}`) || lines.some(([, , , , units]) => !text.includes(` ${units}本`))) {
+    fail(`${path} LINE link does not carry the list: ${text.slice(0, 80)}`);
+  }
+}
+
 if (failures.length > 0) {
   for (const message of failures) {
     console.error(`✗ ${message}`);
   }
   process.exit(1);
 }
-console.log(`scenes ok: ${scenes.length} scene page(s)`);
+console.log(`scenes ok: ${scenes.length} scene page(s), each with a shopping list`);
