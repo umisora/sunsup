@@ -68,6 +68,24 @@ for (const slug of scenes) {
   }
 }
 
+// A scene hero made from product stills: every drink in it is on that page, and no print pixel was repainted.
+const fidelityPath = join(process.cwd(), "stills", "scene-hero-fidelity.json");
+if (existsSync(fidelityPath)) {
+  const fidelity = JSON.parse(readFileSync(fidelityPath, "utf8"));
+  for (const [scene, drinks] of Object.entries(fidelity)) {
+    const page = join("out", "ba", scene, "index.html");
+    const html = existsSync(page) ? readFileSync(page, "utf8") : "";
+    for (const [drink, result] of Object.entries(drinks)) {
+      if (!html.includes(`href="/drink/${drink}/"`)) {
+        fail(`hero of /ba/${scene}/ shows ${drink}, which the page does not list`);
+      }
+      if (result.print_maxdiff !== 0) {
+        fail(`hero of /ba/${scene}/ repainted the print of ${drink}`);
+      }
+    }
+  }
+}
+
 if (failures.length > 0) {
   for (const message of failures) {
     console.error(`✗ ${message}`);

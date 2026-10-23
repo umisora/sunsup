@@ -4,6 +4,13 @@
  * Only public drinks with a real product still may be listed (checked in scripts/check-scenes.mjs).
  */
 import { getDrink, hasRealStill, SITE_ORIGIN, type Drink } from "./drinks";
+import type { PhotoName } from "@/design-system/components/StillLife/photos";
+
+/**
+ * Which first image the scene pages use while the owner compares the two:
+ * "table" is the shared still life, "products" is the scene's own row of real product stills.
+ */
+export const SCENE_HERO: "table" | "products" = "table";
 
 export type SceneGroup = {
   id: string;
@@ -25,11 +32,14 @@ export type Scene = {
   groups: readonly SceneGroup[];
   /** One line for the card that links back here from drink pages. */
   backLink: string;
+  /** Row of this page's drinks, made by scripts/compose-scene-hero.py. */
+  productHero?: PhotoName;
 };
 
 export const SCENES: readonly Scene[] = [
   {
     slug: "bonenkai",
+    productHero: "scene-bonenkai",
     title: "忘年会・新年会のノンアルコール",
     short: "忘年会・新年会",
     description:
@@ -51,7 +61,7 @@ export const SCENES: readonly Scene[] = [
       {
         no: "03",
         title: "味",
-        lines: ["甘い果汁だけだと、料理と合わせにくくなります。", "ぴりっと辛いジンジャーエールや甘さ控えめのサイダーを混ぜておくと、最後まで飲めます。"],
+        lines: ["甘い果汁だけだと、料理と合わせにくくなります。", "すっきりしたジンジャーエールや甘さ控えめの炭酸を混ぜておくと、最後まで飲めます。"],
       },
     ],
     groups: [
@@ -70,8 +80,8 @@ export const SCENES: readonly Scene[] = [
       {
         id: "dry",
         title: "甘くない一本",
-        line: "料理と一緒に飲みたい人のために、辛いものや甘さ控えめのものを混ぜます。",
-        slugs: ["kimura-wasabi-ginger", "neo-ginger-200", "hyuganatsu-cider-245", "umaji-yuzu-cider-280"],
+        line: "料理と一緒に飲みたい人のために、甘さ控えめのものを混ぜます。",
+        slugs: ["kimura-wasabi-ginger", "maison-perrier-raspberry-330", "hyuganatsu-cider-245", "umaji-yuzu-cider-280"],
       },
     ],
     backLink: "年末と年始の飲み会で配れる瓶を、大きな瓶、小さな瓶、甘くない一本に分けています。",
@@ -129,4 +139,8 @@ export function sceneJsonLd(scene: Scene): object[] {
       ],
     },
   ];
+}
+
+export function sceneHero(scene: Scene): PhotoName {
+  return SCENE_HERO === "products" && scene.productHero ? scene.productHero : "table";
 }
