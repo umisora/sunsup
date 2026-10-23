@@ -19,8 +19,12 @@ export type ListItem = {
   /** People one bottle serves; 0 for a syrup with no count. */
   people: number;
   dilute: boolean;
-  /** e.g. ひとり分, 約4人分, 割って飲む */
+  /** e.g. ひとり分, 約4人分, 割って飲む (kept for the share text and checks; not shown on the row) */
   servingText: string;
+  /** White cutout still, /drinks/<slug>.webp */
+  still: string;
+  /** e.g. 780ml, shown only when the name does not already carry it */
+  size: string;
   stores: readonly ListStore[];
 };
 
@@ -55,20 +59,21 @@ export function listLines(items: readonly ListItem[], headcount: number): ListLi
     .map((line) => ({ ...line, units: unitsFor(line.people, line.item.people) }));
 }
 
-export function unitNote(item: ListItem): string {
-  if (item.dilute && item.people === 0) {
-    return "割って飲みます";
-  }
-  return `1本で${item.servingText}`;
+export function listTotal(lines: readonly ListLine[]): number {
+  return lines.reduce((sum, line) => sum + line.units, 0);
+}
+
+/** The heading: 「10人なら、7本。」 */
+export function keyMessage(headcount: number, lines: readonly ListLine[]): string {
+  return `${clampHeadcount(headcount)}人なら、${listTotal(lines)}本。`;
 }
 
 /** The list as plain text, for LINE and the copy button. */
 export function listText(title: string, headcount: number, lines: readonly ListLine[], url: string): string {
-  const total = lines.reduce((sum, line) => sum + line.units, 0);
   return [
-    `${title}（${clampHeadcount(headcount)}人分）`,
-    ...lines.map((line) => `・${line.item.name} ${line.units}本`),
-    `合計 ${total}本`,
+    `${title}　${clampHeadcount(headcount)}人分`,
+    ...lines.map((line) => `${line.item.name} ×${line.units}`),
+    `計${listTotal(lines)}本`,
     url,
   ].join("\n");
 }

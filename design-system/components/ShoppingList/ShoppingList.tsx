@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   clampHeadcount,
   DEFAULT_HEADCOUNT,
@@ -8,30 +8,33 @@ import {
   lineShareUrl,
   listLines,
   listText,
+  listTotal,
   MAX_HEADCOUNT,
   MIN_HEADCOUNT,
-  unitNote,
   type ListItem,
 } from "@/lib/shopping-list";
+import { cx } from "../../cx";
+import { ExternalPhoto, StillLife } from "../StillLife/StillLife";
 import styles from "./ShoppingList.module.css";
 
 type ShoppingListProps = {
-  /** e.g. 忘年会のノンアルコール */
+  /** id of the key-message heading, for the section's aria-labelledby */
+  headingId: string;
+  /** e.g. 忘年会・新年会のノンアルコール, the first line of the shared list */
   title: string;
   items: readonly ListItem[];
   /** Slugs picked to start with. */
   picked: readonly string[];
-  /** Absolute URL of the page, sent with the list. */
+  /** Absolute URL of the page, the last line of the shared list. */
   url: string;
 };
 
 /**
- * The organiser enters the headcount and gets how many of each picked drink to buy.
- * Store links carry data-out-* so app/_metrics/Beacons.tsx counts them with source=list.
- * Nothing is stored: the list lives in the page until it is sent or copied.
+ * 幹事's list, told by layout: the heading is the answer (「10人なら、7本。」), the headcount is the one big
+ * control, and every drink is a row that toggles in and out of the list. Rows stay in place when toggled.
+ * Store links carry data-out-* so app/_metrics/Beacons.tsx counts them with source=list. Nothing is stored.
  */
-export function ShoppingList({ title, items, picked, url }: ShoppingListProps) {
-  const id = useId();
+export function ShoppingList({ headingId, title, items, picked, url }: ShoppingListProps) {
   const [headcount, setHeadcount] = useState(DEFAULT_HEADCOUNT);
   const [draft, setDraft] = useState(String(DEFAULT_HEADCOUNT));
   const [chosen, setChosen] = useState<readonly string[]>(picked);
@@ -41,7 +44,8 @@ export function ShoppingList({ title, items, picked, url }: ShoppingListProps) {
     () => listLines(items.filter((item) => chosen.includes(item.slug)), headcount),
     [items, chosen, headcount],
   );
-  const total = lines.reduce((sum, line) => sum + line.units, 0);
+  const units = new Map(lines.map((line) => [line.item.slug, line.units]));
+  const total = listTotal(lines);
   const text = listText(title, headcount, lines, url);
 
   const setCount = (value: number) => {
@@ -52,7 +56,9 @@ export function ShoppingList({ title, items, picked, url }: ShoppingListProps) {
 
   const toggle = (slug: string) => {
     setChosen((current) =>
-      current.includes(slug) ? current.filter((item) => item !== slug) : items.filter((item) => item.slug === slug || current.includes(item.slug)).map((item) => item.slug),
+      current.includes(slug)
+        ? current.filter((item) => item !== slug)
+        : items.filter((item) => item.slug === slug || current.includes(item.slug)).map((item) => item.slug),
     );
   };
 
@@ -68,22 +74,29 @@ export function ShoppingList({ title, items, picked, url }: ShoppingListProps) {
 
   return (
     <div className={styles.list} data-shopping-list="" data-headcount={headcount}>
-      <div className={styles.count}>
-        <label htmlFor={`${id}-count`} className={styles.label}>
-          人数
-        </label>
-        <div className={styles.stepper}>
-          <button type="button" className={styles.step} onClick={() => setCount(headcount - 1)} disabled={headcount <= MIN_HEADCOUNT} aria-label="1人減らす">
-            −
-          </button>
+      <h2 id={headingId} className={styles.key} aria-live="polite" data-total={lines.length > 0 ? total : undefined}>
+        {lines.length > 0 ? (
+          <>
+            <span className={styles.num}>{headcount}</span>人なら、<span className={styles.num}>{total}</span>本。
+          </>
+        ) : (
+          <>ドリンクを選んで</>
+        )}
+      </h2>
+
+      <div className={styles.stepper} role="group" aria-label="人数">
+        <button type="button" className={styles.step} onClick={() => setCount(headcount - 1)} disabled={headcount <= MIN_HEADCOUNT} aria-label="1人減らす">
+          −
+        </button>
+        <label className={styles.count}>
           <input
-            id={`${id}-count`}
             className={styles.input}
             type="number"
             inputMode="numeric"
             min={MIN_HEADCOUNT}
             max={MAX_HEADCOUNT}
             value={draft}
+            aria-label="人数"
             onChange={(event) => {
               setDraft(event.target.value);
               const value = Number(event.target.value);
@@ -94,81 +107,98 @@ export function ShoppingList({ title, items, picked, url }: ShoppingListProps) {
             onBlur={() => setDraft(String(headcount))}
           />
           <span className={styles.unit}>人</span>
-          <button type="button" className={styles.step} onClick={() => setCount(headcount + 1)} disabled={headcount >= MAX_HEADCOUNT} aria-label="1人増やす">
-            ＋
-          </button>
-        </div>
+        </label>
+        <button type="button" className={styles.step} onClick={() => setCount(headcount + 1)} disabled={headcount >= MAX_HEADCOUNT} aria-label="1人増やす">
+          ＋
+        </button>
       </div>
 
-      {lines.length > 0 ? (
-        <ol className={styles.lines} aria-live="polite">
-          {lines.map((line) => (
-            <li key={line.item.slug} className={styles.line} data-list-slug={line.item.slug} data-people={line.item.people} data-share={line.people} data-units={line.units}>
-              <div className={styles.head}>
-                <a href={`/drink/${line.item.slug}/`} className={styles.name}>
-                  {line.item.name}
-                </a>
-                <p className={styles.units}>{line.units}本</p>
-              </div>
-              <p className={styles.note}>
-                {line.people}人で飲む分。{unitNote(line.item)}。
-              </p>
-              <ul className={styles.stores} aria-label={`${line.item.name}を買えるお店`}>
-                {line.item.stores.map((store) => (
-                  <li key={store.href}>
-                    <a
-                      href={store.href}
-                      className={styles.store}
-                      target="_blank"
-                      rel="noopener nofollow"
-                      data-out-slug={line.item.slug}
-                      data-out-kind={store.kind}
-                      data-out-source={LIST_SOURCE}
-                    >
-                      {store.text}で見る
-                    </a>
-                  </li>
-                ))}
-              </ul>
+      <ul className={styles.rows}>
+        {items.map((item) => {
+          const count = units.get(item.slug);
+          const on = count !== undefined;
+          const line = lines.find((entry) => entry.item.slug === item.slug);
+          return (
+            <li
+              key={item.slug}
+              className={cx(styles.row, on && styles.on)}
+              data-list-slug={item.slug}
+              data-picked={on ? "true" : "false"}
+              data-people={item.people}
+              data-share={line?.people}
+              data-units={count}
+            >
+              <button
+                type="button"
+                className={styles.pick}
+                aria-pressed={on}
+                aria-label={on ? `${item.name}を外す` : `${item.name}を入れる`}
+                onClick={() => toggle(item.slug)}
+              >
+                <span className={styles.thumb}>
+                  <StillLife ratio="fill" radius="sm" fit="plinth">
+                    <ExternalPhoto src={item.still} alt="" />
+                  </StillLife>
+                </span>
+                <span className={styles.name}>
+                  {item.name}
+                  {item.size ? <span className={styles.size}>{item.size}</span> : null}
+                </span>
+                <span className={styles.mark} aria-hidden="true">
+                  {on ? (
+                    <>
+                      <span className={styles.times}>×</span>
+                      <span className={styles.units}>{count}</span>
+                    </>
+                  ) : (
+                    <span className={styles.add}>＋</span>
+                  )}
+                </span>
+              </button>
+              {on ? (
+                <ul className={styles.stores} aria-label={`${item.name}を買う`}>
+                  {item.stores.map((store) => (
+                    <li key={store.href}>
+                      <a
+                        href={store.href}
+                        className={styles.store}
+                        target="_blank"
+                        rel="noopener nofollow"
+                        data-out-slug={item.slug}
+                        data-out-kind={store.kind}
+                        data-out-source={LIST_SOURCE}
+                      >
+                        {store.text}
+                        <span className={styles.arrow} aria-hidden="true">↗</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </li>
-          ))}
-        </ol>
-      ) : (
-        <p className={styles.empty}>ドリンクを一つ以上選んでください。</p>
-      )}
+          );
+        })}
+      </ul>
 
       {lines.length > 0 ? (
-        <>
-          <p className={styles.total}>
-            合計 <strong>{total}本</strong>
-          </p>
-          <div className={styles.actions}>
-            <a href={lineShareUrl(text)} className={styles.action} target="_blank" rel="noreferrer" data-list-line="">
-              LINEで送る
-            </a>
-            <button type="button" className={styles.action} onClick={copy} aria-live="polite">
-              {copied ? "コピーしました" : "リストをコピー"}
-            </button>
-          </div>
-        </>
+        <div className={styles.send}>
+          <a href={lineShareUrl(text)} className={styles.line} target="_blank" rel="noreferrer" data-list-line="">
+            LINEで送る
+          </a>
+          <button type="button" className={styles.copy} onClick={copy} aria-live="polite">
+            {copied ? "コピーしました" : "コピー"}
+          </button>
+        </div>
       ) : null}
-
-      <details className={styles.pick}>
-        <summary className={styles.summary}>ドリンクを選びなおす</summary>
-        <ul className={styles.choices}>
-          {items.map((item) => (
-            <li key={item.slug}>
-              <label className={styles.choice}>
-                <input type="checkbox" checked={chosen.includes(item.slug)} onChange={() => toggle(item.slug)} />
-                <span>{item.name}</span>
-                <span className={styles.serving}>{item.servingText}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </details>
-
-      <p className={styles.fine}>本数は目安です。大きな瓶は、一人180mlとして数えています。値段や在庫は、それぞれのお店で確かめてください。</p>
     </div>
+  );
+}
+
+/** The short call near the top of a scene page that jumps to the list. */
+export function ShoppingListCta({ href = "#list" }: { href?: string }) {
+  return (
+    <a href={href} className={styles.cta}>
+      何本いる？<span className={styles.ctaArrow} aria-hidden="true">↓</span>
+    </a>
   );
 }

@@ -2,7 +2,7 @@
 import { onRequestPost } from "../functions/api/click.ts";
 import { SCENES, sceneListItems } from "../lib/scenes.ts";
 import { servingUnit } from "../lib/servings.ts";
-import { lineShareUrl, listLines, listText, unitsFor, type ListItem } from "../lib/shopping-list.ts";
+import { keyMessage, lineShareUrl, listLines, listText, unitsFor, type ListItem } from "../lib/shopping-list.ts";
 
 const failures: string[] = [];
 function expect(ok: boolean, message: string) {
@@ -25,7 +25,7 @@ expect(unit("名前だけ", "届くのは24本です。", "ビン") === undefine
 
 // Splitting the headcount over the picked drinks.
 const item = (slug: string, people: number, dilute = false): ListItem => ({
-  slug, name: slug, people, dilute, servingText: people === 1 ? "ひとり分" : `約${people}人分`, stores: [],
+  slug, name: slug, people, dilute, servingText: people === 1 ? "ひとり分" : `約${people}人分`, still: `/drinks/${slug}.webp`, size: "", stores: [],
 });
 const lines = listLines([item("a", 1), item("b", 4), item("c", 1)], 10);
 expect(lines.map((line) => line.people).join() === "4,3,3", `10 people over 3 drinks split 4,3,3, got ${lines.map((l) => l.people).join()}`);
@@ -35,7 +35,9 @@ expect(listLines([item("s", 0, true)], 30)[0]?.units === 1, "a syrup with no cou
 expect(unitsFor(9, 4) === 3 && unitsFor(8, 4) === 2, "units round up");
 expect(listLines([item("a", 1)], 0)[0]?.people === 1 && listLines([item("a", 1)], 999)[0]?.people === 200, "headcount is kept between 1 and 200");
 const text = listText("忘年会のノンアルコール", 10, lines, "https://stylish.sunsup.me/ba/bonenkai/");
-expect(text.startsWith("忘年会のノンアルコール（10人分）\n・a 4本\n") && text.includes("合計 8本") && text.endsWith("/ba/bonenkai/"), `list text: ${text}`);
+expect(text === "忘年会のノンアルコール　10人分\na ×4\nb ×1\nc ×3\n計8本\nhttps://stylish.sunsup.me/ba/bonenkai/", `list text: ${JSON.stringify(text)}`);
+expect(keyMessage(10, lines) === "10人なら、8本。", `key message: ${keyMessage(10, lines)}`);
+expect(keyMessage(1, listLines([item("a", 4)], 1)) === "1人なら、1本。", "one person still buys one bottle");
 const share = lineShareUrl(text);
 expect(share.startsWith("https://line.me/R/share?text=") && decodeURIComponent(share.split("text=")[1] ?? "") === text, "LINE link carries the list text");
 
@@ -46,6 +48,8 @@ for (const scene of SCENES) {
   expect(items.length >= 4, `${scene.slug}: only ${items.length} list items`);
   expect(picked.length === scene.groups.length, `${scene.slug}: picked ${picked.length} drinks for ${scene.groups.length} groups`);
   for (const entry of items) {
+    expect(entry.still.startsWith("/drinks/"), `${scene.slug}/${entry.slug}: no still for the row`);
+    expect(!entry.size || !entry.name.includes(entry.size), `${scene.slug}/${entry.slug}: size ${entry.size} repeats the name`);
     expect(entry.stores.length > 0, `${scene.slug}/${entry.slug}: no store link`);
     for (const store of entry.stores) {
       expect(store.kind !== "official", `${scene.slug}/${entry.slug}: brand site in the list`);
