@@ -40,6 +40,7 @@ import {
 } from "@/lib/drinks";
 import { OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
 import { drinkJsonLd, jsonLdText } from "@/lib/jsonld";
+import { scenePath, scenesFor } from "@/lib/scenes";
 import { heroSpecs } from "@/lib/servings";
 import { hasSeasonStills } from "@/lib/still-seasons";
 import { seasonOf } from "@/lib/visit";
@@ -183,6 +184,18 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
           </Stack>
         </Section>
       ) : null}
+
+      {scenesFor(drink.slug).map((scene) => (
+        <Section key={scene.slug} space="md" label={scene.short}>
+          <VenueLink
+            href={scenePath(scene)}
+            media={<Photo name="table" sizes="(min-width: 768px) 420px, 100vw" position="50% 50%" decorative />}
+            eyebrow={scene.short}
+            title={<Phrase>{scene.title}</Phrase>}
+            body={scene.backLink}
+          />
+        </Section>
+      ))}
 
       <Section space="md" label="オフィスの飲み会">
         <VenueLink

@@ -96,6 +96,9 @@ export default function OfficePage() {
           <Text variant="body">
             同じカテゴリの他の商品は、<TextLink href="/drink/">ドリンク一覧</TextLink>にあります。
           </Text>
+          <Text variant="body">
+            年末と年始の飲み会は、<TextLink href="/ba/bonenkai/">忘年会・新年会のノンアルコール</TextLink>にまとめています。
+          </Text>
         </Stack>
       </Section>
 
