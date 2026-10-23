@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import { SITE_NAME, SiteFooter, SiteHeader, SkipLink } from "@/design-system";
 import { categorySummaries } from "@/lib/drinks";
 import "@/design-system/styles/index.css";
+import { Beacons } from "./_metrics/Beacons";
+import { Clarity } from "./_metrics/Clarity";
 
 const cormorant = localFont({
   src: [
@@ -63,6 +65,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <SiteFooter categories={categorySummaries()} />
+        <Beacons />
+        <Clarity />
         <noscript>
           <style>{`[data-intro],[data-line],[data-reveal],[data-stagger-item]{visibility:visible !important}[data-intro-media]{clip-path:none !important}[data-arrive]{transform:none !important}[data-arrive-floor]{opacity:1 !important}`}</style>
         </noscript>
