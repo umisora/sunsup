@@ -108,6 +108,23 @@
   margin-top: var(--space-3);
 }
 
+.specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spec {
+  padding: 4px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: var(--step-small);
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
 /* facts */
 
 .facts {
@@ -189,8 +206,9 @@
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    height: min(60svh, 65svh, 520px);
-    max-height: 65svh;
+    /* Low enough that the name, the size tags and the store button share the first screen. */
+    height: min(42svh, 360px);
+    max-height: 42svh;
     aspect-ratio: auto;
     border-radius: 0;
   }
@@ -207,6 +225,20 @@
   .meta {
     padding-top: 12px;
     font-size: 15px;
+  }
+
+  /* Phones: the store button comes right after the name and tags; the size sentence follows it. */
+  .action {
+    order: 1;
+    margin-top: 0;
+  }
+
+  .meta {
+    order: 2;
+  }
+
+  .extra {
+    order: 3;
   }
 
   .facts {

@@ -40,6 +40,7 @@ import {
 } from "@/lib/drinks";
 import { OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
 import { drinkJsonLd, jsonLdText } from "@/lib/jsonld";
+import { heroSpecs } from "@/lib/servings";
 import { hasSeasonStills } from "@/lib/still-seasons";
 import { seasonOf } from "@/lib/visit";
 
@@ -131,6 +132,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         folio={folio}
         title={drink.name}
         meta={drink.size}
+        specs={heroSpecs(drink)}
         media={hero}
         extra={<TableToggle drink={{ slug: drink.slug, name: drink.name, stillUrl: drink.stillUrl, category: drink.category }} />}
       >

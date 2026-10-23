@@ -16,22 +16,12 @@ const cormorant = localFont({
   display: "swap",
 });
 
-const shippori = localFont({
-  src: "../fonts/shippori-mincho-500.woff2",
-  weight: "500",
-  style: "normal",
-  variable: "--font-shippori",
-  display: "swap",
-});
-
-const zen = localFont({
-  src: [
-    { path: "../fonts/zen-kaku-gothic-new-400.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/zen-kaku-gothic-new-500.woff2", weight: "500", style: "normal" },
-  ],
-  variable: "--font-zen",
-  display: "swap",
-});
+/*
+  Shippori Mincho and Zen Kaku Gothic New are ~480KB of Japanese glyphs together. Fetched with the page,
+  they held back the drink still on phones, so they load from /fonts/jp.css after first paint instead.
+  The swap switches media from "print" to "all" once the sheet is in; <noscript> loads it plainly.
+*/
+const ASYNC_FONTS = `document.querySelectorAll('link[data-async-font]').forEach(function(l){function on(){l.media='all'}if(l.sheet){on()}else{l.addEventListener('load',on)}})`;
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -57,7 +47,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ja" className={`${cormorant.variable} ${shippori.variable} ${zen.variable} js`}>
+    <html lang="ja" className={`${cormorant.variable} js`}>
+      <head>
+        <link rel="stylesheet" href="/fonts/jp.css" media="print" data-async-font="" />
+        <script dangerouslySetInnerHTML={{ __html: ASYNC_FONTS }} />
+        <noscript>
+          <link rel="stylesheet" href="/fonts/jp.css" />
+        </noscript>
+      </head>
       <body>
         <SkipLink target="main" />
         <SiteHeader />

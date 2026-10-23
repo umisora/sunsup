@@ -4,17 +4,11 @@
  * and the brand is left out because the catalog has no brand column.
  */
 import { categoryId, drinkDescription, SITE_ORIGIN, type Drink } from "./drinks";
-
-const VOLUME = /(\d+(?:\.\d+)?)\s*(ml|mL|ML|ｍｌ|L|ℓ|g)(?![a-zA-Z])/;
+import { volumeMl } from "./servings";
 
 /** "200ml", "1L" or "350g" from the name first, then the size line. Empty when neither says. */
 export function volumeOf(drink: Drink): string {
-  const match = VOLUME.exec(drink.name) ?? VOLUME.exec(drink.size);
-  if (!match) {
-    return "";
-  }
-  const unit = match[2] === "g" ? "g" : match[2] === "L" || match[2] === "ℓ" ? "L" : "ml";
-  return `${match[1]}${unit}`;
+  return volumeMl(drink)?.label ?? "";
 }
 
 function absolute(url: string): string {

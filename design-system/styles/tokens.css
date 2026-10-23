@@ -56,9 +56,9 @@
     --action-accent-hover: color-mix(in srgb, var(--palette-brass) 88%, var(--palette-linen));
     --action-focus: var(--palette-brass-deep);
 
-    /* type families (next/font variables are set on <html>) */
-    --font-display: var(--font-shippori), "Hiragino Mincho ProN", "Yu Mincho", serif;
-    --font-text: var(--font-zen), "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    /* type families. Cormorant comes from next/font (variable on <html>); the Japanese faces from /fonts/jp.css. */
+    --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    --font-text: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
     --font-mark: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
 
     /* type scale (fluid) */
