@@ -39,6 +39,7 @@ import {
   storeRows,
 } from "@/lib/drinks";
 import { OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
+import { drinkJsonLd, jsonLdText } from "@/lib/jsonld";
 import { hasSeasonStills } from "@/lib/still-seasons";
 import { seasonOf } from "@/lib/visit";
 
@@ -117,6 +118,9 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
 
   return (
     <Motion>
+      {drinkJsonLd(drink).map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
       {rows.length > 0 ? <script type="application/json" id={OUT_LINKS_ID} dangerouslySetInnerHTML={{ __html: outLinks }} /> : null}
       <ProductHero
         id="drink-title"
