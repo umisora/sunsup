@@ -25,16 +25,46 @@ season = importlib.util.module_from_spec(spec); spec.loader.exec_module(season)
 # bottles are drawn at about two thirds of it. This is a visual scale, not a measured height.
 # Pick stills whose product is at least ~500px tall in public/drinks, so nothing is upscaled much.
 HEROES = {
-    "bonenkai": [
+    "bonenkai": dict(season="winter", drinks=[
         ("kimino-yuzu", 0.66),
         ("ringowork-original-720", 1.0),
         ("kimura-wasabi-ginger", 0.66),
         ("maison-perrier-raspberry-330", 0.70),
-    ],
+    ]),
+    # Autumn: the season most office parties are planned in right now. Bottles 1.0, 185-190g cans about 0.6.
+    "kaisha": dict(season="autumn", drinks=[
+        ("kimino-ringo", 1.0),
+        ("pom-harehime-190", 0.62),
+        ("kimino-mikan", 1.0),
+        ("kobe-grape-bitan-185", 0.60),
+    ]),
+    # Spring: welcome and farewell parties are in March and April.
+    "kansougeikai": dict(season="spring", drinks=[
+        ("kimino-ume", 1.0),
+        ("makubetsu-ichigo-cider", 1.05),
+        ("kimino-momo", 1.0),
+        ("kimura-momo-cider", 0.95),
+    ]),
+    # Summer: cold drinks for the office are the classic 差し入れ.
+    "sashiire": dict(season="summer", drinks=[
+        ("kataura-lemon-cider-330", 1.0),
+        ("kobe-lemonade-soda-185", 0.58),
+        ("kimura-izu-lemon", 0.85),
+        ("pom-kawachi-190", 0.60),
+    ]),
+    # Winter: year-end greetings and New Year visits are when a bottle is handed over most.
+    "nomanai-hito": dict(season="winter", drinks=[
+        ("kimura-fukuneko", 1.0),
+        ("noda-shio-cider", 0.95),
+        ("shodoshima-olive-cider-200", 0.80),
+        ("sanpellegrino-sparkling-250", 0.95),
+    ]),
 }
+MAX_UPSCALE = 1.6   # a cutout drawn bigger than this over its source pixels looks soft; pick another still
 S = 1600          # square backdrop; the hero is its middle 4:5 (1280 x 1600), the PageIntro frame on wide
                   # screens. On phones the frame is about square, so the drinks stay inside the middle 80%.
 CROP_W = 1280
+OUT_SCALE = 1152 / 1280   # the largest file is 1152 wide
 TALLEST = 0.52    # tallest bottle as a share of S
 HORIZON = 0.64    # table edge, a little higher than the single stills so the row sits in the middle
 BASE_Y = 0.79
@@ -51,11 +81,15 @@ def master(slug):
     return Image.open(path).convert("RGBA")
 
 
+UPSCALE = {}
+
+
 def load(slug, h):
     m = master(slug); prod = m.convert("RGB"); a = m.getchannel("A")
     A0 = np.asarray(a, np.float32) / 255; ys, xs = np.where(A0 > 0.5)
     box = (xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)
     prod = prod.crop(box); a = a.crop(box)
+    UPSCALE[slug] = round(h * OUT_SCALE / prod.height, 2)
     w = int(round(prod.width * h / prod.height))
     P = np.asarray(prod.resize((w, h), Image.Resampling.LANCZOS), np.float32)
     A = np.asarray(a.resize((w, h), Image.Resampling.LANCZOS), np.float32) / 255
@@ -104,13 +138,20 @@ def place(out, L, P, A, inner, px, py):
 
 def compose(scene):
     season.S = S; season.HORIZON = HORIZON; season.BASE_Y = BASE_Y
-    p = dict(season.SEASONS["winter"])
+    hero = HEROES[scene]
+    p = dict(season.SEASONS[hero["season"]])
     bg, L = season.render_bg(p)
     out = bg.copy()
-    items = HEROES[scene]; tallest = max(cm for _, cm in items)
-    loaded = [(slug, *load(slug, int(S * TALLEST * cm / tallest))) for slug, cm in items]
-    widths = [A.shape[1] for _, _, A, _ in loaded]
-    gap = int(S * 0.045); total = sum(widths) + gap * (len(widths) - 1)
+    items = hero["drinks"]; tallest = max(k for _, k in items)
+    gap = int(S * 0.045); room = int(CROP_W * 0.88)
+    top = TALLEST
+    while True:   # shrink the whole row until it fits the 4:5 frame with a margin
+        loaded = [(slug, *load(slug, int(S * top * k / tallest))) for slug, k in items]
+        widths = [A.shape[1] for _, _, A, _ in loaded]
+        total = sum(widths) + gap * (len(widths) - 1)
+        if total <= room:
+            break
+        top *= 0.96
     x = (S - total) // 2; base = int(S * season.BASE_Y)
     spots = []
     for (slug, P, A, inner), w in zip(loaded, widths):
@@ -129,23 +170,26 @@ def compose(scene):
     res = {}
     for slug, P, prot, px, py, w, h in checks:
         d = np.abs(out[py:py + h, px:px + w].astype(np.float32) - np.clip(P, 0, 255).astype(np.uint8).astype(np.float32)).max(2)
-        res[slug] = dict(print_px=int(prot.sum()), print_maxdiff=float(d[prot].max()))
+        res[slug] = dict(print_px=int(prot.sum()), print_maxdiff=float(d[prot].max()), upscale=UPSCALE[slug])
     left = (S - CROP_W) // 2
     return out[:, left:left + CROP_W], res
 
 
 if __name__ == "__main__":
-    scene = sys.argv[1]
-    img, res = compose(scene)
-    im = Image.fromarray(img)
-    for width in (768, 1152):
-        im.resize((width, width * 5 // 4), Image.Resampling.LANCZOS).save(
-            os.path.join(ROOT, "public", "images", f"scene-{scene}-{width}.webp"), quality=86, method=6)
-    path = os.path.join(ROOT, "stills", "scene-hero-fidelity.json")
-    allres = json.load(open(path)) if os.path.exists(path) else {}
-    allres[scene] = res
-    json.dump(allres, open(path, "w"), indent=2, ensure_ascii=False)
-    print(json.dumps(res, ensure_ascii=False))
-    bad = [s for s, r in res.items() if r["print_maxdiff"] != 0]
-    if bad:
-        sys.exit("print pixels changed: " + ", ".join(bad))
+    for scene in sys.argv[1:] or list(HEROES):
+        img, res = compose(scene)
+        im = Image.fromarray(img)
+        for width in (768, 1152):
+            im.resize((width, width * 5 // 4), Image.Resampling.LANCZOS).save(
+                os.path.join(ROOT, "public", "images", f"scene-{scene}-{width}.webp"), quality=86, method=6)
+        path = os.path.join(ROOT, "stills", "scene-hero-fidelity.json")
+        allres = json.load(open(path)) if os.path.exists(path) else {}
+        allres[scene] = res
+        json.dump(allres, open(path, "w"), indent=2, ensure_ascii=False)
+        print(json.dumps(res, ensure_ascii=False))
+        bad = [s for s, r in res.items() if r["print_maxdiff"] != 0]
+        if bad:
+            sys.exit("print pixels changed: " + ", ".join(bad))
+        soft = [f"{s} x{r['upscale']}" for s, r in res.items() if r["upscale"] > MAX_UPSCALE]
+        if soft:
+            sys.exit("cutout drawn too large for its source: " + ", ".join(soft))
