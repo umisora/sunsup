@@ -4,6 +4,7 @@ import { CLARITY_ID } from "../_metrics/Clarity";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
+  alternates: { canonical: "/about/" },
   openGraph: {
     title: `このサイトについて｜${SITE_NAME}`,
     description: "オフィスの飲み会を任されたあなたが、定時後に出すノンアルコールを選ぶサイトです。",

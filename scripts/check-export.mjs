@@ -391,7 +391,7 @@ for (const drink of publicDrinks) {
     fail(`${drink.slug} still points at a fallback image`);
   }
   if (still.startsWith("/drinks/") || still.startsWith("http://") || still.startsWith("https://")) {
-    const image = still.startsWith("/") ? `https://sunsup-dv4.pages.dev${still}` : still;
+    const image = still.startsWith("/") ? `https://stylish.sunsup.me${still}` : still;
     if (!html.includes(`<meta property="og:image" content="${image}"/>`)) {
       fail(`${drink.slug} is missing its Open Graph image`);
     }
@@ -501,14 +501,14 @@ if (shell.includes('data-store-primary="true"')) {
 
 const sitemap = read("sitemap.xml");
 const robots = read("robots.txt");
-if (!robots.includes("Sitemap: https://sunsup-dv4.pages.dev/sitemap.xml")) {
+if (!robots.includes("Sitemap: https://stylish.sunsup.me/sitemap.xml")) {
   fail("robots.txt is missing the sitemap");
 }
-if (!sitemap.includes("<loc>https://sunsup-dv4.pages.dev/drink/</loc>")) {
+if (!sitemap.includes("<loc>https://stylish.sunsup.me/drink/</loc>")) {
   fail("sitemap is missing the drink list");
 }
 for (const slug of slugs) {
-  if (!sitemap.includes(`<loc>https://sunsup-dv4.pages.dev/drink/${slug}/</loc>`)) {
+  if (!sitemap.includes(`<loc>https://stylish.sunsup.me/drink/${slug}/</loc>`)) {
     fail(`sitemap is missing /drink/${slug}/`);
   }
 }
@@ -552,8 +552,20 @@ if (existsSync(join("out", "_routes.json"))) {
 } else {
   fail("missing out/_routes.json");
 }
-if (!seasonRoutes.include?.includes("/api/*")) {
-  fail("_routes.json no longer routes /api/*");
+if (!seasonRoutes.include?.includes("/*")) {
+  fail("_routes.json must run functions on every page (old-host redirect, /api/*, season stills)");
+}
+for (const folder of ["/_next/*", "/drinks/*", "/og/*", "/brand/*", "/images/*"]) {
+  if (!seasonRoutes.exclude?.includes(folder)) {
+    fail(`_routes.json must keep static ${folder} out of functions`);
+  }
+}
+const seasonSlugFile = existsSync(join("lib", "season-slugs.ts")) ? readFileSync(join("lib", "season-slugs.ts"), "utf8") : "";
+if (!seasonSlugFile) {
+  fail("missing lib/season-slugs.ts");
+}
+if (!existsSync(join("functions", "_middleware.ts"))) {
+  fail("missing functions/_middleware.ts (sunsup-dv4.pages.dev → stylish.sunsup.me)");
 }
 if ((seasonRoutes.include?.length ?? 0) + (seasonRoutes.exclude?.length ?? 0) > 100) {
   fail("_routes.json has more than 100 rules");
@@ -580,8 +592,8 @@ for (const slug of seasonSlugs) {
       fail(`${slug} is missing its ${season} still ${file}`);
     }
   }
-  if (!seasonRoutes.include?.includes(`/drink/${slug}/`)) {
-    fail(`_routes.json does not send /drink/${slug}/ to the season function`);
+  if (!seasonSlugFile.includes(`"${slug}"`)) {
+    fail(`lib/season-slugs.ts does not list ${slug} for the season function`);
   }
   if (drink["公開"] === "1") {
     const page = read(`drink/${slug}/index.html`);
@@ -607,6 +619,38 @@ if (existsSync(seasonDir)) {
 }
 if (!existsSync(join("functions", "drink", "[[path]].ts"))) {
   fail("missing the season function functions/drink/[[path]].ts");
+}
+
+// Every built page, payload, sitemap and robots must point at stylish.sunsup.me, never the old pages.dev host.
+const OLD_HOST = "sunsup-dv4.pages.dev";
+function walkOut(dir) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (path !== join("out", "_next", "static")) {
+        walkOut(path);
+      }
+    } else if (/\.(html|txt|xml|json|webmanifest)$/.test(entry.name)) {
+      if (readFileSync(path, "utf8").includes(OLD_HOST)) {
+        fail(`${path} still mentions ${OLD_HOST}`);
+      }
+    }
+  }
+}
+walkOut("out");
+const homeHtml = read("index.html");
+for (const [file, path] of [["index.html", "/"], ["about/index.html", "/about/"], ["ba/office/index.html", "/ba/office/"], ["drink/index.html", "/drink/"]]) {
+  if (!read(file).includes(`<link rel="canonical" href="https://stylish.sunsup.me${path}"/>`)) {
+    fail(`${file} is missing its canonical https://stylish.sunsup.me${path}`);
+  }
+}
+for (const slug of slugs) {
+  if (!read(`drink/${slug}/index.html`).includes(`<link rel="canonical" href="https://stylish.sunsup.me/drink/${slug}/"/>`)) {
+    fail(`/drink/${slug}/ is missing its canonical`);
+  }
+}
+if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.me/"/>')) {
+  fail("home og:url is not https://stylish.sunsup.me/");
 }
 
 if (failures.length > 0) {

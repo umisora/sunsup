@@ -16,6 +16,7 @@ import {
 
 export const metadata: Metadata = {
   title: "この飲み会のドリンク",
+  robots: { index: false, follow: true },
 };
 
 const AXES = [

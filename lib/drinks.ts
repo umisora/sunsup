@@ -125,7 +125,7 @@ const FALLBACK_STILL = /^\/drinks\/fallback-[a-z0-9]+(?:-[a-z0-9]+)*\.webp$/;
 
 const AMAZON_PRODUCT = /^\/(?:dp|gp\/product|gp\/aw\/d)\/[A-Za-z0-9]{10}(?:\/|$)/;
 
-export const SITE_ORIGIN = "https://sunsup-dv4.pages.dev";
+export const SITE_ORIGIN = "https://stylish.sunsup.me";
 
 export function hasRealStill(drink: Drink): boolean {
   return drink.stillUrl !== "" && !FALLBACK_STILL.test(drink.stillUrl);
