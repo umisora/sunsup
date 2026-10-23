@@ -47,24 +47,37 @@ function parseCsv(text) {
 /** Map of slug to the rule ids that demote it, for every row of data/drinks.csv. */
 export function demotedDrinks(root = process.cwd()) {
   const rule = JSON.parse(readFileSync(join(root, "data", "demote-rule.json"), "utf8"));
-  const rules = rule.rules.map((item) => ({
-    id: item.id,
-    name: item.name ? new RegExp(item.name, "i") : undefined,
-    look: item.look ? new RegExp(item.look, "i") : undefined,
-    vessels: item.vessels,
-  }));
-  const judged = new Set(rule.slugs);
+  const rules = rule.rules.map((item) => ({ id: item.id, name: new RegExp(item.name, "i") }));
+  const look = new Set(Object.keys(rule.look));
+  const allow = new Set(Object.keys(rule.allow));
   const table = parseCsv(readFileSync(join(root, "data", "drinks.csv"), "utf8"));
   const header = table[0];
+  const rows = table.slice(1).map((cells) => Object.fromEntries(header.map((column, index) => [column, (cells[index] ?? "").trim()])));
+  const known = new Set(rows.map((row) => row.slug));
+  for (const [list, slugs] of [["look", look], ["allow", allow]]) {
+    for (const slug of slugs) {
+      if (!known.has(slug)) {
+        throw new Error(`data/demote-rule.json ${list} names ${slug}, which is not in data/drinks.csv`);
+      }
+      if (!String(rule[list][slug] ?? "").trim()) {
+        throw new Error(`data/demote-rule.json ${list}.${slug} must say why`);
+      }
+    }
+  }
+  for (const slug of allow) {
+    if (look.has(slug)) {
+      throw new Error(`data/demote-rule.json lists ${slug} in both look and allow`);
+    }
+    const row = rows.find((item) => item.slug === slug);
+    if (!rules.some((item) => item.name.test(row["品名"]))) {
+      throw new Error(`data/demote-rule.json allow.${slug} is stale: no name rule catches it`);
+    }
+  }
   const out = new Map();
-  for (const cells of table.slice(1)) {
-    const row = Object.fromEntries(header.map((column, index) => [column, (cells[index] ?? "").trim()]));
-    const reasons = rules
-      .filter((item) => !item.vessels || item.vessels.includes(row["容器"]))
-      .filter((item) => item.name?.test(row["品名"]) || item.look?.test(row["見た目"]))
-      .map((item) => item.id);
-    if (judged.has(row.slug)) {
-      reasons.push("judged");
+  for (const row of rows) {
+    const reasons = allow.has(row.slug) ? [] : rules.filter((item) => item.name.test(row["品名"])).map((item) => item.id);
+    if (look.has(row.slug)) {
+      reasons.push("look");
     }
     if (reasons.length > 0) {
       out.set(row.slug, reasons);

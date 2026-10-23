@@ -23,8 +23,8 @@ if (ids.length === 0) {
   fail("no category pages under out/category/");
 }
 
-// Demoted drinks (data/demote-rule.json: tonics, ginger beers, シャンメリー, メゾンペリエ シック, wine-looking
-// bottles) stay listed, but never open a shelf, never stand in a first image and never lead the office list.
+// Demoted drinks (data/demote-rule.json: tonics, ginger beers, シャンメリー, メゾンペリエ シック, wine names and
+// stills judged to look like wine) stay listed, but never open a shelf, never stand in a first image and never lead the office list.
 const DEMOTED = demotedDrinks();
 const demoted = (slug) => DEMOTED.has(slug);
 const FIRST_ROW = 4;

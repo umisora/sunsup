@@ -2,34 +2,25 @@ import rule from "../data/demote-rule.json";
 
 /**
  * Drinks that stay listed but never open a shelf. The rule lives in data/demote-rule.json so the
- * export checks read the same patterns: tonics and ginger beers, シャンメリー and メゾンペリエ シック,
- * and bottles that read as wine (wine words or grape names, dark red liquid in glass, red liquid in a
- * large bottle). A demoted drink sorts to the end of its shelf, is never in a first row or a hero,
+ * export checks read the same lists: tonics and ginger beers, シャンメリー and メゾンペリエ シック, a winery
+ * or wine grape in the name, and the stills judged by eye to read as wine (look), minus the drinks a
+ * name rule catches whose still does not look like alcohol (allow). A demoted drink sorts to the end of its shelf, is never in a first row or a hero,
  * and never takes an office-entry lead.
  */
-type DemoteRule = { id: string; why: string; name?: string; look?: string; vessels?: string[] };
+type DemoteRule = { id: string; why: string; name: string };
 
-type Demotable = { slug: string; name: string; look: string; vessel: string };
+type Demotable = { slug: string; name: string };
 
-const RULES = (rule.rules as DemoteRule[]).map((item) => ({
-  id: item.id,
-  name: item.name ? new RegExp(item.name, "i") : undefined,
-  look: item.look ? new RegExp(item.look, "i") : undefined,
-  vessels: item.vessels,
-}));
+const RULES = (rule.rules as DemoteRule[]).map((item) => ({ id: item.id, name: new RegExp(item.name, "i") }));
 
-const JUDGED = new Set<string>(rule.slugs as string[]);
+const LOOK = new Set<string>(Object.keys(rule.look));
+const ALLOW = new Set<string>(Object.keys(rule.allow));
 
 /** Rule ids that demote this drink; empty when it may lead. */
 export function demoteReasons(drink: Demotable): string[] {
-  const reasons = RULES.filter((item) => {
-    if (item.vessels && !item.vessels.includes(drink.vessel)) {
-      return false;
-    }
-    return Boolean(item.name?.test(drink.name) || item.look?.test(drink.look));
-  }).map((item) => item.id);
-  if (JUDGED.has(drink.slug)) {
-    reasons.push("judged");
+  const reasons = ALLOW.has(drink.slug) ? [] : RULES.filter((item) => item.name.test(drink.name)).map((item) => item.id);
+  if (LOOK.has(drink.slug)) {
+    reasons.push("look");
   }
   return reasons;
 }
