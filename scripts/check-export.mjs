@@ -118,7 +118,7 @@ if (office.includes("drinkup") || office.includes("Drinkup") || !office.includes
 
 const OFFICE_ENTRIES = [
   "kimino-yuzu",
-  "kuranooto-koshu",
+  "kagome-grape-100",
   "fujiya-nectar-peach",
   "suntory-oolong-340",
   "kitayama-jabarush",

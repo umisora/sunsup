@@ -4,6 +4,7 @@
 // and its first image shows only drinks of the page with no print pixel repainted.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { demotedDrinks } from "./demote-rule.mjs";
 
 const failures = [];
 const fail = (message) => failures.push(message);
@@ -22,10 +23,11 @@ if (ids.length === 0) {
   fail("no category pages under out/category/");
 }
 
-// Tonics and ginger beers stay listed, but never open a shelf and never stand in a first image.
-const MIXER = /トニック|ジンジャー ?ビア|tonic|ginger ?beer/i;
+// Demoted drinks (data/demote-rule.json: tonics, ginger beers, シャンメリー, メゾンペリエ シック, wine-looking
+// bottles) stay listed, but never open a shelf, never stand in a first image and never lead the office list.
+const DEMOTED = demotedDrinks();
+const demoted = (slug) => DEMOTED.has(slug);
 const FIRST_ROW = 4;
-const names = new Map();
 
 /** Drink slugs in page order inside each <section id="...">. */
 function shelves(html) {
@@ -48,7 +50,7 @@ function checkFirstRows(path, html, ids) {
     if (slugs.length <= FIRST_ROW) {
       continue;
     }
-    const opening = slugs.slice(0, FIRST_ROW).filter((slug) => MIXER.test(names.get(slug) ?? ""));
+    const opening = slugs.slice(0, FIRST_ROW).filter(demoted);
     if (opening.length > 0) {
       fail(`${path} opens the #${id} shelf with ${opening.join(", ")}`);
     }
@@ -93,14 +95,13 @@ for (const id of ids) {
       fail(`${path} ItemList entry ${index + 1} is not a numbered ListItem`);
     }
     const slug = item.url.replace(`${origin}/drink/`, "").replace(/\/$/, "");
-    names.set(slug, item.name);
     return slug;
   });
   checkFirstRows(path, html, ["bottle", "big", "can", "pet", "carton", "other"]);
-  // In list order (the shelf shows drinks with a photo first, then the rest), tonics and ginger beers come last.
-  const firstMixer = listed.findIndex((slug) => MIXER.test(names.get(slug) ?? ""));
-  if (firstMixer >= 0 && listed.slice(firstMixer).some((slug) => !MIXER.test(names.get(slug) ?? ""))) {
-    fail(`${path}: tonics and ginger beers must come after every other drink`);
+  // In list order (the shelf shows drinks with a photo first, then the rest), demoted drinks come last.
+  const firstDemoted = listed.findIndex(demoted);
+  if (firstDemoted >= 0 && listed.slice(firstDemoted).some((slug) => !demoted(slug))) {
+    fail(`${path}: demoted drinks must come after every other drink`);
   }
   if (list.numberOfItems !== listed.length || new Set(listed).size !== listed.length) {
     fail(`${path} ItemList count or entries are off`);
@@ -144,8 +145,8 @@ for (const id of ids) {
     if (!listed.includes(drink)) {
       fail(`hero of ${path} shows ${drink}, which the page does not list`);
     }
-    if (MIXER.test(names.get(drink) ?? "")) {
-      fail(`hero of ${path} shows ${drink}, a tonic or ginger beer`);
+    if (demoted(drink)) {
+      fail(`hero of ${path} shows ${drink}, a demoted drink (${DEMOTED.get(drink).join(", ")})`);
     }
     if (result.print_maxdiff !== 0) {
       fail(`hero of ${path} repainted the print of ${drink}`);
@@ -156,16 +157,43 @@ for (const id of ids) {
 // The drink list opens each shelf the same way.
 checkFirstRows("/drink/", drinkList);
 
-// Scene heroes: no tonic or ginger beer either.
+// Scene heroes: no demoted drink either.
 const scenePath = join(process.cwd(), "stills", "scene-hero-fidelity.json");
 if (existsSync(scenePath)) {
   for (const [scene, drinks] of Object.entries(JSON.parse(readFileSync(scenePath, "utf8")))) {
     for (const drink of Object.keys(drinks)) {
-      if (MIXER.test(names.get(drink) ?? "")) {
-        fail(`hero of /ba/${scene}/ shows ${drink}, a tonic or ginger beer`);
+      if (demoted(drink)) {
+        fail(`hero of /ba/${scene}/ shows ${drink}, a demoted drink (${DEMOTED.get(drink).join(", ")})`);
       }
     }
   }
+}
+
+// Scene pages list rows of four, so a demoted drink anywhere on one would open a row.
+for (const entry of readdirSync(join("out", "ba"), { withFileTypes: true })) {
+  const page = join("out", "ba", entry.name, "index.html");
+  if (!entry.isDirectory() || entry.name === "office" || !existsSync(page)) {
+    continue;
+  }
+  const blocks = [...readFileSync(page, "utf8").matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+  const list = blocks.find((item) => item["@type"] === "ItemList");
+  for (const item of list?.itemListElement ?? []) {
+    const slug = item.url.replace(`${origin}/drink/`, "").replace(/\/$/, "");
+    if (demoted(slug)) {
+      fail(`/ba/${entry.name}/ lists ${slug}, a demoted drink (${DEMOTED.get(slug).join(", ")})`);
+    }
+  }
+}
+
+// The office entries open the home and office showcases, so none may be demoted.
+const office = read("ba/office/index.html");
+const showcase = (office.split('aria-label="この飲み会のドリンク"')[1] ?? "").split("</ul>")[0];
+const entries = [...new Set([...showcase.matchAll(/href="\/drink\/([a-z0-9-]+)\/"/g)].map((m) => m[1]))].slice(0, 6);
+if (entries.length !== 6) {
+  fail(`office showcase has ${entries.length} entries`);
+}
+for (const slug of entries.filter(demoted)) {
+  fail(`office showcase leads with ${slug}, a demoted drink (${DEMOTED.get(slug).join(", ")})`);
 }
 
 // Category links go to the category pages, not to shelves of the list.
@@ -188,4 +216,4 @@ if (failures.length > 0) {
   }
   process.exit(1);
 }
-console.log(`categories ok: ${ids.length} category page(s)`);
+console.log(`categories ok: ${ids.length} category page(s), ${DEMOTED.size} demoted drink(s) kept off first rows and heroes`);

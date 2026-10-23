@@ -1,0 +1,11 @@
+{
+  "about": "Drinks that stay listed but sort to the end of their shelf, never open a first row, never stand in a hero, and never take an office-entry lead. A drink is demoted when any rule matches. name tests 品名; look tests 見た目; vessels limits a rule to those 容器 values. Patterns are case-insensitive. slugs lists drinks judged by eye that the patterns miss.",
+  "rules": [
+    { "id": "mixer", "why": "tonic or ginger beer: a mixer, not a drink to hand out", "name": "トニック|ジンジャー ?ビア|tonic|ginger ?beer" },
+    { "id": "alcohol-style", "why": "styled as a party drink for toasting: シャンメリー and メゾンペリエ シック", "name": "シャンメリー|メゾンペリエ シック|maison perrier chic" },
+    { "id": "wine-name", "why": "wine words or wine grape names in the name or on the label", "name": "ワイン|ワイナリー|winery|甲州|シャルドネ|メルロ|カベルネ|ピノ|ソーヴィニ|リースリング|ベーリー", "look": "ワイン|ワイナリー|winery|甲州|シャルドネ|メルロ|カベルネ|ピノ|ソーヴィニ|リースリング|ベーリー" },
+    { "id": "wine-colour-bottle", "why": "dark red or purple liquid in a glass bottle reads as red wine", "vessels": ["ビン", "大瓶"], "look": "(中身|液)は?(濃い赤|赤紫|ぶどう色)|(濃い赤|赤紫|ぶどう色)の(中身|液)" },
+    { "id": "red-big-bottle", "why": "red liquid in a large glass bottle reads as a wine bottle", "vessels": ["大瓶"], "look": "(中身|液)は赤|赤い(中身|液)" }
+  ],
+  "slugs": []
+}

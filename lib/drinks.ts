@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { demoteReasons, isDemoted } from "./demote";
 
 const COLUMNS = [
   "slug",
@@ -392,7 +393,7 @@ export function categoryKey(category: string): string {
 /** One real drink for each category, in the order the office page lists them. */
 export const OFFICE_ENTRY_SLUGS = [
   "kimino-yuzu",
-  "kuranooto-koshu",
+  "kagome-grape-100",
   "fujiya-nectar-peach",
   "suntory-oolong-340",
   "kitayama-jabarush",
@@ -410,6 +411,11 @@ export function officeEntries(): Drink[] {
   const keys = entries.map((drink) => categoryKey(drink.category));
   if (new Set(keys).size !== entries.length) {
     throw new Error("office entries must be one drink per category");
+  }
+  for (const drink of entries) {
+    if (isDemoted(drink)) {
+      throw new Error(`office entry ${drink.slug} is demoted (${demoteReasons(drink).join(", ")})`);
+    }
   }
   return entries;
 }
@@ -449,15 +455,9 @@ export type DrinkGroup = {
   drinks: Drink[];
 };
 
-/** Tonics and ginger beers stay listed, but sort to the end of their shelf and never open one. */
-const MIXER_NAME = /トニック|ジンジャー ?ビア|tonic|ginger ?beer/i;
-
-export function isMixer(drink: Pick<Drink, "name">): boolean {
-  return MIXER_NAME.test(drink.name);
-}
-
+/** Demoted drinks (data/demote-rule.json) stay listed, but sort to the end of their shelf and never open one. */
 function discoveryRank(drink: Drink): number {
-  if (isMixer(drink)) {
+  if (isDemoted(drink)) {
     return 3;
   }
   const entry = (OFFICE_ENTRY_SLUGS as readonly string[]).includes(drink.slug);
@@ -587,6 +587,7 @@ export function seasonalPicks(season: Season, count: number): { label: string; l
     group.drinks.filter(
       (drink) =>
         hasRealStill(drink) &&
+        !isDemoted(drink) &&
         spec.keywords.some((keyword) => drink.name.includes(keyword)) &&
         !(spec.exclude ?? []).some((word) => drink.name.includes(word)),
     ),
