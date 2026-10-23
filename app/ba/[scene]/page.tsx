@@ -14,6 +14,7 @@ import {
   Section,
   SectionHead,
   ShareRow,
+  ShoppingList,
   SITE_NAME,
   Stack,
   Text,
@@ -22,7 +23,7 @@ import {
 } from "@/design-system";
 import { categoryHref, categoryId, categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText } from "@/lib/jsonld";
-import { getScene, groupDrinks, sceneDrinks, sceneJsonLd, scenePath, SCENES } from "@/lib/scenes";
+import { getScene, groupDrinks, sceneDrinks, sceneJsonLd, sceneListItems, scenePath, SCENES } from "@/lib/scenes";
 
 type ScenePageProps = {
   params: Promise<{ scene: string }>;
@@ -68,6 +69,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
   // Categories of this page's drinks that have their own page.
   const used = new Set(sceneDrinks(scene).map(categoryId));
   const categoryPages = categorySummaries().filter((item) => used.has(item.id));
+  const list = sceneListItems(scene);
 
   return (
     <Motion>
@@ -86,7 +88,12 @@ export default async function ScenePage({ params }: ScenePageProps) {
       <Section labelledBy="scene-title">
         <Grid columns="aside" gap="wide">
           <Eyebrow id="scene-title">{scene.proseLabel}</Eyebrow>
-          <FillText variant="prose" lines={[scene.prose]} />
+          <Stack gap={3}>
+            <FillText variant="prose" lines={[scene.prose]} />
+            <Text variant="body">
+              幹事の方は、<TextLink href="#list">人数から買う本数</TextLink>を出せます。
+            </Text>
+          </Stack>
         </Grid>
       </Section>
 
@@ -114,6 +121,17 @@ export default async function ScenePage({ params }: ScenePageProps) {
           </Section>
         );
       })}
+
+      {list.items.length > 0 ? (
+        <Section id="list" space="md" labelledBy="list-title">
+          <SectionHead id="list-title" eyebrow="幹事の方へ" title={<Phrase>人数から、買う本数を出す</Phrase>}>
+            <Text variant="lead" tone="secondary">
+              人数を入れると、選んだドリンクを何本買えばよいかがわかります。人数は、選んだ種類で分けて数えます。
+            </Text>
+          </SectionHead>
+          <ShoppingList title={scene.title} items={list.items} picked={list.picked} url={`${SITE_ORIGIN}${scenePath(scene)}`} />
+        </Section>
+      ) : null}
 
       <Section space="md" label="ほかの場面">
         <Stack gap={3}>

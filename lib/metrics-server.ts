@@ -1,7 +1,7 @@
 /**
  * First-party, cookieless counters for page views and store clicks (Pages Functions only).
  * One row per day × page (× drink × link type) with a running count. No IP, no user agent,
- * no identifier is stored. Requests that fail validation still get 204 so the page never notices.
+ * no identifier is stored. Clicks also keep where they came from (source: page or list). Requests that fail validation still get 204 so the page never notices.
  */
 
 type D1Statement = { bind(...values: unknown[]): { run(): Promise<unknown> } };
@@ -32,6 +32,14 @@ export function cleanPath(value: unknown): string | undefined {
 
 export function cleanSlug(value: unknown): string | undefined {
   return typeof value === "string" && SLUG.test(value) ? value : undefined;
+}
+
+/** Where a store click came from: the drink page's store row, or a scene page's shopping list. */
+export const CLICK_SOURCES = ["page", "list"] as const;
+export type ClickSource = (typeof CLICK_SOURCES)[number];
+
+export function cleanSource(value: unknown): ClickSource {
+  return typeof value === "string" && (CLICK_SOURCES as readonly string[]).includes(value) ? (value as ClickSource) : "page";
 }
 
 export function drinkSlugOf(path: string): string {

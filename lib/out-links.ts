@@ -38,7 +38,12 @@ export type OutLinkMap = {
 export function outLinkMap(slug: string, rows: readonly { label: string; href: string }[]): OutLinkMap {
   const links: Record<string, OutKind> = {};
   for (const row of rows) {
-    links[row.href] = outKind(row.label);
+    // A brand site that is also the shop (公式URL = 直販URL) counts as the shop, so the click is a goal click.
+    const kind = outKind(row.label);
+    const known = links[row.href];
+    if (!known || (known === "official" && isGoalKind(kind))) {
+      links[row.href] = kind;
+    }
   }
   return { slug, links };
 }

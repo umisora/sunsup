@@ -56,24 +56,59 @@ const DILUTE = /シロップ|原液|コーディアル|割って|割ると|混�
 /** The catalog says one bottle is one person's. */
 const ONE_EACH = /(ひとり|一人)(に)?一本|飲みきれ/;
 
-/** What the catalog's サイズ line says about people, when it says it. */
-export function catalogServings(size: string): string | undefined {
+/** What the catalog's サイズ line says about people: the text, and the smallest count it promises. */
+function catalogPeople(size: string): { text: string; people: number } | undefined {
   const range = new RegExp(`(${NUM})[、〜～-](${NUM})人`).exec(size);
   if (range) {
-    return `${toNumber(range[1])}〜${toNumber(range[2])}人分`;
+    const low = toNumber(range[1]);
+    return { text: `${low}〜${toNumber(range[2])}人分`, people: low };
   }
   const over = new RegExp(`(${NUM})人を超え`).exec(size);
   if (over) {
-    return `${toNumber(over[1])}人分以上`;
+    return { text: `${toNumber(over[1])}人分以上`, people: toNumber(over[1]) };
   }
   const about = new RegExp(`(${NUM})人前後`).exec(size);
   if (about) {
-    return `約${toNumber(about[1])}人分`;
+    return { text: `約${toNumber(about[1])}人分`, people: toNumber(about[1]) };
   }
   if (ONE_EACH.test(size)) {
-    return "ひとり分";
+    return { text: "ひとり分", people: 1 };
   }
   return undefined;
+}
+
+/** What the catalog's サイズ line says about people, when it says it. */
+export function catalogServings(size: string): string | undefined {
+  return catalogPeople(size)?.text;
+}
+
+/**
+ * How many people one bottle (can, carton) serves, and the words for it.
+ * The catalog's own count wins; otherwise 180ml a person, and a personal container is one person's.
+ * people is 0 for a syrup with no count: how far it goes depends on the water.
+ */
+export type ServingUnit = { people: number; dilute: boolean; text: string };
+
+export function servingUnit(drink: Pick<Drink, "name" | "size" | "vessel">): ServingUnit | undefined {
+  const dilute = DILUTE.test(drink.name) || DILUTE.test(drink.size);
+  const fromCatalog = catalogPeople(drink.size);
+  if (fromCatalog) {
+    const text = dilute && fromCatalog.people !== 1 ? `割って${fromCatalog.text}` : fromCatalog.text;
+    return { people: fromCatalog.people, dilute: dilute && fromCatalog.people !== 1, text };
+  }
+  if (dilute) {
+    return { people: 0, dilute: true, text: "割って飲む" };
+  }
+  const volume = volumeMl(drink);
+  if (!volume) {
+    return undefined;
+  }
+  const vessel = drink.vessel.trim();
+  if (volume.ml <= SINGLE_ML || (PERSONAL.has(vessel) && volume.ml <= PERSONAL_ML)) {
+    return { people: 1, dilute: false, text: "ひとり分" };
+  }
+  const people = Math.max(2, Math.round(volume.ml / SHARE_ML));
+  return { people, dilute: false, text: `約${people}人分` };
 }
 
 export function servingsText(ml: number, vessel = "", size = "", name = ""): string {
