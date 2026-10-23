@@ -22,7 +22,7 @@ import {
 } from "@/design-system";
 import { SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText } from "@/lib/jsonld";
-import { getScene, groupDrinks, sceneHero, sceneJsonLd, scenePath, SCENES } from "@/lib/scenes";
+import { getScene, groupDrinks, sceneJsonLd, scenePath, SCENES } from "@/lib/scenes";
 
 type ScenePageProps = {
   params: Promise<{ scene: string }>;
@@ -74,7 +74,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
         eyebrow="飲み会"
         title={lineB ? [`${lineA}の`, lineB] : [scene.title]}
         lead={scene.lead}
-        media={<Photo name={sceneHero(scene)} sizes="(min-width: 960px) 720px, calc(100vw - 32px)" position="50% 50%" priority />}
+        media={<Photo name={scene.hero} sizes="(min-width: 960px) 720px, calc(100vw - 32px)" position="50% 50%" priority />}
       />
 
       <Section labelledBy="scene-title">

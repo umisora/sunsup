@@ -6,11 +6,6 @@
 import { getDrink, hasRealStill, SITE_ORIGIN, type Drink } from "./drinks";
 import type { PhotoName } from "@/design-system/components/StillLife/photos";
 
-/**
- * Which first image the scene pages use while the owner compares the two:
- * "table" is the shared still life, "products" is the scene's own row of real product stills.
- */
-export const SCENE_HERO: "table" | "products" = "table";
 
 export type SceneGroup = {
   id: string;
@@ -32,14 +27,14 @@ export type Scene = {
   groups: readonly SceneGroup[];
   /** One line for the card that links back here from drink pages. */
   backLink: string;
-  /** Row of this page's drinks, made by scripts/compose-scene-hero.py. */
-  productHero?: PhotoName;
+  /** First image: a row of this page's own drinks, made only from real product stills by scripts/compose-scene-hero.py. */
+  hero: PhotoName;
 };
 
 export const SCENES: readonly Scene[] = [
   {
     slug: "bonenkai",
-    productHero: "scene-bonenkai",
+    hero: "scene-bonenkai",
     title: "忘年会・新年会のノンアルコール",
     short: "忘年会・新年会",
     description:
@@ -139,8 +134,4 @@ export function sceneJsonLd(scene: Scene): object[] {
       ],
     },
   ];
-}
-
-export function sceneHero(scene: Scene): PhotoName {
-  return SCENE_HERO === "products" && scene.productHero ? scene.productHero : "table";
 }
