@@ -71,7 +71,7 @@ export const SCENES: readonly Scene[] = [
         id: "dry",
         title: "甘くない一本",
         line: "料理と一緒に飲みたい人のために、辛いものや甘さ控えめのものを混ぜます。",
-        slugs: ["kimura-wasabi-ginger", "neo-ginger-200", "kitayama-jabarush", "umaji-yuzu-cider-280"],
+        slugs: ["kimura-wasabi-ginger", "neo-ginger-200", "hyuganatsu-cider-245", "umaji-yuzu-cider-280"],
       },
     ],
     backLink: "年末と年始の飲み会で配れる瓶を、大きな瓶、小さな瓶、甘くない一本に分けています。",
