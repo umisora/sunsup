@@ -6,7 +6,7 @@
 import { isDemoted } from "./demote";
 import { getDrink, hasRealStill, SITE_ORIGIN, storeRows, type Drink } from "./drinks";
 import { isGoalKind, outKind } from "./out-links";
-import { servingUnit } from "./servings";
+import { servingUnit, volumeMl } from "./servings";
 import type { ListItem } from "./shopping-list";
 import type { PhotoName } from "@/design-system/components/StillLife/photos";
 
@@ -388,7 +388,17 @@ export function sceneListItems(scene: Scene): { items: ListItem[]; picked: strin
         continue;
       }
       seen.add(drink.slug);
-      items.push({ slug: drink.slug, name: drink.name, people: unit.people, dilute: unit.dilute, servingText: unit.text, stores });
+      const volume = volumeMl(drink)?.label ?? "";
+      items.push({
+        slug: drink.slug,
+        name: drink.name,
+        people: unit.people,
+        dilute: unit.dilute,
+        servingText: unit.text,
+        still: drink.stillUrl,
+        size: volume && !drink.name.includes(volume) ? volume : "",
+        stores,
+      });
       if (first) {
         picked.push(drink.slug);
         first = false;

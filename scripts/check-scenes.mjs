@@ -86,48 +86,60 @@ if (existsSync(fidelityPath)) {
   }
 }
 
-// The organiser's shopping list: on every scene page, first painted for 10 people, units rounded up
-// from each drink's people per bottle, store links that are the drink page's own (same URL, same kind),
-// tagged for /api/click with source=list, no affiliate parameters, and a LINE link carrying the list.
+// The organiser's shopping list, told by layout: the heading is the answer (「10人なら、7本。」) for the
+// first paint of 10 people, every scene drink is a row, picked rows show units rounded up from people per
+// bottle and the drink page's own store links (same URL, same kind) tagged source=list with no affiliate
+// parameters, unpicked rows show no count and no store, and the LINE link carries the list.
 const AFFILIATE = /[?&](tag|ascsubtag|linkCode|aff(iliate)?(_?id)?|scid|a8|afid)=/i;
 const unescape = (text) => text.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 const attr = (tag, name) => {
   const match = new RegExp(`\\s${name}="([^"]*)"`).exec(tag);
   return match ? unescape(match[1]) : undefined;
 };
+const strip = (text) => unescape(text.replace(/<!-- -->/g, "").replace(/<[^>]+>/g, ""));
 for (const slug of scenes) {
   const path = `/ba/${slug}/`;
   const html = read(`ba/${slug}/index.html`);
   const start = html.indexOf('data-shopping-list=""');
-  if (start < 0 || !html.includes('id="list"') || !html.includes('href="#list"')) {
-    fail(`${path} has no shopping list, or no link to it`);
+  if (start < 0 || !html.includes('id="list"') || !/<a href="#list"[^>]*>何本いる？/.test(html)) {
+    fail(`${path} has no shopping list, or no 何本いる？ link to it`);
     continue;
   }
   if (!/data-shopping-list="" data-headcount="10"/.test(html)) {
     fail(`${path} shopping list is not first painted for 10 people`);
   }
   const part = html.slice(start);
-  const lines = [...part.matchAll(/<li[^>]*data-list-slug="([a-z0-9-]+)" data-people="(\d+)" data-share="(\d+)" data-units="(\d+)"[^>]*>([\s\S]*?)<\/ul><\/li>/g)];
-  if (lines.length === 0) {
-    fail(`${path} shopping list has no lines`);
+  const rows = [...part.matchAll(/<li class="[^"]*" data-list-slug="([a-z0-9-]+)" data-picked="(true|false)" data-people="(\d+)"(?: data-share="(\d+)" data-units="(\d+)")?>([\s\S]*?)<\/li>(?=<li class="[^"]*" data-list-slug|<\/ul>)/g)];
+  const picked = rows.filter((row) => row[2] === "true");
+  if (rows.length < 4 || picked.length === 0) {
+    fail(`${path} shopping list has ${rows.length} rows, ${picked.length} picked`);
   }
-  const shares = lines.reduce((sum, line) => sum + Number(line[3]), 0);
-  if (lines.length > 0 && shares !== 10) {
+  const shares = picked.reduce((sum, row) => sum + Number(row[4]), 0);
+  if (picked.length > 0 && shares !== 10) {
     fail(`${path} shopping list shares add up to ${shares}, not 10`);
   }
   let total = 0;
-  for (const [, drink, people, share, units, body] of lines) {
-    const expected = Number(people) === 0 ? 1 : Math.max(1, Math.ceil(Number(share) / Number(people)));
-    if (Number(units) !== expected) {
-      fail(`${path} list: ${drink} is ${units} bottles for ${share} people at ${people} a bottle, expected ${expected}`);
-    }
-    total += Number(units);
+  for (const [, drink, on, people, share, units, body] of rows) {
     if (!html.includes(`href="/drink/${drink}/"`)) {
       fail(`${path} list names ${drink}, which the page does not show`);
     }
+    if (!/<img src="\/drinks\/[a-z0-9-]+\.webp"/.test(body)) {
+      fail(`${path} list: ${drink} row has no still`);
+    }
+    const stores = [...body.matchAll(/<a [^>]*data-out-source="[^"]*"[^>]*>/g)].map((m) => m[0]);
+    if (on === "false") {
+      if (stores.length > 0 || units !== undefined) {
+        fail(`${path} list: unpicked ${drink} shows a count or a store`);
+      }
+      continue;
+    }
+    const expected = Number(people) === 0 ? 1 : Math.max(1, Math.ceil(Number(share) / Number(people)));
+    if (Number(units) !== expected || !body.includes(`>${units}</span>`)) {
+      fail(`${path} list: ${drink} is ${units} bottles for ${share} people at ${people} a bottle, expected ${expected}`);
+    }
+    total += Number(units);
     const drinkPage = join("out", "drink", drink, "index.html");
     const map = existsSync(drinkPage) ? JSON.parse((readFileSync(drinkPage, "utf8").match(/<script[^>]*id="out-links"[^>]*>([\s\S]*?)<\/script>/) ?? [])[1] ?? "{}") : {};
-    const stores = [...body.matchAll(/<a [^>]*data-out-source="[^"]*"[^>]*>/g)].map((m) => m[0]);
     if (stores.length === 0) {
       fail(`${path} list: ${drink} has no store link`);
     }
@@ -144,13 +156,14 @@ for (const slug of scenes) {
       }
     }
   }
-  if (!part.includes(`合計 <strong>${total}<!-- -->本</strong>`) && !part.includes(`合計 <strong>${total}本</strong>`)) {
-    fail(`${path} list total is not ${total}`);
+  const heading = /<h2 id="list-title"[^>]*data-total="(\d+)"[^>]*>([\s\S]*?)<\/h2>/.exec(part);
+  if (!heading || Number(heading[1]) !== total || strip(heading[2]) !== `10人なら、${total}本。`) {
+    fail(`${path} heading is not 「10人なら、${total}本。」: ${heading ? strip(heading[2]) : "missing"}`);
   }
   const line = /<a href="(https:\/\/line\.me\/R\/share\?text=[^"]+)"[^>]*data-list-line=""/.exec(part);
   const text = line ? decodeURIComponent(unescape(line[1]).split("text=")[1]) : "";
-  if (!text.includes("（10人分）") || !text.includes(`合計 ${total}本`) || !text.endsWith(`${origin}${path}`) || lines.some(([, , , , units]) => !text.includes(` ${units}本`))) {
-    fail(`${path} LINE link does not carry the list: ${text.slice(0, 80)}`);
+  if (!text.includes("　10人分\n") || !text.includes(`\n計${total}本\n`) || !text.endsWith(`${origin}${path}`) || picked.some((row) => !text.includes(` ×${row[5]}\n`))) {
+    fail(`${path} LINE link does not carry the list: ${JSON.stringify(text.slice(0, 80))}`);
   }
 }
 

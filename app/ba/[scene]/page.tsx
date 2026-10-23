@@ -15,6 +15,7 @@ import {
   SectionHead,
   ShareRow,
   ShoppingList,
+  ShoppingListCta,
   SITE_NAME,
   Stack,
   Text,
@@ -90,9 +91,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
           <Eyebrow id="scene-title">{scene.proseLabel}</Eyebrow>
           <Stack gap={3}>
             <FillText variant="prose" lines={[scene.prose]} />
-            <Text variant="body">
-              幹事の方は、<TextLink href="#list">人数から買う本数</TextLink>を出せます。
-            </Text>
+            {list.items.length > 0 ? <ShoppingListCta /> : null}
           </Stack>
         </Grid>
       </Section>
@@ -124,12 +123,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
 
       {list.items.length > 0 ? (
         <Section id="list" space="md" labelledBy="list-title">
-          <SectionHead id="list-title" eyebrow="幹事の方へ" title={<Phrase>人数から、買う本数を出す</Phrase>}>
-            <Text variant="lead" tone="secondary">
-              人数を入れると、選んだドリンクを何本買えばよいかがわかります。人数は、選んだ種類で分けて数えます。
-            </Text>
-          </SectionHead>
-          <ShoppingList title={scene.title} items={list.items} picked={list.picked} url={`${SITE_ORIGIN}${scenePath(scene)}`} />
+          <ShoppingList headingId="list-title" title={scene.title} items={list.items} picked={list.picked} url={`${SITE_ORIGIN}${scenePath(scene)}`} />
         </Section>
       ) : null}
 

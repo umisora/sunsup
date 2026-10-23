@@ -34,4 +34,4 @@ export { Surface, type SurfaceTone } from "./components/Surface/Surface";
 export { Tile } from "./components/Tile/Tile";
 export { DisplayLines, Eyebrow, FillText, Numeral, Phrase, SoftBreak, Text, TextLink } from "./components/Text/Text";
 export { JOURNEY, type JourneyStep } from "./journey";
-export { ShoppingList } from "./components/ShoppingList/ShoppingList";
+export { ShoppingList, ShoppingListCta } from "./components/ShoppingList/ShoppingList";
