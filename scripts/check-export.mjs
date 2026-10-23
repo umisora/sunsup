@@ -4,6 +4,7 @@ import { isGenericProduct } from "./generic-rule.mjs";
 // JSON-LD on drink pages has its own checker; importing runs it first.
 import "./check-jsonld.mjs";
 import "./check-scenes.mjs";
+import "./check-categories.mjs";
 
 const failures = [];
 

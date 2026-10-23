@@ -9,7 +9,7 @@ Input:  stills/masters/<slug>.png (transparent cutout; made from public/drinks/<
         rembg when missing, RGB kept as is, only alpha added)
 Output: public/images/scene-<scene>-{768,1152}.webp (4:5) and stills/scene-hero-fidelity.json
 
-Usage (repo root):  python3 scripts/compose-scene-hero.py bonenkai
+Usage (repo root):  python3 scripts/compose-scene-hero.py bonenkai   (or category:citrus)
 Needs numpy, scipy, scikit-image, Pillow (and rembg for new cutouts).
 """
 import importlib.util, json, os, sys
@@ -58,6 +58,17 @@ HEROES = {
         ("noda-shio-cider", 0.95),
         ("shodoshima-olive-cider-200", 0.80),
         ("sanpellegrino-sparkling-250", 0.95),
+    ]),
+}
+# Category pages (/category/<id>/) get the same kind of hero: category:<id> on the command line,
+# public/images/category-<id>-{768,1152}.webp, results in stills/category-hero-fidelity.json.
+CATEGORY_HEROES = {
+    # Summer: cold citrus sodas. One drink per container (bottle-can, PET, slim can, can), none from another hero.
+    "citrus": dict(season="summer", drinks=[
+        ("umaji-yuzu-cider-280", 0.78),
+        ("dydo-wano-yuzu", 1.0),
+        ("sanpellegrino-aranciata-rossa-330", 0.74),
+        ("kimino-yuzu-water", 0.58),
     ]),
 }
 MAX_UPSCALE = 1.6   # a cutout drawn bigger than this over its source pixels looks soft; pick another still
@@ -138,7 +149,7 @@ def place(out, L, P, A, inner, px, py):
 
 def compose(scene):
     season.S = S; season.HORIZON = HORIZON; season.BASE_Y = BASE_Y
-    hero = HEROES[scene]
+    hero = CATEGORY_HEROES[scene[9:]] if scene.startswith("category:") else HEROES[scene]
     p = dict(season.SEASONS[hero["season"]])
     bg, L = season.render_bg(p)
     out = bg.copy()
@@ -179,12 +190,13 @@ if __name__ == "__main__":
     for scene in sys.argv[1:] or list(HEROES):
         img, res = compose(scene)
         im = Image.fromarray(img)
+        kind, key = ("category", scene[9:]) if scene.startswith("category:") else ("scene", scene)
         for width in (768, 1152):
             im.resize((width, width * 5 // 4), Image.Resampling.LANCZOS).save(
-                os.path.join(ROOT, "public", "images", f"scene-{scene}-{width}.webp"), quality=86, method=6)
-        path = os.path.join(ROOT, "stills", "scene-hero-fidelity.json")
+                os.path.join(ROOT, "public", "images", f"{kind}-{key}-{width}.webp"), quality=86, method=6)
+        path = os.path.join(ROOT, "stills", f"{kind}-hero-fidelity.json")
         allres = json.load(open(path)) if os.path.exists(path) else {}
-        allres[scene] = res
+        allres[key] = res
         json.dump(allres, open(path, "w"), indent=2, ensure_ascii=False)
         print(json.dumps(res, ensure_ascii=False))
         bad = [s for s, r in res.items() if r["print_maxdiff"] != 0]

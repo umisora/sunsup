@@ -3,7 +3,7 @@
  * Only facts the catalog row already holds. No price, offer, rating or review is made up,
  * and the brand is left out because the catalog has no brand column.
  */
-import { categoryId, drinkDescription, SITE_ORIGIN, type Drink } from "./drinks";
+import { categoryHref, categoryId, drinkDescription, SITE_ORIGIN, type Drink } from "./drinks";
 import { volumeMl } from "./servings";
 
 /** "200ml", "1L" or "350g" from the name first, then the size line. Empty when neither says. */
@@ -41,7 +41,7 @@ export function drinkJsonLd(drink: Drink): object[] {
       { "@type": "ListItem", position: 1, name: "STYLISH!", item: `${SITE_ORIGIN}/` },
       { "@type": "ListItem", position: 2, name: "ドリンク一覧", item: `${SITE_ORIGIN}/drink/` },
       ...(shelf
-        ? [{ "@type": "ListItem", position: 3, name: drink.category, item: `${SITE_ORIGIN}/drink/#${shelf}` }]
+        ? [{ "@type": "ListItem", position: 3, name: drink.category, item: `${SITE_ORIGIN}${categoryHref(shelf)}` }]
         : []),
       { "@type": "ListItem", position: shelf ? 4 : 3, name: drink.name, item: url },
     ],

@@ -20,9 +20,9 @@ import {
   TextLink,
   Tile,
 } from "@/design-system";
-import { SITE_ORIGIN } from "@/lib/drinks";
+import { CATEGORY_PAGE_IDS, categoryHref, categoryId, categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText } from "@/lib/jsonld";
-import { getScene, groupDrinks, sceneJsonLd, scenePath, SCENES } from "@/lib/scenes";
+import { getScene, groupDrinks, sceneDrinks, sceneJsonLd, scenePath, SCENES } from "@/lib/scenes";
 
 type ScenePageProps = {
   params: Promise<{ scene: string }>;
@@ -64,6 +64,10 @@ export default async function ScenePage({ params }: ScenePageProps) {
   // Break after the last の: 「会社の飲み会の」「ノンアルコール」
   const cut = scene.title.lastIndexOf("の") + 1;
   const titleLines = scene.titleLines ? [...scene.titleLines] : cut > 0 && cut < scene.title.length ? [scene.title.slice(0, cut), scene.title.slice(cut)] : [scene.title];
+
+  // Categories of this page's drinks that have their own page.
+  const used = new Set(sceneDrinks(scene).map(categoryId));
+  const categoryPages = categorySummaries().filter((item) => used.has(item.id) && CATEGORY_PAGE_IDS.has(item.id));
 
   return (
     <Motion>
@@ -127,6 +131,18 @@ export default async function ScenePage({ params }: ScenePageProps) {
             ))}
             です。
           </Text>
+          {categoryPages.length > 0 ? (
+            <Text variant="body">
+              種類で選ぶなら、
+              {categoryPages.map((item, index) => (
+                <span key={item.id}>
+                  <TextLink href={categoryHref(item.id)}>{item.category}</TextLink>
+                  {index < categoryPages.length - 1 ? "、" : ""}
+                </span>
+              ))}
+              のページもあります。
+            </Text>
+          ) : null}
         </Stack>
       </Section>
 

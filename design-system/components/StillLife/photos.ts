@@ -1,4 +1,4 @@
-export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai" | "scene-kaisha" | "scene-kansougeikai" | "scene-sashiire" | "scene-nomanai-hito";
+export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai" | "scene-kaisha" | "scene-kansougeikai" | "scene-sashiire" | "scene-nomanai-hito" | "category-citrus";
 
 type PhotoSpec = {
   widths: readonly number[];
@@ -75,5 +75,11 @@ export const PHOTOS: Record<PhotoName, PhotoSpec> = {
     width: 1152,
     height: 1440,
     alt: "冬の壁の前のテーブルに、福招き猫サイダー、のだ塩サイダー、小豆島オリーブサイダー、サンペレグリノの瓶が並んでいます。",
+  },
+  "category-citrus": {
+    widths: [768, 1152],
+    width: 1152,
+    height: 1440,
+    alt: "夏の光が差す壁の前のテーブルに、馬路村のゆずサイダー、和ノチカラ ゆず炭酸水のペットボトル、サンペレグリノ アランチャータ・ロッサの缶、KIMINO YUZUスパークリングウォーターの缶が並んでいます。",
   },
 };
