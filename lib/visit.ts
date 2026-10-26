@@ -204,7 +204,7 @@ export const STORIES: readonly VisitStory[] = [
   story("spring-afternoon", "spring", "春の昼", ["春の会議のあとは、味の違うものを一緒に出すのがおすすめです。", "違いがあるので、話が続きます。"], ["fujiya-sparkling-peach", "kimino-yuzu", "kimura-momo-cider"], { daypart: "afternoon" }),
   story("spring-morning", "spring", "春の朝", ["春の出社直後で、初対面の人がいるときです。", "渡しやすいものと、甘くないものを分けて置くと安心です。"], ["kimino-ume", "fujiya-sparkling-peach", "kimino-yuzu"], { daypart: "morning" }),
   story("spring-evening", "spring", "春の夜", ["残った三人には、瓶が二本で足ります。", "味を分ければ、全員に行き渡ります。"], ["kimino-ume", "kimura-momo-cider"], { daypart: "evening" }),
-  story("spring-mild", "spring", "春の午後", ["顔合わせでは、お酒を飲まない人もいます。", "誰に渡しても困らないものを選ぶと安心です。"], ["fujiya-sparkling-peach", "kimino-ume", "kimura-momo-cider"], { weather: "mild" }),
+  story("spring-mild", "spring", "春の午後", ["顔合わせでは、ソフトドリンクを選ぶ人もいます。", "誰に渡しても困らないものを選ぶと安心です。"], ["fujiya-sparkling-peach", "kimino-ume", "kimura-momo-cider"], { weather: "mild" }),
   story("spring-mild-b", "spring", "春の午後", ["春の午後の休憩には、一本を特別なものにするのがおすすめです。", "人数分置くと、取り合いになりません。"], ["kimura-momo-cider", "fujiya-sparkling-peach", "kimino-ume"], { weather: "mild" }),
   story("spring-rain", "spring", "春の雨", ["春の雨で外に出ない日は、この三本で足ります。", "甘いものを出して、甘くないものは仕事に戻る人に残すと安心です。"], ["kimino-ume", "fujiya-sparkling-peach", "kimura-momo-cider"], { weather: "rain" }),
   story("spring-hot", "spring", "暖かい春", ["少し暑い春の日は、よく冷えたものがおすすめです。", "常温だと甘さばかり感じます。"], ["fujiya-sparkling-peach", "kimino-yuzu", "sanpellegrino-aranciata"], { weather: "hot" }),

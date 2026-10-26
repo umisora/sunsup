@@ -1,4 +1,4 @@
-export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai" | "scene-kaisha" | "scene-kansougeikai" | "scene-sashiire" | "scene-nomanai-hito" | "category-citrus" | "category-grape" | "category-nectar" | "category-tea" | "category-craft" | "category-party";
+export type PhotoName = "table" | "place" | "office" | "detail" | "peak" | "peak-wide" | "scene-bonenkai" | "scene-kaisha" | "scene-kansougeikai" | "scene-sashiire" | "scene-okurimono" | "category-citrus" | "category-grape" | "category-nectar" | "category-tea" | "category-craft" | "category-party";
 
 type PhotoSpec = {
   widths: readonly number[];
@@ -70,7 +70,7 @@ export const PHOTOS: Record<PhotoName, PhotoSpec> = {
     height: 1440,
     alt: "夏の明るい壁の前に、片浦レモンサイダー、神戸居留地 レモネードソーダの缶、伊豆レモンサイダー、POM 愛媛河内晩柑の缶が並んでいます。",
   },
-  "scene-nomanai-hito": {
+  "scene-okurimono": {
     widths: [768, 1152],
     width: 1152,
     height: 1440,

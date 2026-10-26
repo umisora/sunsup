@@ -6,8 +6,8 @@
 import { isDemoted } from "./demote";
 import { getDrink, hasRealStill, SITE_ORIGIN, storeRows, type Drink } from "./drinks";
 import { isGoalKind, outKind } from "./out-links";
-import { servingUnit, volumeMl } from "./servings";
-import type { ListItem } from "./shopping-list";
+import { volumeMl } from "./servings";
+import { SET_ROLES, type SetCard, type SetItem, type SetRole } from "./shopping-list";
 import type { PhotoName } from "@/design-system/components/StillLife/photos";
 
 
@@ -51,10 +51,10 @@ export const SCENES: readonly Scene[] = [
     title: "忘年会・新年会のノンアルコール",
     short: "忘年会・新年会",
     description:
-      "会社の忘年会や新年会で、お酒を飲まない人にも配れるノンアルコール飲料を選べます。テーブルに置く大きな瓶、ひとりに一本ずつ渡す小さな瓶、甘くない一本に分けて紹介しています。",
-    lead: "年末と年始の飲み会を任されたあなたが、お酒を飲まない人のぶんを選ぶページです。",
+      "会社の忘年会や新年会で、乾杯から楽しめるソフトドリンクを選べます。テーブルに置く大きな瓶、ひとりに一本ずつ渡す小さな瓶、甘くない一本に分けて紹介しています。",
+    lead: "年末と年始の飲み会を任されたあなたが、乾杯のソフトドリンクを選ぶページです。",
     prose:
-      "12月の忘年会と1月の新年会は、ふだんの飲み会より人が多く、乾杯から始まります。お酒を飲まない人も、車で来た人も、翌朝が早い人も、同じタイミングでグラスを上げられるように、テーブルで見栄えのする瓶を用意しておくと安心です。お店に持ち込むときは、先にお店へ確認しておきましょう。",
+      "12月の忘年会と1月の新年会は、ふだんの飲み会より人が多く、乾杯から始まります。ソフトドリンクで乾杯したい人も、車で来た人も、翌朝が早い人も、同じタイミングでグラスを上げられるように、テーブルで見栄えのする瓶を用意しておくと安心です。お店に持ち込むときは、先にお店へ確認しておきましょう。",
     criteria: [
       {
         no: "01",
@@ -93,7 +93,7 @@ export const SCENES: readonly Scene[] = [
       },
     ],
     backLink: "年末と年始の飲み会で配れる瓶を、大きな瓶、小さな瓶、甘くない一本に分けています。",
-    invite: { note: "人数と、お酒を飲まない人の数がわかったら、本数を決めます。", headline: ["大きな瓶を一本と、", "小さな瓶を人数分。"] },
+    invite: { note: "人数と、ソフトドリンクで乾杯する人の数がわかったら、本数を決めます。", headline: ["大きな瓶を一本と、", "小さな瓶を人数分。"] },
   },
   {
     slug: "kaisha",
@@ -103,10 +103,10 @@ export const SCENES: readonly Scene[] = [
     title: "会社の飲み会のノンアルコール",
     short: "会社の飲み会",
     description:
-      "会社の飲み会で、お酒を飲まない人が手に取りやすいノンアルコール飲料を選べます。乾杯で手に持つ瓶、ひとりで飲みきれる小さな缶、食事に合う甘くない一本に分けて紹介しています。",
-    lead: "ふだんの会社の飲み会で、お酒を飲まない人のぶんを用意するページです。",
+      "会社の飲み会で、手に取りやすいソフトドリンクを選べます。乾杯で手に持つ瓶、ひとりで飲みきれる小さな缶、食事に合う甘くない一本に分けて紹介しています。",
+    lead: "ふだんの会社の飲み会で、ソフトドリンクを用意するページです。",
     prose:
-      "会社の飲み会は、乾杯のあとに食事と話が続きます。お酒を飲まない人も、乾杯で同じように瓶を持てて、食事のあいだも手元に飲みものがあれば、気をつかわずにいられます。社内で開くなら人数分を買っておけます。お店で開くときは、持ち込めるかどうかを先に確かめておきましょう。",
+      "会社の飲み会は、乾杯のあとに食事と話が続きます。ソフトドリンクを選んだ人も、乾杯で同じように瓶を持てて、食事のあいだも手元に飲みものがあれば、気をつかわずにいられます。社内で開くなら人数分を買っておけます。お店で開くときは、持ち込めるかどうかを先に確かめておきましょう。",
     criteria: [
       {
         no: "01",
@@ -145,7 +145,7 @@ export const SCENES: readonly Scene[] = [
       },
     ],
     backLink: "ふだんの会社の飲み会に向くドリンクを、瓶、小さな缶、甘くない一本に分けています。",
-    invite: { note: "人数と、お酒を飲まない人の数がわかったら、本数を決めます。", headline: ["乾杯の瓶と、", "食事のお茶を。"] },
+    invite: { note: "人数と、ソフトドリンクで乾杯する人の数がわかったら、本数を決めます。", headline: ["乾杯の瓶と、", "食事のお茶を。"] },
   },
   {
     slug: "kansougeikai",
@@ -155,10 +155,10 @@ export const SCENES: readonly Scene[] = [
     title: "歓送迎会のノンアルコール",
     short: "歓送迎会",
     description:
-      "春の歓迎会や送別会で、お酒を飲まない人にも配れるノンアルコール飲料を選べます。乾杯でそろえる瓶、主役に渡す一本、甘さ控えめの一本に分けて紹介しています。",
-    lead: "3月と4月の歓迎会や送別会で、お酒を飲まない人のぶんを選ぶページです。",
+      "春の歓迎会や送別会で、乾杯からそろえられるソフトドリンクを選べます。乾杯でそろえる瓶、主役に渡す一本、甘さ控えめの一本に分けて紹介しています。",
+    lead: "3月と4月の歓迎会や送別会で、乾杯のソフトドリンクを選ぶページです。",
     prose:
-      "歓送迎会は、異動や入社で顔ぶれが変わる3月と4月に集まります。来たばかりの人や送られる人が、お酒を飲まないこともあります。乾杯の瓶を全員でそろえておけば、主役も同じタイミングで瓶を持てます。会の終わりに、主役へ一本渡すのもいい方法です。",
+      "歓送迎会は、異動や入社で顔ぶれが変わる3月と4月に集まります。来たばかりの人や送られる人が、ソフトドリンクで乾杯したいこともあります。乾杯の瓶を全員でそろえておけば、主役も同じタイミングで瓶を持てます。会の終わりに、主役へ一本渡すのもいい方法です。",
     criteria: [
       {
         no: "01",
@@ -252,18 +252,18 @@ export const SCENES: readonly Scene[] = [
     invite: { note: "人数がわかったら、缶の数を決めます。", headline: ["配れる缶と、", "土地の瓶を。"] },
   },
   {
-    slug: "nomanai-hito",
-    hero: "scene-nomanai-hito",
+    slug: "okurimono",
+    hero: "scene-okurimono",
     eyebrow: "贈りもの",
     proseLabel: "この一本",
-    title: "お酒を飲まない人に渡す一本",
-    titleLines: ["お酒を飲まない人に", "渡す一本"],
-    short: "飲まない人に渡す一本",
+    title: "ソフトドリンク好きに贈る一本",
+    titleLines: ["ソフトドリンク", "好きに贈る一本"],
+    short: "ソフトドリンク好きに贈る一本",
     description:
-      "お酒を飲まない人へのお礼や手土産に選べるノンアルコール飲料です。ラベルで選ぶ瓶、家族で分けられる大きな瓶、甘くない一本に分けて紹介しています。",
-    lead: "お酒を飲まない人に、お礼や手土産として渡す一本を選ぶページです。",
+      "ソフトドリンクが好きな人へのお礼や手土産に選べる飲みものです。ラベルで選ぶ瓶、家族で分けられる大きな瓶、甘くない一本に分けて紹介しています。",
+    lead: "ソフトドリンクが好きな人に、お礼や手土産として渡す一本を選ぶページです。",
     prose:
-      "贈る相手がお酒を飲まない人だと、何を選ぶか迷いがちです。ラベルに話のたねがある瓶や、家族で分けられる大きな瓶なら、受け取った人も気軽に開けられます。年末のあいさつや年始の訪問など、冬は渡す機会が増えます。甘いものが苦手な人もいるので、甘くない一本も候補に入れておきましょう。",
+      "ソフトドリンクを贈るときは、何を選ぶか迷いがちです。ラベルに話のたねがある瓶や、家族で分けられる大きな瓶なら、受け取った人も気軽に開けられます。年末のあいさつや年始の訪問など、冬は渡す機会が増えます。甘いものが苦手な人もいるので、甘くない一本も候補に入れておきましょう。",
     criteria: [
       {
         no: "01",
@@ -301,7 +301,7 @@ export const SCENES: readonly Scene[] = [
         slugs: ["sanpellegrino-sparkling-250", "kimura-wasabi-ginger", "ucc-teatime-straight-900", "pokka-chiran-tea"],
       },
     ],
-    backLink: "お礼や手土産として、お酒を飲まない人に渡す一本を、ラベルで選ぶ瓶、大きな瓶、甘くない一本に分けています。",
+    backLink: "お礼や手土産として、ソフトドリンクが好きな人に渡す一本を、ラベルで選ぶ瓶、大きな瓶、甘くない一本に分けています。",
     invite: { note: "相手の好みがわからないときは、甘いものと甘くないものを一本ずつ選びます。", headline: ["迷ったら、", "二本に分けて。"] },
   },
 ];
@@ -366,44 +366,92 @@ export function sceneJsonLd(scene: Scene): object[] {
   ];
 }
 
+type SceneSet = {
+  /** First line of the LINE text, e.g. 忘年会・新年会のソフトドリンク */
+  listTitle: string;
+  /** Per role: one reason that holds for every slug, and the slugs with STYLISH!'s pick first. */
+  roles: Record<SetRole, { reason: string; slugs: readonly string[] }>;
+};
+
+/** Big bottles already shown on the bonenkai page; scenes without one of their own borrow from these for テーブル用. */
+const TABLE_BOTTLES = ["pom-mikan-straight-780", "nfs-apple-720", "knk-kanjuku-apple-720", "ringowork-original-720"] as const;
+const tableFirst = (slug: (typeof TABLE_BOTTLES)[number]) => [slug, ...TABLE_BOTTLES.filter((other) => other !== slug)];
+
 /**
- * Items for the organiser's shopping list: every drink on the page whose people-per-bottle is known
- * and that has a store link. The first drink of each group is picked to start with.
+ * STYLISH!'s recommended soft-drink set per scene. 乾杯用 and 食事用 come from the scene's own groups;
+ * テーブル用 is a 大瓶 (checked in scripts/check-shopping.mts). Reasons were written with the natural-japanese skill.
  */
-export function sceneListItems(scene: Scene): { items: ListItem[]; picked: string[] } {
-  const items: ListItem[] = [];
-  const picked: string[] = [];
-  const seen = new Set<string>();
-  for (const group of scene.groups) {
-    let first = true;
-    for (const drink of groupDrinks(group)) {
-      if (seen.has(drink.slug)) {
-        continue;
-      }
-      const unit = servingUnit(drink);
-      const stores = storeRows(drink)
-        .filter((row) => isGoalKind(outKind(row.label)))
-        .map((row) => ({ text: row.text, href: row.href, kind: outKind(row.label) }));
-      if (!unit || stores.length === 0) {
-        continue;
-      }
-      seen.add(drink.slug);
-      const volume = volumeMl(drink)?.label ?? "";
-      items.push({
-        slug: drink.slug,
-        name: drink.name,
-        people: unit.people,
-        dilute: unit.dilute,
-        servingText: unit.text,
-        still: drink.stillUrl,
-        size: volume && !drink.name.includes(volume) ? volume : "",
-        stores,
-      });
-      if (first) {
-        picked.push(drink.slug);
-        first = false;
-      }
-    }
+export const SCENE_SETS: Record<string, SceneSet> = {
+  bonenkai: {
+    listTitle: "忘年会・新年会のソフトドリンク",
+    roles: {
+      kanpai: { reason: "小さな瓶なので、注がずにそのまま乾杯できます。", slugs: ["kimino-yuzu", "kimino-ringo", "shinshu-apple-cider-245", "kimura-fuji-yuzu"] },
+      table: { reason: "700mlを超える大きな瓶。4人で注ぎ分けられます。", slugs: tableFirst("pom-mikan-straight-780") },
+      meal: { reason: "甘さ控えめで、料理と一緒に飲めます。", slugs: ["kimura-wasabi-ginger", "maison-perrier-raspberry-330", "hyuganatsu-cider-245", "umaji-yuzu-cider-280"] },
+    },
+  },
+  kaisha: {
+    listTitle: "会社の飲み会のソフトドリンク",
+    roles: {
+      kanpai: { reason: "果物の色が見える瓶で、乾杯の席が明るくなります。", slugs: ["kimino-mikan", "kimino-ringo", "kimura-shine-muscat", "kimura-mikan-cider"] },
+      table: { reason: "一本置けば、乾杯のあとも注ぎ足せます。", slugs: tableFirst("nfs-apple-720") },
+      meal: { reason: "砂糖が入っていないので、料理の味を邪魔しません。", slugs: ["perrier-glass-330", "dydo-wano-yuzu", "sangaria-houjicha-500", "kuro-oolong-350"] },
+    },
+  },
+  kansougeikai: {
+    listTitle: "歓送迎会のソフトドリンク",
+    roles: {
+      kanpai: { reason: "桃やいちごの春らしい色で、全員の瓶がそろいます。", slugs: ["kimino-momo", "makubetsu-ichigo-cider", "kimura-momo-cider", "kimura-ichigo-cider"] },
+      table: { reason: "乾杯のあとは、大きな瓶から注ぎ分けます。", slugs: tableFirst("knk-kanjuku-apple-720") },
+      meal: { reason: "甘さ控えめで、食事のあいだも飲み飽きません。", slugs: ["hiroshima-lemon-moshio-250", "maison-perrier-raspberry-330", "hyuganatsu-cider-245", "amaou-cider-245"] },
+    },
+  },
+  sashiire: {
+    listTitle: "差し入れのソフトドリンク",
+    roles: {
+      kanpai: { reason: "土地の名前が入った瓶なので、渡すと話がはずみます。", slugs: ["kataura-lemon-cider-330", "kimura-izu-lemon", "dogo-cider-330", "odawara-mikan-cider-330"] },
+      table: { reason: "大きな瓶なら、みんなのグラスに分けて出せます。", slugs: tableFirst("pom-mikan-straight-780") },
+      meal: { reason: "砂糖が入っていないので、どの料理にも合わせやすい一本です。", slugs: ["dydo-wano-lemon", "oiocha-pure-green-600", "kobe-chabo-jasmine-500", "awa-bancha-500"] },
+    },
+  },
+  okurimono: {
+    listTitle: "贈りもののソフトドリンク",
+    roles: {
+      kanpai: { reason: "ラベルに話のたねがあって、そのまま手に持てる瓶です。", slugs: ["kimura-fukuneko", "noda-shio-cider", "shodoshima-olive-cider-200", "kimura-kiwi-cider"] },
+      table: { reason: "家族で分けられる大きな瓶です。", slugs: ["ringowork-sweet-720", "pom-mikan-straight-780", "delmonte-pineapple-750", "acqua-panna-750"] },
+      meal: { reason: "甘さ控えめで、食事と一緒に飲めます。", slugs: ["sanpellegrino-sparkling-250", "kimura-wasabi-ginger", "ucc-teatime-straight-900", "pokka-chiran-tea"] },
+    },
+  },
+};
+
+function setItem(drink: Drink): SetItem | undefined {
+  if (!hasRealStill(drink) || isDemoted(drink)) {
+    return undefined;
   }
-  return { items, picked };
+  const stores = storeRows(drink)
+    .filter((row) => isGoalKind(outKind(row.label)))
+    .map((row) => ({ text: row.text, href: row.href, kind: outKind(row.label) }));
+  if (stores.length === 0) {
+    return undefined;
+  }
+  const volume = volumeMl(drink)?.label ?? "";
+  return { slug: drink.slug, name: drink.name, still: drink.stillUrl, size: volume && !drink.name.includes(volume) ? volume : "", stores };
+}
+
+/** The three role cards for a scene, in 乾杯用, テーブル用, 食事用 order; drinks without a still or a shop link are left out. */
+export function sceneSet(scene: Scene): { title: string; cards: SetCard[] } {
+  const set = SCENE_SETS[scene.slug];
+  if (!set) {
+    return { title: scene.title, cards: [] };
+  }
+  const cards = SET_ROLES.map((role) => ({
+    role,
+    reason: set.roles[role].reason,
+    items: set.roles[role].slugs.flatMap((slug) => {
+      const drink = getDrink(slug);
+      const item = drink ? setItem(drink) : undefined;
+      return item ? [item] : [];
+    }),
+  }));
+  return { title: set.listTitle, cards };
 }

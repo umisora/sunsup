@@ -24,10 +24,10 @@ import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drink
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
   alternates: { canonical: "/ba/office/" },
-  description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒を飲まない人にも渡せる缶と瓶を紹介しています。",
+  description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。",
   openGraph: {
     title: `オフィスのオープンな飲み会｜${SITE_NAME}`,
-    description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒を飲まない人にも渡せる缶と瓶を紹介しています。",
+    description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。",
     url: "/ba/office/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -75,7 +75,7 @@ export default function OfficePage() {
           <FillText
             variant="prose"
             lines={[
-              "定時後のオフィスで、会議室のテーブルを囲んで立ち飲み。お酒を飲まない人も、まだ仕事が残っている人もいる場です。片手で持てる缶や小ぶりの瓶を中心に、少しだけ特別な一本を混ぜると盛り上がります。",
+              "定時後のオフィスで、会議室のテーブルを囲んで立ち飲み。ソフトドリンクが好きな人も、まだ仕事が残っている人もいる場です。片手で持てる缶や小ぶりの瓶を中心に、少しだけ特別な一本を混ぜると盛り上がります。",
             ]}
           />
         </Grid>
@@ -103,7 +103,7 @@ export default function OfficePage() {
           </Text>
           <Text variant="body">
             飲み会のほかに、<TextLink href="/ba/sashiire/">差し入れ・手土産</TextLink>と
-            <TextLink href="/ba/nomanai-hito/">お酒を飲まない人に渡す一本</TextLink>のページもあります。
+            <TextLink href="/ba/okurimono/">ソフトドリンク好きに贈る一本</TextLink>のページもあります。
           </Text>
         </Stack>
       </Section>

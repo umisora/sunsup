@@ -678,6 +678,47 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
   }
 }
 
+// Site-wide wording rule: no exclusive words for people who pick soft drinks (say ソフトドリンクが好きな人,
+// アルコール以外も楽しみたい人). Any built page with 飲まない人, 飲めない人 or 下戸 fails the build. The renamed
+// gift page is /ba/okurimono/; nothing built may still link or point to /ba/nomanai-hito/.
+{
+  const BANNED = /飲まない人|飲めない人|下戸/g;
+  const pages = [];
+  const walkHtml = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walkHtml(full);
+      else if (entry.name.endsWith(".html") || entry.name.endsWith(".txt") || entry.name.endsWith(".xml")) pages.push(full);
+    }
+  };
+  walkHtml("out");
+  let found = 0;
+  for (const file of pages) {
+    const text = readFileSync(file, "utf8");
+    const words = [...new Set(text.match(BANNED) ?? [])];
+    if (words.length > 0 && found < 20) {
+      fail(`${file} says ${words.join("、")}; use positive wording (ソフトドリンクが好きな人, アルコール以外も楽しみたい人)`);
+    }
+    found += words.length > 0 ? 1 : 0;
+    if (text.includes("/ba/nomanai-hito") && found < 20) {
+      fail(`${file} still points to /ba/nomanai-hito/; the page is /ba/okurimono/`);
+    }
+  }
+  if (found > 20) {
+    fail(`…and ${found - 20} more page(s) with exclusive wording`);
+  }
+  if (existsSync("out/ba/nomanai-hito")) {
+    fail("out/ba/nomanai-hito/ is still built; the old path should only 301 to /ba/okurimono/");
+  }
+  const gift = read("ba/okurimono/index.html");
+  if (!gift.includes('<link rel="canonical" href="https://stylish.sunsup.me/ba/okurimono/"') || !gift.includes("ソフトドリンク好きに贈る一本")) {
+    fail("/ba/okurimono/ has no canonical to itself or no 「ソフトドリンク好きに贈る一本」 title");
+  }
+  if (!read("sitemap.xml").includes("<loc>https://stylish.sunsup.me/ba/okurimono/</loc>")) {
+    fail("sitemap.xml does not list /ba/okurimono/");
+  }
+}
+
 if (failures.length > 0) {
   for (const message of failures) {
     console.error(message);

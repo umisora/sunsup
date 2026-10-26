@@ -1,243 +1,232 @@
-/* 幹事's list: one answer, one control, then the drinks on their white board. */
+/* STYLISH!'s recommended set: tag, the answer, one headcount pill, three role cards, the total, the send bar. */
 .list {
   display: grid;
-  gap: var(--space-6, 40px);
-  justify-items: center;
-  max-width: 46rem;
+  gap: 18px;
+  max-width: 34rem;
   margin-inline: auto;
 }
 
-.key {
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-accent);
+}
+
+.tag::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--palette-brass);
+}
+
+.key {
+  margin: -6px 0 0;
   font-family: var(--font-display);
-  font-size: clamp(30px, 7.4vw, 56px);
+  font-size: clamp(26px, 6.8vw, 40px);
   font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: 0.04em;
-  text-align: center;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
   color: var(--text-primary);
 }
 
 .num {
   font-family: var(--font-mark);
-  font-size: 1.62em;
-  font-weight: 500;
+  font-size: 1.2em;
   font-variant-numeric: lining-nums tabular-nums;
-  letter-spacing: 0;
   color: var(--text-accent);
   padding-inline: 0.04em;
 }
 
-/* the hero control */
+/* headcount pill */
+.people {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 6px 6px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+}
+
+.peopleLabel {
+  min-width: 0;
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
 .stepper {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 4vw, 28px);
+  gap: 4px;
 }
 
 .step {
   display: inline-grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
+  width: 40px;
+  height: 40px;
   border: 1px solid var(--border-default);
   border-radius: 50%;
-  background: var(--surface-raised);
+  background: #fff;
   color: var(--text-primary);
   font: inherit;
-  font-size: 28px;
+  font-size: 20px;
   line-height: 1;
   cursor: pointer;
-  transition:
-    border-color var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-standard);
+  transition: border-color var(--duration-base) var(--ease-standard);
 }
 
 .step:hover:not(:disabled) {
   border-color: var(--action-accent);
 }
 
-.step:active:not(:disabled) {
-  transform: scale(0.94);
-}
-
 .step:disabled {
-  opacity: 0.35;
+  opacity: 0.4;
   cursor: default;
 }
 
 .count {
-  display: flex;
+  display: inline-flex;
   align-items: baseline;
-  gap: 6px;
+  justify-content: center;
+  min-width: 52px;
 }
 
 .input {
-  width: 3.2ch;
-  padding: 0;
+  width: 2.6ch;
   border: 0;
-  border-bottom: 2px solid var(--border-default);
   background: transparent;
   color: var(--text-primary);
   font-family: var(--font-mark);
-  font-size: 64px;
+  font-size: 24px;
   font-weight: 500;
-  line-height: 1;
   font-variant-numeric: lining-nums tabular-nums;
   text-align: center;
-  -moz-appearance: textfield;
   appearance: textfield;
+  -moz-appearance: textfield;
 }
 
-.input::-webkit-outer-spin-button,
-.input::-webkit-inner-spin-button {
+.input::-webkit-inner-spin-button,
+.input::-webkit-outer-spin-button {
+  appearance: none;
   margin: 0;
-  -webkit-appearance: none;
 }
 
 .input:focus-visible {
-  outline: none;
-  border-bottom-color: var(--action-focus);
+  outline: 2px solid var(--action-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
 .unit {
-  font-family: var(--font-display);
-  font-size: var(--step-1);
+  font-size: var(--step--1);
+  color: var(--text-muted);
 }
 
-/* the drinks */
-.rows {
+/* role cards */
+.cards {
   display: grid;
-  gap: 10px;
-  width: 100%;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.row {
-  display: grid;
-  gap: 10px;
-  padding: 10px 14px 10px 10px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--surface-raised) 55%, transparent);
-  transition:
-    background-color var(--duration-base) var(--ease-standard),
-    border-color var(--duration-base) var(--ease-standard);
-}
-
-.row.on {
-  border-color: var(--border-default);
+.card {
+  padding: 14px;
+  border: 1px solid var(--border-default);
+  border-radius: 18px;
   background: var(--surface-raised);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--palette-brass-deep) 6%, transparent);
 }
 
-.pick {
+.top {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr) auto;
+  grid-template-columns: 84px minmax(0, 1fr) auto;
+  gap: 12px;
   align-items: center;
-  gap: 14px;
-  width: 100%;
-  min-height: 64px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
 }
 
-.thumb {
+.photo {
   position: relative;
-  width: 64px;
-  aspect-ratio: 1;
-  transition: opacity var(--duration-base) var(--ease-standard), filter var(--duration-base) var(--ease-standard);
+  display: block;
+  width: 84px;
+  height: 104px;
 }
 
-.row:not(.on) {
-  padding-block: 6px;
+.body {
+  min-width: 0;
 }
 
-.row:not(.on) .pick {
-  grid-template-columns: 44px minmax(0, 1fr) auto;
-  min-height: 48px;
-}
-
-.row:not(.on) .thumb {
-  width: 44px;
-  opacity: 0.5;
-  filter: grayscale(0.6);
+.role {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--action-primary);
+  color: var(--text-inverse);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 .name {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: var(--step--1);
-  font-weight: 500;
-  line-height: 1.45;
-}
-
-.row:not(.on) .name {
-  color: var(--text-muted);
-  font-weight: 400;
+  margin: 6px 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
 }
 
 .size {
-  color: var(--text-muted);
-  font-size: var(--step--2);
+  margin-left: 0.4em;
   font-weight: 400;
-  letter-spacing: 0.04em;
-}
-
-.mark {
-  display: inline-flex;
-  align-items: baseline;
-  justify-content: flex-end;
-  min-width: 3.2rem;
-}
-
-.times {
   color: var(--text-muted);
-  font-family: var(--font-text);
-  font-size: 15px;
-  margin-left: 3px;
+}
+
+.why {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
 }
 
 .units {
-  font-family: var(--font-mark);
-  font-size: 44px;
-  font-weight: 500;
-  line-height: 1;
-  font-variant-numeric: lining-nums tabular-nums;
+  margin: 0;
+  text-align: right;
+  white-space: nowrap;
   color: var(--text-accent);
 }
 
-.add {
-  display: inline-grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--border-default);
-  border-radius: 50%;
-  color: var(--text-muted);
-  font-size: 18px;
+.unitsNum {
+  font-family: var(--font-mark);
+  font-size: 34px;
+  font-weight: 500;
   line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-.pick:hover .add {
-  border-color: var(--action-accent);
-  color: var(--text-primary);
+.times {
+  margin-left: 2px;
+  font-family: var(--font-text);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 .stores {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 0;
-  padding: 0 0 2px 78px;
+  margin: 12px 0 0;
+  padding: 0;
   list-style: none;
 }
 
@@ -249,10 +238,9 @@
   padding-inline: 12px;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
+  background: #fff;
   color: var(--text-primary);
-  font-size: var(--step--2);
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: 12.5px;
   text-decoration: none;
 }
 
@@ -261,15 +249,88 @@
 }
 
 .arrow {
-  color: var(--text-muted);
   font-size: 0.9em;
+  color: var(--text-muted);
 }
 
-/* one action */
+/* other drinks of the same role */
+.alt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-default);
+}
+
+.altLabel {
+  margin-right: auto;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.altRow {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.altHidden {
+  display: none;
+}
+
+.swap {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.swap:hover {
+  border-color: var(--action-accent);
+}
+
+.swap:focus-visible,
+.step:focus-visible,
+.store:focus-visible,
+.line:focus-visible,
+.copy:focus-visible,
+.cta:focus-visible {
+  outline: 2px solid var(--action-focus);
+  outline-offset: 2px;
+}
+
+/* total and send */
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 6px 4px 0;
+}
+
+.totalLabel {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.totalNum {
+  font-family: var(--font-mark);
+  font-size: 28px;
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--text-accent);
+}
+
 .send {
   display: flex;
-  width: 100%;
-  max-width: 26rem;
   border-radius: var(--radius-pill);
   background: var(--action-primary);
   box-shadow: var(--shadow-action);
@@ -287,20 +348,23 @@
   color: var(--text-inverse);
   font: inherit;
   font-size: var(--step-0);
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-decoration: none;
   cursor: pointer;
+  transition: background var(--duration-base) var(--ease-standard);
 }
 
 .line {
   flex: 1;
+  padding-inline: 8px;
 }
 
 .copy {
-  padding-inline: 22px;
+  flex: 0 0 84px;
   border-left: 1px solid color-mix(in srgb, var(--text-inverse) 28%, transparent);
   font-size: var(--step--1);
+  font-weight: 400;
 }
 
 .line:hover,
@@ -322,8 +386,7 @@
   font-size: var(--step-0);
   letter-spacing: 0.06em;
   text-decoration: none;
-  justify-self: start;
-  transition: background-color var(--duration-base) var(--ease-standard);
+  transition: background var(--duration-base) var(--ease-standard);
 }
 
 .cta:hover {
@@ -335,17 +398,11 @@
   font-size: 0.85em;
 }
 
-@media (min-width: 960px) {
-  .rows {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .step,
-  .row,
-  .thumb {
+  .line,
+  .copy,
+  .cta {
     transition: none;
   }
 }
