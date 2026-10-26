@@ -53,7 +53,7 @@ HEROES = {
         ("pom-kawachi-190", 0.60),
     ]),
     # Winter: year-end greetings and New Year visits are when a bottle is handed over most.
-    "nomanai-hito": dict(season="winter", drinks=[
+    "okurimono": dict(season="winter", drinks=[
         ("kimura-fukuneko", 1.0),
         ("noda-shio-cider", 0.95),
         ("shodoshima-olive-cider-200", 0.80),

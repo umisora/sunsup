@@ -86,10 +86,10 @@ if (existsSync(fidelityPath)) {
   }
 }
 
-// The organiser's shopping list, told by layout: the heading is the answer (「10人分で7本」) for the
-// first paint of 10 people, every scene drink is a row, picked rows show units rounded up from people per
-// bottle and the drink page's own store links (same URL, same kind) tagged source=list with no affiliate
-// parameters, unpicked rows show no count and no store, and the LINE link carries the list.
+// STYLISH!'s recommended set, first painted for 4 people toasting with a soft drink: the tag and the
+// heading 「乾杯のソフトドリンクは、この3種類で」, three role cards (乾杯用 4本, テーブル用 1本, 食事用 2本 = 7本)
+// each with a reason, the drink page's own store links (same URL, same kind) tagged source=list with no
+// affiliate parameters and swap buttons for the other drinks of the role, then 「全部で7本」 and the LINE link.
 const AFFILIATE = /[?&](tag|ascsubtag|linkCode|aff(iliate)?(_?id)?|scid|a8|afid)=/i;
 const unescape = (text) => text.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 const attr = (tag, name) => {
@@ -97,73 +97,89 @@ const attr = (tag, name) => {
   return match ? unescape(match[1]) : undefined;
 };
 const strip = (text) => unescape(text.replace(/<!-- -->/g, "").replace(/<[^>]+>/g, ""));
+const ROLES = [
+  ["kanpai", "乾杯用", 4],
+  ["table", "テーブル用", 1],
+  ["meal", "食事用", 2],
+];
 for (const slug of scenes) {
   const path = `/ba/${slug}/`;
   const html = read(`ba/${slug}/index.html`);
   const start = html.indexOf('data-shopping-list=""');
-  if (start < 0 || !html.includes('id="list"') || !/<a href="#list"[^>]*>何本買えばいい？/.test(html)) {
-    fail(`${path} has no shopping list, or no 何本買えばいい？ link to it`);
+  if (start < 0 || !html.includes('id="list"') || !/<a href="#list"[^>]*>ソフトドリンクのおすすめを見る/.test(html)) {
+    fail(`${path} has no recommended set, or no ソフトドリンクのおすすめを見る link to it`);
     continue;
   }
-  if (!/data-shopping-list="" data-headcount="10"/.test(html)) {
-    fail(`${path} shopping list is not first painted for 10 people`);
+  if (!/data-shopping-list="" data-headcount="4"/.test(html)) {
+    fail(`${path} set is not first painted for 4 people`);
   }
   const part = html.slice(start);
-  const rows = [...part.matchAll(/<li class="[^"]*" data-list-slug="([a-z0-9-]+)" data-picked="(true|false)" data-people="(\d+)"(?: data-share="(\d+)" data-units="(\d+)")?>([\s\S]*?)<\/li>(?=<li class="[^"]*" data-list-slug|<\/ul>)/g)];
-  const picked = rows.filter((row) => row[2] === "true");
-  if (rows.length < 4 || picked.length === 0) {
-    fail(`${path} shopping list has ${rows.length} rows, ${picked.length} picked`);
+  if (!/<p class="[^"]*">STYLISH!のおすすめ<\/p>/.test(part)) {
+    fail(`${path} set has no STYLISH!のおすすめ tag`);
   }
-  const shares = picked.reduce((sum, row) => sum + Number(row[4]), 0);
-  if (picked.length > 0 && shares !== 10) {
-    fail(`${path} shopping list shares add up to ${shares}, not 10`);
+  const heading = /<h2 id="list-title"[^>]*>([\s\S]*?)<\/h2>/.exec(part);
+  if (!heading || strip(heading[1]) !== "乾杯のソフトドリンクは、この3種類で") {
+    fail(`${path} set heading: ${heading ? strip(heading[1]) : "missing"}`);
+  }
+  if (!part.includes(">ソフトドリンクで乾杯する人</span>")) {
+    fail(`${path} set has no ソフトドリンクで乾杯する人 headcount`);
+  }
+  const cards = [...part.matchAll(/<li class="[^"]*" data-list-role="([a-z]+)" data-list-slug="([a-z0-9-]+)" data-units="(\d+)">([\s\S]*?)(?=<li class="[^"]*" data-list-role=|<p class="[^"]*" data-total=)/g)];
+  if (cards.map((card) => card[1]).join() !== ROLES.map((role) => role[0]).join()) {
+    fail(`${path} set cards are ${cards.map((card) => card[1]).join() || "missing"}, not kanpai,table,meal`);
   }
   let total = 0;
-  for (const [, drink, on, people, share, units, body] of rows) {
-    if (!html.includes(`href="/drink/${drink}/"`)) {
-      fail(`${path} list names ${drink}, which the page does not show`);
-    }
-    if (!/<img src="\/drinks\/[a-z0-9-]+\.webp"/.test(body)) {
-      fail(`${path} list: ${drink} row has no still`);
-    }
-    const stores = [...body.matchAll(/<a [^>]*data-out-source="[^"]*"[^>]*>/g)].map((m) => m[0]);
-    if (on === "false") {
-      if (stores.length > 0 || units !== undefined) {
-        fail(`${path} list: unpicked ${drink} shows a count or a store`);
-      }
-      continue;
-    }
-    const expected = Number(people) === 0 ? 1 : Math.max(1, Math.ceil(Number(share) / Number(people)));
+  const sent = [];
+  for (const [, role, drink, units, body] of cards) {
+    const [, label, expected] = ROLES.find((entry) => entry[0] === role) ?? [];
     if (Number(units) !== expected || !body.includes(`>${units}</span>`)) {
-      fail(`${path} list: ${drink} is ${units} bottles for ${share} people at ${people} a bottle, expected ${expected}`);
+      fail(`${path} set: ${role} is ${units} bottles for 4 people, expected ${expected}`);
     }
     total += Number(units);
+    if (!body.includes(`>${label}</span>`) || !/<p class="[^"]*">[^<]{6,}。<\/p>/.test(body)) {
+      fail(`${path} set: ${role} card has no ${label} tag or no reason`);
+    }
+    if (!/<img src="\/drinks\/[a-z0-9-]+\.webp"/.test(body)) {
+      fail(`${path} set: ${drink} card has no still`);
+    }
+    const swaps = [...body.matchAll(/<button[^>]*data-list-swap="([a-z0-9-]+)"[^>]*>/g)];
+    if (swaps.length < 2 || !swaps.some((tag) => tag[1] === drink && /aria-pressed="true"/.test(tag[0]) && /\sdisabled=""/.test(tag[0])) || !swaps.every((tag) => /aria-label="[^"]+に替える"/.test(tag[0]))) {
+      fail(`${path} set: ${role} has ${swaps.length} swap button(s), or the pick is not marked pressed`);
+    }
+    if (!/>ほかの候補<\/span>/.test(body)) {
+      fail(`${path} set: ${role} has no ほかの候補`);
+    }
     const drinkPage = join("out", "drink", drink, "index.html");
+    if (!existsSync(drinkPage)) {
+      fail(`${path} set names ${drink}, which has no drink page`);
+    }
     const map = existsSync(drinkPage) ? JSON.parse((readFileSync(drinkPage, "utf8").match(/<script[^>]*id="out-links"[^>]*>([\s\S]*?)<\/script>/) ?? [])[1] ?? "{}") : {};
+    const stores = [...body.matchAll(/<a [^>]*data-out-source="[^"]*"[^>]*>/g)].map((m) => m[0]);
     if (stores.length === 0) {
-      fail(`${path} list: ${drink} has no store link`);
+      fail(`${path} set: ${drink} has no store link`);
     }
     for (const tag of stores) {
       const href = attr(tag, "href") ?? "";
       if (attr(tag, "data-out-slug") !== drink || attr(tag, "data-out-source") !== "list") {
-        fail(`${path} list: ${href} is not tagged as ${drink} from the list`);
+        fail(`${path} set: ${href} is not tagged as ${drink} from the list`);
       }
       if (map.links?.[href] !== attr(tag, "data-out-kind") || attr(tag, "data-out-kind") === "official") {
-        fail(`${path} list: ${drink} links ${href} as ${attr(tag, "data-out-kind")}, the drink page has ${map.links?.[href]}`);
+        fail(`${path} set: ${drink} links ${href} as ${attr(tag, "data-out-kind")}, the drink page has ${map.links?.[href]}`);
       }
       if (AFFILIATE.test(href)) {
-        fail(`${path} list: affiliate parameter in ${href}`);
+        fail(`${path} set: affiliate parameter in ${href}`);
       }
     }
+    sent.push(`　${units}本（${label}）\n`);
   }
-  const heading = /<h2 id="list-title"[^>]*data-total="(\d+)"[^>]*>([\s\S]*?)<\/h2>/.exec(part);
-  if (!heading || Number(heading[1]) !== total || strip(heading[2]) !== `10人分で${total}本`) {
-    fail(`${path} heading is not 「10人分で${total}本」: ${heading ? strip(heading[2]) : "missing"}`);
+  const totalTag = /<p class="[^"]*" data-total="(\d+)">([\s\S]*?)<\/p>/.exec(part);
+  if (!totalTag || Number(totalTag[1]) !== total || total !== 7 || strip(totalTag[2]) !== `全部で${total}本`) {
+    fail(`${path} total is not 「全部で7本」: ${totalTag ? strip(totalTag[2]) : "missing"}`);
   }
-  const line = /<a href="(https:\/\/line\.me\/R\/share\?text=[^"]+)"[^>]*data-list-line=""/.exec(part);
+  const line = /<a href="(https:\/\/line\.me\/R\/share\?text=[^"]+)"[^>]*data-list-line="">([^<]*)<\/a>/.exec(part);
   const text = line ? decodeURIComponent(unescape(line[1]).split("text=")[1]) : "";
-  if (!text.includes("（10人分）\n") || !text.includes(`\n合計${total}本\n`) || !text.endsWith(`${origin}${path}`) || picked.some((row) => !text.includes(`　${row[5]}本\n`))) {
-    fail(`${path} LINE link does not carry the list: ${JSON.stringify(text.slice(0, 80))}`);
+  if (!line || line[2] !== "買い出しの人にLINEで送る" || !/^.+のソフトドリンク（4人分）\n/.test(text) || !text.includes(`\n全部で${total}本\n`) || !text.endsWith(`${origin}${path}`) || sent.some((entry) => !text.includes(entry))) {
+    fail(`${path} LINE link does not carry the set: ${JSON.stringify(text.slice(0, 80))}`);
   }
 }
 
@@ -173,4 +189,4 @@ if (failures.length > 0) {
   }
   process.exit(1);
 }
-console.log(`scenes ok: ${scenes.length} scene page(s), each with a shopping list`);
+console.log(`scenes ok: ${scenes.length} scene page(s), each with a recommended set`);

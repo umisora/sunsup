@@ -186,7 +186,7 @@ export default function HomePage() {
               <Phrase>オープンな飲み会</Phrase>
             </>
           }
-          body="定時後に会議室を囲む飲み会です。お酒を飲まない人も、仕事が残っている人もいます。"
+          body="定時後に会議室を囲む飲み会です。ソフトドリンクが好きな人も、仕事が残っている人もいます。"
           action="詳しく見る"
         />
       </Section>

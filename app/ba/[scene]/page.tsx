@@ -24,7 +24,7 @@ import {
 } from "@/design-system";
 import { categoryHref, categoryId, categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText } from "@/lib/jsonld";
-import { getScene, groupDrinks, sceneDrinks, sceneJsonLd, sceneListItems, scenePath, SCENES } from "@/lib/scenes";
+import { getScene, groupDrinks, sceneDrinks, sceneJsonLd, sceneSet, scenePath, SCENES } from "@/lib/scenes";
 
 type ScenePageProps = {
   params: Promise<{ scene: string }>;
@@ -70,7 +70,8 @@ export default async function ScenePage({ params }: ScenePageProps) {
   // Categories of this page's drinks that have their own page.
   const used = new Set(sceneDrinks(scene).map(categoryId));
   const categoryPages = categorySummaries().filter((item) => used.has(item.id));
-  const list = sceneListItems(scene);
+  const list = sceneSet(scene);
+  const hasList = list.cards.some((card) => card.items.length > 0);
 
   return (
     <Motion>
@@ -91,7 +92,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
           <Eyebrow id="scene-title">{scene.proseLabel}</Eyebrow>
           <Stack gap={3}>
             <FillText variant="prose" lines={[scene.prose]} />
-            {list.items.length > 0 ? <ShoppingListCta /> : null}
+            {hasList ? <ShoppingListCta /> : null}
           </Stack>
         </Grid>
       </Section>
@@ -121,9 +122,9 @@ export default async function ScenePage({ params }: ScenePageProps) {
         );
       })}
 
-      {list.items.length > 0 ? (
+      {hasList ? (
         <Section id="list" space="md" labelledBy="list-title">
-          <ShoppingList headingId="list-title" title={scene.title} items={list.items} picked={list.picked} url={`${SITE_ORIGIN}${scenePath(scene)}`} />
+          <ShoppingList headingId="list-title" title={list.title} cards={list.cards} url={`${SITE_ORIGIN}${scenePath(scene)}`} />
         </Section>
       ) : null}
 
