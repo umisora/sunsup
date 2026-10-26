@@ -151,6 +151,82 @@
       "base_y": 1060
     }
   },
+  "ikeda-budo-cider-240_autumn": {
+    "print_px": 107654,
+    "print_maxdiff": 0.0,
+    "opaque_px": 109208,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0944,
+    "seethrough_meandiff": 67.98,
+    "edge_band_px": 5477,
+    "ssim_print": 0.99424,
+    "ssim_inner": 0.96561,
+    "layout": {
+      "scale": 0.7157,
+      "x": 487,
+      "y": 342,
+      "w": 226,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "ikeda-budo-cider-240_spring": {
+    "print_px": 107654,
+    "print_maxdiff": 0.0,
+    "opaque_px": 109208,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0944,
+    "seethrough_meandiff": 27.15,
+    "edge_band_px": 5477,
+    "ssim_print": 0.99626,
+    "ssim_inner": 0.98328,
+    "layout": {
+      "scale": 0.7157,
+      "x": 487,
+      "y": 342,
+      "w": 226,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "ikeda-budo-cider-240_summer": {
+    "print_px": 107654,
+    "print_maxdiff": 0.0,
+    "opaque_px": 109208,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0944,
+    "seethrough_meandiff": 20.85,
+    "edge_band_px": 5477,
+    "ssim_print": 0.99645,
+    "ssim_inner": 0.98946,
+    "layout": {
+      "scale": 0.7157,
+      "x": 487,
+      "y": 342,
+      "w": 226,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "ikeda-budo-cider-240_winter": {
+    "print_px": 107654,
+    "print_maxdiff": 0.0,
+    "opaque_px": 109208,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0944,
+    "seethrough_meandiff": 42.95,
+    "edge_band_px": 5477,
+    "ssim_print": 0.99502,
+    "ssim_inner": 0.97046,
+    "layout": {
+      "scale": 0.7157,
+      "x": 487,
+      "y": 342,
+      "w": 226,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
   "ishigaki-ginger-ale-200_autumn": {
     "print_px": 94276,
     "print_maxdiff": 0.0,
@@ -227,6 +303,82 @@
       "base_y": 1061
     }
   },
+  "kuranooto-koshu_autumn": {
+    "print_px": 95665,
+    "print_maxdiff": 0.0,
+    "opaque_px": 97215,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5526,
+    "ssim_print": 0.99204,
+    "ssim_inner": 0.99148,
+    "layout": {
+      "scale": 0.715,
+      "x": 506,
+      "y": 342,
+      "w": 188,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kuranooto-koshu_spring": {
+    "print_px": 95665,
+    "print_maxdiff": 0.0,
+    "opaque_px": 97215,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5526,
+    "ssim_print": 0.98987,
+    "ssim_inner": 0.98892,
+    "layout": {
+      "scale": 0.715,
+      "x": 506,
+      "y": 342,
+      "w": 188,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kuranooto-koshu_summer": {
+    "print_px": 95665,
+    "print_maxdiff": 0.0,
+    "opaque_px": 97215,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5526,
+    "ssim_print": 0.98809,
+    "ssim_inner": 0.98692,
+    "layout": {
+      "scale": 0.715,
+      "x": 506,
+      "y": 342,
+      "w": 188,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "kuranooto-koshu_winter": {
+    "print_px": 95665,
+    "print_maxdiff": 0.0,
+    "opaque_px": 97215,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0,
+    "seethrough_meandiff": 0.0,
+    "edge_band_px": 5526,
+    "ssim_print": 0.99353,
+    "ssim_inner": 0.99277,
+    "layout": {
+      "scale": 0.715,
+      "x": 506,
+      "y": 342,
+      "w": 188,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
   "noda-shio-cider_autumn": {
     "print_px": 80538,
     "print_maxdiff": 0.0,
@@ -299,6 +451,82 @@
       "x": 500,
       "y": 342,
       "w": 199,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "sarabetsu-sumomo-cider-240_autumn": {
+    "print_px": 108546,
+    "print_maxdiff": 0.0,
+    "opaque_px": 109799,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0905,
+    "seethrough_meandiff": 74.3,
+    "edge_band_px": 5576,
+    "ssim_print": 0.99427,
+    "ssim_inner": 0.96625,
+    "layout": {
+      "scale": 0.7157,
+      "x": 486,
+      "y": 342,
+      "w": 228,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "sarabetsu-sumomo-cider-240_spring": {
+    "print_px": 108546,
+    "print_maxdiff": 0.0,
+    "opaque_px": 109799,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0905,
+    "seethrough_meandiff": 28.08,
+    "edge_band_px": 5576,
+    "ssim_print": 0.99629,
+    "ssim_inner": 0.98379,
+    "layout": {
+      "scale": 0.7157,
+      "x": 486,
+      "y": 342,
+      "w": 228,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "sarabetsu-sumomo-cider-240_summer": {
+    "print_px": 108546,
+    "print_maxdiff": 0.0,
+    "opaque_px": 109799,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0905,
+    "seethrough_meandiff": 20.61,
+    "edge_band_px": 5576,
+    "ssim_print": 0.99652,
+    "ssim_inner": 0.99011,
+    "layout": {
+      "scale": 0.7157,
+      "x": 486,
+      "y": 342,
+      "w": 228,
+      "h": 720,
+      "base_y": 1061
+    }
+  },
+  "sarabetsu-sumomo-cider-240_winter": {
+    "print_px": 108546,
+    "print_maxdiff": 0.0,
+    "opaque_px": 109799,
+    "opaque_maxdiff": 0.0,
+    "seethrough_frac": 0.0905,
+    "seethrough_meandiff": 48.15,
+    "edge_band_px": 5576,
+    "ssim_print": 0.99522,
+    "ssim_inner": 0.97099,
+    "layout": {
+      "scale": 0.7157,
+      "x": 486,
+      "y": 342,
+      "w": 228,
       "h": 720,
       "base_y": 1061
     }
