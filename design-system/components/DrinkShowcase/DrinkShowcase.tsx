@@ -40,7 +40,7 @@ export function DrinkShowcase({ drinks, columns = 3, label, stagger = true }: Dr
               </StillLife>
             ) : drink.stillUrl ? (
               <StillLife ratio="4:5" radius="md" fit="plinth">
-                <ExternalPhoto src={drink.stillUrl} alt="" />
+                <ExternalPhoto src={drink.stillUrl} alt="" sizes="(max-width: 767px) 74vw, (max-width: 959px) 40vw, 220px" />
               </StillLife>
             ) : null}
             <span className={cx(styles.copy, !drink.stillUrl && !drink.seasonUrl && styles.plain)}>

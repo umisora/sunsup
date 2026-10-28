@@ -8,6 +8,7 @@ import {
   MediaPanel,
   Motion,
   PageIntro,
+  PreloadPhoto,
   Photo,
   Phrase,
   Section,
@@ -59,6 +60,7 @@ export default function OfficePage() {
 
   return (
     <Motion>
+      <PreloadPhoto name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />
       <PageIntro
         id="office-title"
         step="ba"
