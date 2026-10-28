@@ -719,6 +719,24 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
   }
 }
 
+// Every drink still shipped as /drinks/<slug>.webp has a 320w thumb for card srcsets.
+{
+  const missing = [];
+  for (const slug of slugs) {
+    const still = join("out", "drinks", `${slug}.webp`);
+    const thumb = join("out", "drinks", "320", `${slug}.webp`);
+    if (existsSync(still) && !existsSync(thumb)) {
+      missing.push(slug);
+    }
+  }
+  for (const slug of missing.slice(0, 20)) {
+    fail(`drink thumb missing: /drinks/320/${slug}.webp (run scripts/build-drink-thumbs.py)`);
+  }
+  if (missing.length > 20) {
+    fail(`…and ${missing.length - 20} more drink thumbs are missing`);
+  }
+}
+
 if (failures.length > 0) {
   for (const message of failures) {
     console.error(message);

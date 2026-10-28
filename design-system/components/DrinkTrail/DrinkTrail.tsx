@@ -14,7 +14,7 @@ function Step({ drink, direction }: { drink: TrailDrink; direction: "previous" |
       {drink.stillUrl ? (
         <span className={styles.thumb}>
           <StillLife ratio="fill" radius="sm" fit="plinth">
-            <ExternalPhoto src={drink.stillUrl} alt="" />
+            <ExternalPhoto src={drink.stillUrl} alt="" sizes="96px" />
           </StillLife>
         </span>
       ) : null}

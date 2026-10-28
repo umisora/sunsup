@@ -187,6 +187,8 @@ export function TableArrival({ pieces, onStillError }: TableArrivalProps) {
                   <img
                     className={styles.still}
                     src={piece.src}
+                    srcSet={/^\/drinks\/[a-z0-9-]+\.webp$/.test(piece.src) ? `/drinks/320/${piece.slug}.webp 320w, ${piece.src} 1000w` : undefined}
+                    sizes="(max-width: 767px) 74vw, 220px"
                     alt=""
                     width={piece.nw}
                     height={piece.nh}

@@ -7,6 +7,7 @@ import {
   Grid,
   Motion,
   PageIntro,
+  PreloadPhoto,
   Photo,
   Phrase,
   Section,
@@ -80,6 +81,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {categoryJsonLd(page, drinks).map((data, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
+      <PreloadPhoto name={page.hero} sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />
       <PageIntro
         id="category-intro-title"
         step="drink"

@@ -9,19 +9,19 @@ import {
   MediaPanel,
   Motion,
   PageIntro,
+  PreloadPhoto,
   Photo,
   Phrase,
   Section,
   SectionHead,
   ShareRow,
-  ShoppingList,
-  ShoppingListCta,
   SITE_NAME,
   Stack,
   Text,
   TextLink,
   Tile,
 } from "@/design-system";
+import { ShoppingList, ShoppingListCta } from "@/design-system/components/ShoppingList/ShoppingList";
 import { categoryHref, categoryId, categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText } from "@/lib/jsonld";
 import { getScene, groupDrinks, sceneDrinks, sceneJsonLd, sceneSet, scenePath, SCENES } from "@/lib/scenes";
@@ -78,6 +78,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
       {sceneJsonLd(scene).map((data, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
+      <PreloadPhoto name={scene.hero} sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />
       <PageIntro
         id="scene-intro-title"
         step="ba"

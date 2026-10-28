@@ -116,7 +116,7 @@ export function ShoppingList({ headingId, title, cards, url }: ShoppingListProps
               <div className={styles.top}>
                 <span className={styles.photo}>
                   <StillLife ratio="fill" radius="sm" fit="plinth">
-                    <ExternalPhoto src={line.item.still} alt="" />
+                    <ExternalPhoto src={line.item.still} alt="" sizes="84px" />
                   </StillLife>
                 </span>
                 <div className={styles.body}>
@@ -168,7 +168,7 @@ export function ShoppingList({ headingId, title, cards, url }: ShoppingListProps
                             onClick={() => setPicks((current) => ({ ...current, [line.role]: item.slug }))}
                           >
                             <StillLife ratio="fill" radius="sm" fit="plinth">
-                              <ExternalPhoto src={item.still} alt="" />
+                              <ExternalPhoto src={item.still} alt="" sizes="40px" />
                             </StillLife>
                           </button>
                         </li>

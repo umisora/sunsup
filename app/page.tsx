@@ -17,12 +17,12 @@ import {
   Section,
   SectionHead,
   Stack,
-  TABLE_CAST,
   TableShelf,
   Text,
-  VisitHero,
   Tile,
 } from "@/design-system";
+import { VisitHero } from "@/design-system/components/VisitHero/VisitHero";
+import { TABLE_CAST } from "@/design-system/components/TableArrival/cast";
 import { categorySummaries, getDrink, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
 import { DEFAULT_STORY_ID, STORIES, storyById, type Daypart, type Season } from "@/lib/visit";
 

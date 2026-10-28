@@ -101,7 +101,7 @@ function Strip({ title, drinks, note }: { title: string; drinks: readonly TableD
               {drink.stillUrl ? (
                 <span className={styles.thumb}>
                   <StillLife ratio="fill" radius="sm" fit="plinth">
-                    <ExternalPhoto src={drink.stillUrl} alt="" />
+                    <ExternalPhoto src={drink.stillUrl} alt="" sizes="72px" />
                   </StillLife>
                 </span>
               ) : null}
