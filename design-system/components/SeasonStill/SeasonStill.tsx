@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { seasonOf, type Season } from "@/lib/visit";
-import { seasonStillUrl } from "@/lib/still-seasons";
+import { SEASON_HERO_SIZES, seasonStillSrcSet, seasonStillUrl } from "@/lib/still-seasons";
 import { StillLife } from "../StillLife/StillLife";
 
 type SeasonStillProps = {
@@ -31,6 +31,8 @@ export function SeasonStill({ slug, alt, season, priority = false, intro = false
     <StillLife ratio={ratio} radius="lg" fit="cover" intro={intro}>
       <img
         src={src}
+        srcSet={seasonStillSrcSet(slug, current)}
+        sizes={SEASON_HERO_SIZES}
         alt={alt}
         width={1200}
         height={1200}

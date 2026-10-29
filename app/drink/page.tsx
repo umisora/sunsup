@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead, SITE_NAME, TableShelf, Text, TextLink } from "@/design-system";
 import { categoryHref, drinkGroups } from "@/lib/drinks";
+import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "ドリンク一覧",
@@ -24,6 +25,9 @@ export default function DrinkIndexPage() {
 
   return (
     <Motion>
+      {pageJsonLd("/drink/", "ドリンク一覧").map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
       <PageIntro
         id="list-title"
         compact

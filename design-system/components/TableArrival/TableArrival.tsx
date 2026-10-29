@@ -2,12 +2,8 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import Link from "next/link";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import type { ArrivalStand, ArrivalToast } from "./cast";
 import styles from "./TableArrival.module.css";
-
-gsap.registerPlugin(useGSAP);
 
 export type TablePiece = {
   slug: string;
@@ -76,83 +72,100 @@ export function TableArrival({ pieces, onStillError }: TableArrivalProps) {
     });
   }, [pieces, onStillError]);
 
-  useGSAP(
-    () => {
-      const scope = root.current;
-      if (!scope) {
-        return;
-      }
-
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference) and (min-width: 768px)", () => {
-        const stills = gsap.utils.toArray<HTMLElement>("[data-arrive]", scope);
-        const timeline = gsap.timeline({
-          defaults: { ease: "power3.out" },
-          onComplete: () => {
-            gsap.set(stills, { willChange: "auto" });
-          },
-        });
-
-        timeline.addLabel("set", 0.35);
-        stills.forEach((still, index) => {
-          const from = readMotion(still);
-          const at = `set+=${index * 0.52}`;
-          timeline.fromTo(
-            still,
-            { x: from.x, y: from.y, rotation: from.rotation },
-            { x: 0, y: 0, rotation: 0, duration: 1.25 },
-            at,
-          );
-          const floor = still.closest("[data-slot]")?.querySelector("[data-arrive-floor]");
-          if (floor) {
-            timeline.to(floor, { opacity: 1, duration: 0.4, ease: "power1.out" }, `${at}+=0.75`);
-          }
-        });
-
-        const left = scope.querySelector<HTMLElement>('[data-toast="left"]');
-        const right = scope.querySelector<HTMLElement>('[data-toast="right"]');
-        const daylight = scope.querySelector("[data-daylight]");
-        const clink = scope.querySelector("[data-clink]");
-
-        timeline.addLabel("toast", 4.7);
-
-        if (left && right) {
-          const floors = [left, right]
-            .map((still) => still.closest("[data-slot]")?.querySelector("[data-floor]"))
-            .filter((floor): floor is Element => Boolean(floor));
-          timeline.to(left, { y: -28, rotation: 8, duration: 0.9, ease: "power2.out" }, "toast");
-          timeline.to(right, { y: -28, rotation: -8, duration: 0.9, ease: "power2.out" }, "toast");
-          if (floors.length > 0) {
-            timeline.to(floors, { scaleX: 0.58, opacity: 0.4, duration: 0.9, ease: "power2.out" }, "toast");
-          }
-          timeline.to([left, right], { y: 0, rotation: 0, duration: 1.15, ease: "power2.inOut" }, "toast+=1.5");
-          if (floors.length > 0) {
-            timeline.to(floors, { scaleX: 1, opacity: 1, duration: 1.15, ease: "power2.inOut" }, "toast+=1.5");
-          }
+  // The arrival plays on wide screens only. GSAP is fetched after hydration, so no first paint waits on it.
+  useEffect(() => {
+    const scope = root.current;
+    if (!scope) {
+      return;
+    }
+    let cancelled = false;
+    let revert: (() => void) | undefined;
+    import("gsap")
+      .then(({ default: gsap }) => {
+        if (cancelled) {
+          return;
         }
+        let mm: ReturnType<typeof gsap.matchMedia> | undefined;
+        const context = gsap.context(() => {
+          mm = gsap.matchMedia();
+          mm.add("(prefers-reduced-motion: no-preference) and (min-width: 768px)", () => {
+            const stills = gsap.utils.toArray<HTMLElement>("[data-arrive]", scope);
+            const timeline = gsap.timeline({
+              defaults: { ease: "power3.out" },
+              onComplete: () => {
+                gsap.set(stills, { willChange: "auto" });
+              },
+            });
 
-        if (clink) {
-          timeline.fromTo(
-            clink,
-            { opacity: 0, scale: 0.55 },
-            { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" },
-            "toast+=0.5",
-          );
-          timeline.to(clink, { opacity: 0, scale: 0.85, duration: 0.55, ease: "power1.in" }, "toast+=1.25");
-        }
+            timeline.addLabel("set", 0.35);
+            stills.forEach((still, index) => {
+              const from = readMotion(still);
+              const at = `set+=${index * 0.52}`;
+              timeline.fromTo(
+                still,
+                { x: from.x, y: from.y, rotation: from.rotation },
+                { x: 0, y: 0, rotation: 0, duration: 1.25 },
+                at,
+              );
+              const floor = still.closest("[data-slot]")?.querySelector("[data-arrive-floor]");
+              if (floor) {
+                timeline.to(floor, { opacity: 1, duration: 0.4, ease: "power1.out" }, `${at}+=0.75`);
+              }
+            });
 
-        if (daylight) {
-          timeline.to(daylight, { opacity: 0.92, duration: 0.75, ease: "power1.inOut" }, "toast");
-          timeline.to(daylight, { opacity: 0.6, duration: 1.2, ease: "power1.inOut" }, "toast+=1.5");
-        }
+            const left = scope.querySelector<HTMLElement>('[data-toast="left"]');
+            const right = scope.querySelector<HTMLElement>('[data-toast="right"]');
+            const daylight = scope.querySelector("[data-daylight]");
+            const clink = scope.querySelector("[data-clink]");
+
+            timeline.addLabel("toast", 4.7);
+
+            if (left && right) {
+              const floors = [left, right]
+                .map((still) => still.closest("[data-slot]")?.querySelector("[data-floor]"))
+                .filter((floor): floor is Element => Boolean(floor));
+              timeline.to(left, { y: -28, rotation: 8, duration: 0.9, ease: "power2.out" }, "toast");
+              timeline.to(right, { y: -28, rotation: -8, duration: 0.9, ease: "power2.out" }, "toast");
+              if (floors.length > 0) {
+                timeline.to(floors, { scaleX: 0.58, opacity: 0.4, duration: 0.9, ease: "power2.out" }, "toast");
+              }
+              timeline.to([left, right], { y: 0, rotation: 0, duration: 1.15, ease: "power2.inOut" }, "toast+=1.5");
+              if (floors.length > 0) {
+                timeline.to(floors, { scaleX: 1, opacity: 1, duration: 1.15, ease: "power2.inOut" }, "toast+=1.5");
+              }
+            }
+
+            if (clink) {
+              timeline.fromTo(
+                clink,
+                { opacity: 0, scale: 0.55 },
+                { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" },
+                "toast+=0.5",
+              );
+              timeline.to(clink, { opacity: 0, scale: 0.85, duration: 0.55, ease: "power1.in" }, "toast+=1.25");
+            }
+
+            if (daylight) {
+              timeline.to(daylight, { opacity: 0.92, duration: 0.75, ease: "power1.inOut" }, "toast");
+              timeline.to(daylight, { opacity: 0.6, duration: 1.2, ease: "power1.inOut" }, "toast+=1.5");
+            }
+          });
+        }, scope);
+        revert = () => {
+          mm?.revert();
+          context.revert();
+        };
+      })
+      .catch(() => {
+        // No GSAP: settle the stills where they would land.
+        scope.querySelectorAll<HTMLElement>("[data-arrive]").forEach((still) => still.style.setProperty("transform", "none", "important"));
+        scope.querySelectorAll<HTMLElement>("[data-arrive-floor]").forEach((floor) => floor.style.setProperty("opacity", "1", "important"));
       });
-
-      return () => {
-        mm.revert();
-      };
-    },
-    { scope: root },
-  );
+    return () => {
+      cancelled = true;
+      revert?.();
+    };
+  }, []);
 
   return (
     <div ref={root} className={styles.scene}>

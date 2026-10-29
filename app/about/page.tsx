@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Eyebrow, Grid, InfoRow, LogoTitle, Motion, Photo, Section, SITE_NAME, Stack, StillLife, Text, TextLink } from "@/design-system";
 import { CLARITY_ID } from "../_metrics/Clarity";
+import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
@@ -19,6 +20,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <Motion>
+      {pageJsonLd("/about/", "このサイトについて").map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
       <Section space="md" labelledBy="about-title">
         <Grid columns="splitWide" align="center">
           <Stack gap={5}>

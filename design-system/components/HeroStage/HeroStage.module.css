@@ -132,9 +132,13 @@
 
   .side > :last-child {
     order: 3;
+    box-sizing: border-box;
     padding: 8px var(--layout-gutter) 0;
     font-size: 16px;
     line-height: 1.7;
+    /* /api/visit can swap in a story whose lead runs longer than the static default.
+       Every story's lead fits in four lines from 360px up, so reserve them and the stills never move. */
+    min-height: calc(8px + 4 * 1.7em);
   }
 
   .stage {
