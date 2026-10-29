@@ -595,6 +595,12 @@ for (const slug of seasonSlugs) {
     if (!existsSync(file) || readFileSync(file).length < 10000) {
       fail(`${slug} is missing its ${season} still ${file}`);
     }
+    for (const width of ["480", "800"]) {
+      const copy = join("out", "drinks", "season", width, `${slug}_${season}.webp`);
+      if (!existsSync(copy)) {
+        fail(`${slug} is missing its ${width}w ${season} still ${copy} (run scripts/build-drink-thumbs.py)`);
+      }
+    }
   }
   if (!seasonSlugFile.includes(`"${slug}"`)) {
     fail(`lib/season-slugs.ts does not list ${slug} for the season function`);
@@ -615,6 +621,9 @@ for (const slug of seasonSlugs) {
 const seasonDir = join("out", "drinks", "season");
 if (existsSync(seasonDir)) {
   for (const file of readdirSync(seasonDir)) {
+    if (file === "480" || file === "800") {
+      continue;
+    }
     const match = file.match(/^(.+)_(spring|summer|autumn|winter)\.webp$/);
     if (!match || !seasonSlugs.includes(match[1])) {
       fail(`out/drinks/season/${file} is not listed in data/still-seasons.json`);

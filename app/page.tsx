@@ -25,6 +25,7 @@ import { VisitHero } from "@/design-system/components/VisitHero/VisitHero";
 import { TABLE_CAST } from "@/design-system/components/TableArrival/cast";
 import { categorySummaries, getDrink, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
 import { DEFAULT_STORY_ID, STORIES, storyById, type Daypart, type Season } from "@/lib/visit";
+import { jsonLdText, siteJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: { absolute: SITE_NAME },
@@ -104,6 +105,9 @@ export default function HomePage() {
 
   return (
     <Motion>
+      {siteJsonLd().map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
       <VisitHero
         labelledBy="home-title"
         initialId={DEFAULT_STORY_ID}

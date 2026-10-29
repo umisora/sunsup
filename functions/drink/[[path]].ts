@@ -25,6 +25,7 @@ type PagesContext = {
 };
 
 const SLUG = /^[a-z0-9-]+$/;
+const SEASON_FILE = /_(?:spring|summer|autumn|winter)\.webp/g;
 
 export async function onRequestGet(context: PagesContext): Promise<Response> {
   const response = await context.next();
@@ -40,6 +41,11 @@ export async function onRequestGet(context: PagesContext): Promise<Response> {
   const headers = new Headers(response.headers);
   headers.delete("etag");
   const page = new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  // Keep the srcset (480w / 800w / 1200w copies) on the same season as src.
+  const srcSet = (slug: string) => {
+    const file = `${slug}_${season}.webp`;
+    return `/drinks/season/480/${file} 480w, /drinks/season/800/${file} 800w, /drinks/season/${file} 1200w`;
+  };
   return new HTMLRewriter()
     .on("img[data-season-still]", {
       element(element) {
@@ -48,7 +54,28 @@ export async function onRequestGet(context: PagesContext): Promise<Response> {
           return;
         }
         element.setAttribute("src", `/drinks/season/${slug}_${season}.webp`);
+        // React writes srcSet; HTML attribute names are case-insensitive, so check both spellings.
+        for (const name of ["srcset", "srcSet"]) {
+          if (element.getAttribute(name) !== null) {
+            element.setAttribute(name, srcSet(slug));
+            break;
+          }
+        }
         element.setAttribute("data-season", season);
+      },
+    })
+    // React emits a preload for the eager hero <img>; move it to the same season so only one file loads.
+    .on("link[rel=preload][as=image]", {
+      element(element) {
+        for (const name of ["href", "imagesrcset", "imageSrcSet"]) {
+          const value = element.getAttribute(name);
+          if (value && value.includes(`/drinks/season/`) && value.includes(`/${pageSlug}_`)) {
+            element.setAttribute(name, value.replace(SEASON_FILE, `_${season}.webp`));
+            if (name !== "href") {
+              break;
+            }
+          }
+        }
       },
     })
     .transform(page);

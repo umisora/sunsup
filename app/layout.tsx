@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { SITE_NAME, SiteFooter, SiteHeader, SkipLink } from "@/design-system";
+import { SITE_DESCRIPTION } from "@/design-system/brand";
 import { categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import "@/design-system/styles/index.css";
 import { Beacons } from "./_metrics/Beacons";
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     locale: "ja_JP",
     type: "website",
   },
-  description: "オフィスの飲み会を任された人が、定時後に出すノンアルコールを選ぶサイトです。",
+  description: SITE_DESCRIPTION,
   twitter: { card: "summary_large_image" },
 };
 

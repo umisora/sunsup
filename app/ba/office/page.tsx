@@ -21,6 +21,7 @@ import {
   Tile,
 } from "@/design-system";
 import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drinks";
+import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
@@ -60,6 +61,9 @@ export default function OfficePage() {
 
   return (
     <Motion>
+      {pageJsonLd("/ba/office/", "オフィスのオープンな飲み会").map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
       <PreloadPhoto name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />
       <PageIntro
         id="office-title"

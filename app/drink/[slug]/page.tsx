@@ -44,7 +44,7 @@ import { OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
 import { drinkJsonLd, jsonLdText } from "@/lib/jsonld";
 import { scenePath, scenesFor } from "@/lib/scenes";
 import { heroSpecs } from "@/lib/servings";
-import { hasSeasonStills, seasonStillUrl } from "@/lib/still-seasons";
+import { hasSeasonStills } from "@/lib/still-seasons";
 import { seasonOf } from "@/lib/visit";
 
 type DrinkPageProps = {
@@ -126,11 +126,8 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
       {rows.length > 0 ? <script type="application/json" id={OUT_LINKS_ID} dangerouslySetInnerHTML={{ __html: outLinks }} /> : null}
-      {hasSeasonStills(drink.slug)
-        ? <PreloadExternal src={seasonStillUrl(drink.slug, seasonOf(new Date()))!} />
-        : drink.stillUrl
-          ? <PreloadExternal src={drink.stillUrl} />
-          : null}
+      {/* A season still's <img> is eager with fetchPriority high, so React already emits its preload (with the srcset). */}
+      {!hasSeasonStills(drink.slug) && drink.stillUrl ? <PreloadExternal src={drink.stillUrl} /> : null}
       <ProductHero
         id="drink-title"
         crumbs={[
