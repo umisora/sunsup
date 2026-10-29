@@ -6,6 +6,9 @@
     "noda-shio-cider": { "tint": [214, 236, 238] },
     "fever-tree-tonic": { "tint": [240, 232, 210] },
     "tennensui-sparkling-lemon-500": { "tint": [250, 246, 214] },
-    "ishigaki-ginger-ale-200": { "tint": [240, 206, 166] }
+    "ishigaki-ginger-ale-200": { "tint": [240, 206, 166] },
+    "kuranooto-koshu": { "tint": [238, 226, 204] },
+    "ikeda-budo-cider-240": { "tint": [242, 214, 222] },
+    "sarabetsu-sumomo-cider-240": { "tint": [246, 222, 230] }
   }
 }
