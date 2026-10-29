@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { daypartOf, DEFAULT_STORY_ID, seasonOf, storyById, type VisitStory } from "@/lib/visit";
 import { seasonStillUrl } from "@/lib/still-seasons";
 import { pickVisitStories, replacementDrink, type PickedDrink, type PickedStory } from "@/lib/visit-picks";
@@ -237,9 +237,13 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
       >
         <Chip intro>{story.kicker}</Chip>
         <Text variant="lead" intro>
-          <Phrase>{story.lead[0]}</Phrase>
-          <br />
-          <Phrase>{story.lead[1]}</Phrase>
+          {/* Keyed so a story swap replaces the lines instead of moving them (no layout shift).
+              The <p> keeps its node, so its motion state and reserved height stay put. */}
+          <Fragment key={story.id}>
+            <Phrase>{story.lead[0]}</Phrase>
+            <br />
+            <Phrase>{story.lead[1]}</Phrase>
+          </Fragment>
         </Text>
       </HeroStage>
       {more.map((item) => {
