@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Section, ShelfHead, SITE_NAME, TableShelf, Text, TextLink } from "@/design-system";
+import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Photo, Section, ShelfHead, SITE_NAME, Stack, TableShelf, Text, TextLink, VenueLink } from "@/design-system";
 import { categoryHref, drinkGroups } from "@/lib/drinks";
+import { SCENES, scenePath } from "@/lib/scenes";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
@@ -37,6 +38,20 @@ export default function DrinkIndexPage() {
         sublead={`全${total}本を、6つのカテゴリに分けています。`}
       />
       <CategoryNav categories={categories} total={total} />
+      <Section space="md" label="飲み会">
+        <Stack gap={5} align="stretch">
+          {[...SCENES].sort((a, b) => (a.slug === "bonenkai" ? -1 : b.slug === "bonenkai" ? 1 : 0)).map((scene) => (
+            <VenueLink
+              key={scene.slug}
+              href={scenePath(scene)}
+              media={<Photo name={scene.hero} sizes="(min-width: 768px) 420px, 100vw" position="50% 50%" decorative />}
+              eyebrow={scene.eyebrow}
+              title={<Phrase>{scene.title}</Phrase>}
+              body={scene.backLink}
+            />
+          ))}
+        </Stack>
+      </Section>
       <TableShelf known={groups.flatMap((group) => group.drinks.map((drink) => drink.slug))} />
       {groups.map((group, index) => (
         <Section key={group.id} id={group.id} space={index === 0 ? "sm" : "md"} labelledBy={`cat-${group.id}`}>

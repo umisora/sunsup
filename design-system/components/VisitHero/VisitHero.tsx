@@ -218,6 +218,7 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
     };
   }, []);
 
+
   const more = (page ?? []).slice(1);
   // Stories only render after the visit is picked on the client, so today's JST season is safe here.
   const season = seasonOf(new Date());
@@ -237,8 +238,7 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
       >
         <Chip intro>{story.kicker}</Chip>
         <Text variant="lead" intro>
-          {/* Keyed so a story swap replaces the lines instead of moving them (no layout shift).
-              The <p> keeps its node, so its motion state and reserved height stay put. */}
+          {/* Keyed so a story swap replaces the lines in place. Height follows the copy (no fixed 4-line gap). */}
           <Fragment key={story.id}>
             <Phrase>{story.lead[0]}</Phrase>
             <br />

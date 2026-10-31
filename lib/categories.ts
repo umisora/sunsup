@@ -178,9 +178,9 @@ export function vesselGroups(drinks: readonly Drink[]): VesselGroup[] {
 /** Scenes that list drinks of this category, with how many. */
 export function categoryScenes(drinks: readonly Drink[]): { scene: Scene; count: number }[] {
   const slugs = new Set(drinks.map((drink) => drink.slug));
-  return SCENES.map((scene) => ({ scene, count: sceneDrinks(scene).filter((drink) => slugs.has(drink.slug)).length })).filter(
-    (item) => item.count > 0,
-  );
+  return SCENES.map((scene) => ({ scene, count: sceneDrinks(scene).filter((drink) => slugs.has(drink.slug)).length }))
+    .filter((item) => item.count > 0)
+    .sort((a, b) => (a.scene.slug === "bonenkai" ? -1 : b.scene.slug === "bonenkai" ? 1 : 0));
 }
 
 export function categoryDescription(page: CategoryPage, drinks: readonly Drink[]): string {
