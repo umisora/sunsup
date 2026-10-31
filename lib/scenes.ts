@@ -330,7 +330,9 @@ export function sceneDrinks(scene: Scene): Drink[] {
 
 /** Scenes that list this drink, for the card back from the drink page. */
 export function scenesFor(slug: string): Scene[] {
-  return SCENES.filter((scene) => scene.groups.some((group) => group.slugs.includes(slug)));
+  return SCENES.filter((scene) => scene.groups.some((group) => group.slugs.includes(slug))).sort((a, b) =>
+    a.slug === "bonenkai" ? -1 : b.slug === "bonenkai" ? 1 : 0,
+  );
 }
 
 export function scenePath(scene: Scene): string {

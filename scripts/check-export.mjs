@@ -687,6 +687,30 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
   }
 }
 
+
+// Scene and category pages ship ItemList + BreadcrumbList; top pages ship WebSite or BreadcrumbList.
+{
+  const need = [
+    ["ba/bonenkai/index.html", ["ItemList", "BreadcrumbList"]],
+    ["category/citrus/index.html", ["ItemList", "BreadcrumbList"]],
+    ["index.html", ["WebSite"]],
+    ["about/index.html", ["BreadcrumbList"]],
+    ["drink/index.html", ["BreadcrumbList"]],
+    ["ba/office/index.html", ["BreadcrumbList"]],
+    ["drink/kimino-yuzu/index.html", ["Product", "BreadcrumbList"]],
+  ];
+  for (const [file, types] of need) {
+    const html = read(file);
+    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+    const joined = blocks.join("\n");
+    for (const type of types) {
+      if (!joined.includes(`"@type":"${type}"`) && !joined.includes(`"@type": "${type}"`)) {
+        fail(`${file} is missing JSON-LD ${type}`);
+      }
+    }
+  }
+}
+
 // Site-wide wording rule: no exclusive words for people who pick soft drinks (say ソフトドリンクが好きな人,
 // アルコール以外も楽しみたい人). Any built page with 飲まない人, 飲めない人 or 下戸 fails the build. The renamed
 // gift page is /ba/okurimono/; nothing built may still link or point to /ba/nomanai-hito/.
