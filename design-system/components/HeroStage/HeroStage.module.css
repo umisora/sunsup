@@ -150,6 +150,8 @@
     flex-direction: column;
     gap: 12px;
     aspect-ratio: auto;
+    /* Keep height while TableArrival remounts on /api/visit story swap (castKey change). */
+    min-height: calc(clamp(200px, 32svh, 272px) + 12px + 3.2em + 48px);
     margin-top: 10px;
     overflow: visible;
     border-radius: 0;
