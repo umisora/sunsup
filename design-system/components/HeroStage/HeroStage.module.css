@@ -133,10 +133,15 @@
   .side > :last-child {
     order: 3;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     padding: 8px var(--layout-gutter) 0;
     font-size: 16px;
     line-height: 1.7;
-    /* Lead height: VisitHero sets grow-only min-height from first paint (no fixed 4-line gap). */
+    /* Reserve 4 lines so story swaps never move the stills. Short leads sit at the bottom of the box
+       (slack above the text) so there is no empty hole under the copy. */
+    min-height: calc(8px + 4 * 1.7em);
   }
 
   .stage {
