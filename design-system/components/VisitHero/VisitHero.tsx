@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { daypartOf, DEFAULT_STORY_ID, seasonOf, storyById, type VisitStory } from "@/lib/visit";
 import { seasonStillUrl } from "@/lib/still-seasons";
 import { pickVisitStories, replacementDrink, type PickedDrink, type PickedStory } from "@/lib/visit-picks";
@@ -139,6 +139,8 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
   const pickedRef = useRef(picked);
   const extrasRef = useRef(extras);
   const seen = useRef(new Set<string>());
+  const leadWrapRef = useRef<HTMLDivElement>(null);
+  const leadMinRef = useRef(0);
   storyRef.current = story;
   pickedRef.current = picked;
   extrasRef.current = extras;
@@ -155,6 +157,21 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
     setBroken([]);
     setExtras([]);
   }, [sourceKey]);
+
+  // Grow-only min-height from the painted lead: no fixed 4-line blank, no shrink CLS on story swap.
+  useLayoutEffect(() => {
+    const el = leadWrapRef.current;
+    if (!el) {
+      return;
+    }
+    const height = el.getBoundingClientRect().height;
+    if (height > leadMinRef.current) {
+      leadMinRef.current = height;
+    }
+    if (leadMinRef.current > 0) {
+      el.style.minHeight = `${leadMinRef.current}px`;
+    }
+  }, [story.id]);
 
   const onStillError = useCallback((slug: string) => {
     if (seen.current.has(slug) || seen.current.size >= 8) {
@@ -237,14 +254,16 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
         onStillError={onStillError}
       >
         <Chip intro>{story.kicker}</Chip>
-        <Text variant="lead" intro>
-          {/* Keyed so a story swap replaces the lines in place. Height follows the copy (no fixed 4-line gap). */}
-          <Fragment key={story.id}>
-            <Phrase>{story.lead[0]}</Phrase>
-            <br />
-            <Phrase>{story.lead[1]}</Phrase>
-          </Fragment>
-        </Text>
+        <div ref={leadWrapRef}>
+          <Text variant="lead" intro>
+            {/* Keyed so a story swap replaces the lines in place. min-height grows only (see useLayoutEffect). */}
+            <Fragment key={story.id}>
+              <Phrase>{story.lead[0]}</Phrase>
+              <br />
+              <Phrase>{story.lead[1]}</Phrase>
+            </Fragment>
+          </Text>
+        </div>
       </HeroStage>
       {more.map((item) => {
         const extra = storyById(item.id);

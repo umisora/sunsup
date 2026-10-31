@@ -136,7 +136,7 @@
     padding: 8px var(--layout-gutter) 0;
     font-size: 16px;
     line-height: 1.7;
-    /* Height follows the lead. VisitHero keeps CLS down on swap without a fixed 4-line gap. */
+    /* Lead height: VisitHero sets grow-only min-height from first paint (no fixed 4-line gap). */
   }
 
   .stage {
