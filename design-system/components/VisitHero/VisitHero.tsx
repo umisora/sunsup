@@ -122,9 +122,9 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
   const [page, setPage] = useState<PickedStory[] | null>(null);
   const [broken, setBroken] = useState<readonly string[]>([]);
   const [extras, setExtras] = useState<readonly PickedDrink[]>([]);
-  const primary = page?.[0];
-  const story = requireStory(primary?.id ?? initialId);
-  const picked = primary ? heroDrinks(primary.drinks) : fallbackDrinks(story);
+  // Hero stays on the SSR story and stills. Visit picks render only in the sections below (avoids ~0.6 CLS).
+  const story = requireStory(initialId);
+  const picked = fallbackDrinks(story);
   const brokenSet = new Set(broken);
   const replaced = [...picked.filter((drink) => !brokenSet.has(drink.slug)), ...extras.map((drink) => ({
     slug: drink.slug,
@@ -219,7 +219,7 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
   }, []);
 
 
-  const more = (page ?? []).slice(1);
+  const more = page ?? [];
   // Stories only render after the visit is picked on the client, so today's JST season is safe here.
   const season = seasonOf(new Date());
 

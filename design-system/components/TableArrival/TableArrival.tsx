@@ -174,9 +174,9 @@ export function TableArrival({ pieces, onStillError }: TableArrivalProps) {
       <div className={styles.set} data-count={pieces.length}>
         <div className={styles.clink} data-clink aria-hidden="true" />
         <ul className={styles.lineup} aria-label="テーブルに並ぶノンアルコール">
-          {pieces.map((piece) => (
+          {pieces.map((piece, index) => (
             <li
-              key={piece.slug}
+              key={index}
               className={`${styles.slot} ${standClass(piece.stand)}`}
               data-slot=""
               data-slug={piece.slug}
