@@ -85,7 +85,7 @@ design-system/
 
 ## Motion contract
 
-`<Motion>` runs GSAP inside `gsap.matchMedia()`; with reduced motion the page is static and fully visible. Components set these attributes, pages don't.
+`<Motion>` loads GSAP after hydration (`components/Motion/runMotion.ts`, a separate chunk) and runs it inside `gsap.matchMedia()`; with reduced motion the page is static and fully visible. Components set these attributes, pages don't.
 
 | Attribute | Set by | Behaviour | Hidden before it runs |
 |---|---|---|---|

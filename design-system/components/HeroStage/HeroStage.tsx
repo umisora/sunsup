@@ -109,14 +109,15 @@ function tablePieces(drinks: readonly HeroTableDrink[]): TablePiece[] {
 /** Home hero: a vertical headline on the paper beside the table, where the drinks arrive. */
 export function HeroStage({ labelledBy, drinks, castKey, visitId, drinkIds, aside, title, actions, children, onStillError }: HeroStageProps) {
   return (
-    <section className={styles.hero} aria-labelledby={labelledBy} data-visit={visitId} data-drinks={drinkIds}>
+    <section className={styles.hero} aria-labelledby={labelledBy} data-visit={visitId} data-drinks={drinkIds} data-cast={castKey}>
       <div className={styles.copy}>
         <div className={styles.title}>{title}</div>
         <div className={styles.side}>{children}</div>
         {actions ? <div className={styles.actions}>{actions}</div> : null}
       </div>
       <div className={styles.stage}>
-        <TableArrival key={castKey} pieces={tablePieces(drinks)} onStillError={onStillError} />
+        {/* No key: remounting on visit swap shifted the mobile stage (~0.6 CLS). Pieces update in place. */}
+        <TableArrival pieces={tablePieces(drinks)} onStillError={onStillError} />
         {aside ? <div className={styles.aside}>{aside}</div> : null}
       </div>
     </section>

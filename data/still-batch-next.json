@@ -1,0 +1,101 @@
+{
+  "about": "Drinks waiting for a new real product still, for the next intake batch (drink-intake-checklist). Nothing here is on the site yet. candidates lists every image checked; only an entry with verdict pass may be cut out and added, after the owner sees the image sheet.",
+  "drinks": [
+    {
+      "slug": "rbt-irika-ruby-750",
+      "name": "釜炒り紅茶 炒香 ルビー 750ml",
+      "container": "大瓶",
+      "page": "https://online.royalbluetea.com/?pid=170052848",
+      "current": null,
+      "why": "photo removed: the maker's still showed a wine glass beside the bottle",
+      "candidates": [
+        {
+          "image": "https://img07.shop-pro.jp/PA01447/526/product/170052848.jpg",
+          "size": "549x550",
+          "verdict": "fail: a wine glass stands beside the bottle; cropping it out leaves a bottle about 300px tall"
+        },
+        {
+          "image": "https://img07.shop-pro.jp/PA01447/526/product/170052848_o1.jpg",
+          "size": "549x550",
+          "verdict": "fail: bottle lies in a wooden box with a glass"
+        },
+        {
+          "image": "https://img07.shop-pro.jp/PA01447/526/product/170052848_o2.jpg",
+          "size": "512x512",
+          "verdict": "fail: wooden box only, no bottle"
+        },
+        {
+          "image": "https://cdn.shopify.com/s/files/1/1659/0709/products/1273964_listImage.jpg",
+          "size": "300x530",
+          "verdict": "fail: too small, and it is IRIKA green tea, not Ruby"
+        }
+      ]
+    },
+    {
+      "slug": "rbt-darjeeling-rajah-grand-750",
+      "name": "ロイヤルダージリン ラジャ グランド 750ml",
+      "container": "大瓶",
+      "page": "https://online.royalbluetea.com/?pid=170053621",
+      "current": null,
+      "why": "photo removed: the maker's still showed a wine glass beside the bottle",
+      "candidates": [
+        {
+          "image": "https://img07.shop-pro.jp/PA01447/526/product/170053621.jpg",
+          "size": "549x550",
+          "verdict": "fail: a wine glass stands beside the bottle; cropping it out leaves a bottle about 300px tall"
+        },
+        {
+          "image": "https://img07.shop-pro.jp/PA01447/526/product/170053621_o1.jpg",
+          "size": "549x550",
+          "verdict": "fail: bottle lies in a wooden box with a glass"
+        },
+        {
+          "image": "https://img07.shop-pro.jp/PA01447/526/product/170053621_o2.jpg",
+          "size": "549x550",
+          "verdict": "fail: glass and paper box beside the bottle"
+        },
+        {
+          "image": "https://cdn.shopify.com/s/files/1/1659/0709/products/746152_listImage-re.jpg",
+          "size": "300x530",
+          "verdict": "fail: too small"
+        }
+      ]
+    },
+    {
+      "slug": "kuranooto-koshu",
+      "name": "クラノオト 山梨甲州葡萄100％ジュース",
+      "container": "大瓶",
+      "page": "https://kurashiwine.com/product/koshu_juice/",
+      "current": "/drinks/kuranooto-koshu.webp",
+      "why": "current still is on a grey studio backdrop, not white",
+      "candidates": []
+    },
+    {
+      "slug": "niki-tomato-1000",
+      "name": "トマトジュース仁木 1000ml",
+      "container": "大瓶",
+      "page": "https://otarukazoku.com/products/detail/66",
+      "current": "/drinks/niki-tomato-1000.webp",
+      "why": "current still is a photo on a beige ground, not white",
+      "candidates": []
+    },
+    {
+      "slug": "ikeda-budo-cider-240",
+      "name": "池田ぶどうサイダー 240ml",
+      "container": "ビン",
+      "page": "https://tornw.tokachi.biz/product/soda001/",
+      "current": "/drinks/ikeda-budo-cider-240.webp",
+      "why": "current still is on a light grey ground, not white",
+      "candidates": []
+    },
+    {
+      "slug": "sarabetsu-sumomo-cider-240",
+      "name": "更別すももサイダー 240ml",
+      "container": "ビン",
+      "page": "https://tornw.tokachi.biz/product/soda003/",
+      "current": "/drinks/sarabetsu-sumomo-cider-240.webp",
+      "why": "current still is on a light grey ground, not white",
+      "candidates": []
+    }
+  ]
+}

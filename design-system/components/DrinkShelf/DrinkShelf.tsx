@@ -56,6 +56,7 @@ export function DrinkShelf({ drinks, opening = false, defer = false }: DrinkShel
                         alt=""
                         priority={opening && index === 0}
                         lazy={!(opening && index < EAGER_STILLS)}
+                        sizes="(max-width: 519px) 28vw, 120px"
                       />
                     </StillLife>
                   </span>

@@ -92,7 +92,7 @@ async function subset(font, text) {
 
 async function download(font, text) {
   const bytes = await subset(font, text);
-  await writeFile(join("fonts", font.file), bytes);
+  await writeFile(join(font.text === "latin" ? "fonts" : join("public", "fonts"), font.file), bytes);
   console.log(`${font.file} ${bytes.length} bytes`);
 }
 

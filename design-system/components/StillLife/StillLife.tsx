@@ -57,14 +57,28 @@ type ExternalPhotoProps = {
   priority?: boolean;
   /** Defer the download until the still is near the viewport. Ignored on the priority image. */
   lazy?: boolean;
+  /**
+   * CSS sizes for the 320w / full srcset. Cards and shelves should pass the rendered width;
+   * the LCP still on a drink page can omit it and keep the full file only.
+   */
+  sizes?: string;
 };
 
+/** /drinks/<slug>.webp → the 320w thumb next to it, when sizes is set. */
+function drinkSrcSet(src: string): string | undefined {
+  const match = /^\/drinks\/([a-z0-9-]+)\.webp$/.exec(src);
+  return match ? `/drinks/320/${match[1]}.webp 320w, ${src} 1000w` : undefined;
+}
+
 /** A still life that is not in the local photo catalog. Use for a drink's 静物URL. */
-export function ExternalPhoto({ src, alt, priority = false, lazy = true }: ExternalPhotoProps) {
+export function ExternalPhoto({ src, alt, priority = false, lazy = true, sizes }: ExternalPhotoProps) {
   const eager = priority || !lazy;
+  const srcSet = sizes ? drinkSrcSet(src) : undefined;
   return (
     <img
       src={src}
+      srcSet={srcSet}
+      sizes={srcSet ? sizes : undefined}
       alt={alt}
       loading={eager ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : undefined}
@@ -72,6 +86,16 @@ export function ExternalPhoto({ src, alt, priority = false, lazy = true }: Exter
       referrerPolicy="no-referrer"
     />
   );
+}
+
+/** Hoisted into <head> by Next: discover the LCP photo before CSS. */
+export function PreloadPhoto({ name, sizes }: { name: PhotoName; sizes: string }) {
+  return <link rel="preload" as="image" imageSrcSet={srcSet(name)} imageSizes={sizes} fetchPriority="high" />;
+}
+
+/** Hoisted into <head> by Next: discover a priority drink still (full file; no 320w). */
+export function PreloadExternal({ src }: { src: string }) {
+  return <link rel="preload" as="image" href={src} fetchPriority="high" />;
 }
 
 type Ratio = "16:9" | "4:3" | "4:5" | "3:4" | "1:1" | "fill";

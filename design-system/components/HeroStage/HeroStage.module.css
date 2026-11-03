@@ -132,9 +132,16 @@
 
   .side > :last-child {
     order: 3;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     padding: 8px var(--layout-gutter) 0;
     font-size: 16px;
     line-height: 1.7;
+    /* Reserve 4 lines so story swaps never move the stills. Short leads sit at the bottom of the box
+       (slack above the text) so there is no empty hole under the copy. */
+    min-height: calc(8px + 4 * 1.7em);
   }
 
   .stage {
@@ -143,6 +150,8 @@
     flex-direction: column;
     gap: 12px;
     aspect-ratio: auto;
+    /* Keep height while TableArrival remounts on /api/visit story swap (castKey change). */
+    min-height: calc(clamp(200px, 32svh, 272px) + 12px + 3.2em + 48px);
     margin-top: 10px;
     overflow: visible;
     border-radius: 0;

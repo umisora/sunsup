@@ -1,6 +1,10 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { isGenericProduct } from "./generic-rule.mjs";
+// JSON-LD on drink pages has its own checker; importing runs it first.
+import "./check-jsonld.mjs";
+import "./check-scenes.mjs";
+import "./check-categories.mjs";
 
 const failures = [];
 
@@ -114,7 +118,7 @@ if (office.includes("drinkup") || office.includes("Drinkup") || !office.includes
 
 const OFFICE_ENTRIES = [
   "kimino-yuzu",
-  "kuranooto-koshu",
+  "kagome-grape-100",
   "fujiya-nectar-peach",
   "suntory-oolong-340",
   "kitayama-jabarush",
@@ -391,7 +395,7 @@ for (const drink of publicDrinks) {
     fail(`${drink.slug} still points at a fallback image`);
   }
   if (still.startsWith("/drinks/") || still.startsWith("http://") || still.startsWith("https://")) {
-    const image = still.startsWith("/") ? `https://sunsup-dv4.pages.dev${still}` : still;
+    const image = still.startsWith("/") ? `https://stylish.sunsup.me${still}` : still;
     if (!html.includes(`<meta property="og:image" content="${image}"/>`)) {
       fail(`${drink.slug} is missing its Open Graph image`);
     }
@@ -501,14 +505,14 @@ if (shell.includes('data-store-primary="true"')) {
 
 const sitemap = read("sitemap.xml");
 const robots = read("robots.txt");
-if (!robots.includes("Sitemap: https://sunsup-dv4.pages.dev/sitemap.xml")) {
+if (!robots.includes("Sitemap: https://stylish.sunsup.me/sitemap.xml")) {
   fail("robots.txt is missing the sitemap");
 }
-if (!sitemap.includes("<loc>https://sunsup-dv4.pages.dev/drink/</loc>")) {
+if (!sitemap.includes("<loc>https://stylish.sunsup.me/drink/</loc>")) {
   fail("sitemap is missing the drink list");
 }
 for (const slug of slugs) {
-  if (!sitemap.includes(`<loc>https://sunsup-dv4.pages.dev/drink/${slug}/</loc>`)) {
+  if (!sitemap.includes(`<loc>https://stylish.sunsup.me/drink/${slug}/</loc>`)) {
     fail(`sitemap is missing /drink/${slug}/`);
   }
 }
@@ -552,8 +556,20 @@ if (existsSync(join("out", "_routes.json"))) {
 } else {
   fail("missing out/_routes.json");
 }
-if (!seasonRoutes.include?.includes("/api/*")) {
-  fail("_routes.json no longer routes /api/*");
+if (!seasonRoutes.include?.includes("/*")) {
+  fail("_routes.json must run functions on every page (old-host redirect, /api/*, season stills)");
+}
+for (const folder of ["/_next/*", "/drinks/*", "/og/*", "/brand/*", "/images/*"]) {
+  if (!seasonRoutes.exclude?.includes(folder)) {
+    fail(`_routes.json must keep static ${folder} out of functions`);
+  }
+}
+const seasonSlugFile = existsSync(join("lib", "season-slugs.ts")) ? readFileSync(join("lib", "season-slugs.ts"), "utf8") : "";
+if (!seasonSlugFile) {
+  fail("missing lib/season-slugs.ts");
+}
+if (!existsSync(join("functions", "_middleware.ts"))) {
+  fail("missing functions/_middleware.ts (sunsup-dv4.pages.dev → stylish.sunsup.me)");
 }
 if ((seasonRoutes.include?.length ?? 0) + (seasonRoutes.exclude?.length ?? 0) > 100) {
   fail("_routes.json has more than 100 rules");
@@ -579,9 +595,15 @@ for (const slug of seasonSlugs) {
     if (!existsSync(file) || readFileSync(file).length < 10000) {
       fail(`${slug} is missing its ${season} still ${file}`);
     }
+    for (const width of ["480", "800"]) {
+      const copy = join("out", "drinks", "season", width, `${slug}_${season}.webp`);
+      if (!existsSync(copy)) {
+        fail(`${slug} is missing its ${width}w ${season} still ${copy} (run scripts/build-drink-thumbs.py)`);
+      }
+    }
   }
-  if (!seasonRoutes.include?.includes(`/drink/${slug}/`)) {
-    fail(`_routes.json does not send /drink/${slug}/ to the season function`);
+  if (!seasonSlugFile.includes(`"${slug}"`)) {
+    fail(`lib/season-slugs.ts does not list ${slug} for the season function`);
   }
   if (drink["公開"] === "1") {
     const page = read(`drink/${slug}/index.html`);
@@ -599,6 +621,9 @@ for (const slug of seasonSlugs) {
 const seasonDir = join("out", "drinks", "season");
 if (existsSync(seasonDir)) {
   for (const file of readdirSync(seasonDir)) {
+    if (file === "480" || file === "800") {
+      continue;
+    }
     const match = file.match(/^(.+)_(spring|summer|autumn|winter)\.webp$/);
     if (!match || !seasonSlugs.includes(match[1])) {
       fail(`out/drinks/season/${file} is not listed in data/still-seasons.json`);
@@ -607,6 +632,142 @@ if (existsSync(seasonDir)) {
 }
 if (!existsSync(join("functions", "drink", "[[path]].ts"))) {
   fail("missing the season function functions/drink/[[path]].ts");
+}
+
+// Every built page, payload, sitemap and robots must point at stylish.sunsup.me, never the old pages.dev host.
+const OLD_HOST = "sunsup-dv4.pages.dev";
+function walkOut(dir) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (path !== join("out", "_next", "static")) {
+        walkOut(path);
+      }
+    } else if (/\.(html|txt|xml|json|webmanifest)$/.test(entry.name)) {
+      if (readFileSync(path, "utf8").includes(OLD_HOST)) {
+        fail(`${path} still mentions ${OLD_HOST}`);
+      }
+    }
+  }
+}
+walkOut("out");
+const homeHtml = read("index.html");
+for (const [file, path] of [["index.html", "/"], ["about/index.html", "/about/"], ["ba/office/index.html", "/ba/office/"], ["drink/index.html", "/drink/"]]) {
+  if (!read(file).includes(`<link rel="canonical" href="https://stylish.sunsup.me${path}"/>`)) {
+    fail(`${file} is missing its canonical https://stylish.sunsup.me${path}`);
+  }
+}
+for (const slug of slugs) {
+  if (!read(`drink/${slug}/index.html`).includes(`<link rel="canonical" href="https://stylish.sunsup.me/drink/${slug}/"/>`)) {
+    fail(`/drink/${slug}/ is missing its canonical`);
+  }
+}
+if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.me/"/>')) {
+  fail("home og:url is not https://stylish.sunsup.me/");
+}
+
+// The 「本文へ」 skip link must stay clipped out of view until it has keyboard focus, at any scroll
+// position or capture size (a transform alone showed it over the list in full-page captures).
+{
+  const cssFiles = [];
+  const walkCss = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walkCss(full);
+      else if (entry.name.endsWith(".css")) cssFiles.push(full);
+    }
+  };
+  walkCss("out/_next/static");
+  const css = cssFiles.map((file) => readFileSync(file, "utf8")).join("\n");
+  const hidden = css.match(/\.(SkipLink_skip__[\w-]+):not\(:focus-visible\)\{([^}]*)\}/);
+  if (!hidden || !/(^|;)clip-path:inset\(50%\)/.test(hidden[2]) || !/width:1px/.test(hidden[2]) || !/height:1px/.test(hidden[2])) {
+    fail("the 本文へ skip link is not clipped out of view until it has keyboard focus");
+  } else if (!homeHtml.includes(`class="${hidden[1]}" href="#main"`)) {
+    fail("the 本文へ skip link on the home page does not use the clipped style");
+  }
+}
+
+
+// Scene and category pages ship ItemList + BreadcrumbList; top pages ship WebSite or BreadcrumbList.
+{
+  const need = [
+    ["ba/bonenkai/index.html", ["ItemList", "BreadcrumbList"]],
+    ["category/citrus/index.html", ["ItemList", "BreadcrumbList"]],
+    ["index.html", ["WebSite"]],
+    ["about/index.html", ["BreadcrumbList"]],
+    ["drink/index.html", ["BreadcrumbList"]],
+    ["ba/office/index.html", ["BreadcrumbList"]],
+    ["drink/kimino-yuzu/index.html", ["Product", "BreadcrumbList"]],
+  ];
+  for (const [file, types] of need) {
+    const html = read(file);
+    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+    const joined = blocks.join("\n");
+    for (const type of types) {
+      if (!joined.includes(`"@type":"${type}"`) && !joined.includes(`"@type": "${type}"`)) {
+        fail(`${file} is missing JSON-LD ${type}`);
+      }
+    }
+  }
+}
+
+// Site-wide wording rule: no exclusive words for people who pick soft drinks (say ソフトドリンクが好きな人,
+// アルコール以外も楽しみたい人). Any built page with 飲まない人, 飲めない人 or 下戸 fails the build. The renamed
+// gift page is /ba/okurimono/; nothing built may still link or point to /ba/nomanai-hito/.
+{
+  const BANNED = /飲まない人|飲めない人|下戸/g;
+  const pages = [];
+  const walkHtml = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walkHtml(full);
+      else if (entry.name.endsWith(".html") || entry.name.endsWith(".txt") || entry.name.endsWith(".xml")) pages.push(full);
+    }
+  };
+  walkHtml("out");
+  let found = 0;
+  for (const file of pages) {
+    const text = readFileSync(file, "utf8");
+    const words = [...new Set(text.match(BANNED) ?? [])];
+    if (words.length > 0 && found < 20) {
+      fail(`${file} says ${words.join("、")}; use positive wording (ソフトドリンクが好きな人, アルコール以外も楽しみたい人)`);
+    }
+    found += words.length > 0 ? 1 : 0;
+    if (text.includes("/ba/nomanai-hito") && found < 20) {
+      fail(`${file} still points to /ba/nomanai-hito/; the page is /ba/okurimono/`);
+    }
+  }
+  if (found > 20) {
+    fail(`…and ${found - 20} more page(s) with exclusive wording`);
+  }
+  if (existsSync("out/ba/nomanai-hito")) {
+    fail("out/ba/nomanai-hito/ is still built; the old path should only 301 to /ba/okurimono/");
+  }
+  const gift = read("ba/okurimono/index.html");
+  if (!gift.includes('<link rel="canonical" href="https://stylish.sunsup.me/ba/okurimono/"') || !gift.includes("ソフトドリンク好きに贈る一本")) {
+    fail("/ba/okurimono/ has no canonical to itself or no 「ソフトドリンク好きに贈る一本」 title");
+  }
+  if (!read("sitemap.xml").includes("<loc>https://stylish.sunsup.me/ba/okurimono/</loc>")) {
+    fail("sitemap.xml does not list /ba/okurimono/");
+  }
+}
+
+// Every drink still shipped as /drinks/<slug>.webp has a 320w thumb for card srcsets.
+{
+  const missing = [];
+  for (const slug of slugs) {
+    const still = join("out", "drinks", `${slug}.webp`);
+    const thumb = join("out", "drinks", "320", `${slug}.webp`);
+    if (existsSync(still) && !existsSync(thumb)) {
+      missing.push(slug);
+    }
+  }
+  for (const slug of missing.slice(0, 20)) {
+    fail(`drink thumb missing: /drinks/320/${slug}.webp (run scripts/build-drink-thumbs.py)`);
+  }
+  if (missing.length > 20) {
+    fail(`…and ${missing.length - 20} more drink thumbs are missing`);
+  }
 }
 
 if (failures.length > 0) {

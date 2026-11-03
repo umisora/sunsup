@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Eyebrow, Grid, InfoRow, LogoTitle, Motion, Photo, Section, SITE_NAME, Stack, StillLife, Text, TextLink } from "@/design-system";
+import { CLARITY_ID } from "../_metrics/Clarity";
+import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
+  alternates: { canonical: "/about/" },
   openGraph: {
     title: `このサイトについて｜${SITE_NAME}`,
     description: "オフィスの飲み会を任されたあなたが、定時後に出すノンアルコールを選ぶサイトです。",
@@ -17,6 +20,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <Motion>
+      {pageJsonLd("/about/", "このサイトについて").map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
       <Section space="md" labelledBy="about-title">
         <Grid columns="splitWide" align="center">
           <Stack gap={5}>
@@ -42,6 +48,11 @@ export default function AboutPage() {
           </InfoRow>
           <InfoRow title="購入リンク">
             買うページへのリンクだけ載せています。アフィリエイトではなく、安い順でも並べていません。
+          </InfoRow>
+          <InfoRow title="アクセスの記録">
+            {CLARITY_ID
+              ? "どのページが読まれたか、どの購入リンクが押されたかを数えています。名前やメールアドレスなど、あなたが誰かわかる情報は集めていません。数えるのには Cloudflare Web Analytics と、画面のどこが押されたかを見る Microsoft Clarity を使っています。Clarity だけはクッキーを使います。"
+              : "どのページが読まれたか、どの購入リンクが押されたかを数えています。クッキーは使わず、名前やメールアドレスなど、あなたが誰かわかる情報は集めていません。数えるのには Cloudflare Web Analytics も使っています。"}
           </InfoRow>
           <InfoRow title="このサイトにないもの" muted>
             カートや会員登録、ランキング、価格比較はありません。

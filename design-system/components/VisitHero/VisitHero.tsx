@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { daypartOf, DEFAULT_STORY_ID, seasonOf, storyById, type VisitStory } from "@/lib/visit";
 import { seasonStillUrl } from "@/lib/still-seasons";
 import { pickVisitStories, replacementDrink, type PickedDrink, type PickedStory } from "@/lib/visit-picks";
@@ -122,9 +122,9 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
   const [page, setPage] = useState<PickedStory[] | null>(null);
   const [broken, setBroken] = useState<readonly string[]>([]);
   const [extras, setExtras] = useState<readonly PickedDrink[]>([]);
-  const primary = page?.[0];
-  const story = requireStory(primary?.id ?? initialId);
-  const picked = primary ? heroDrinks(primary.drinks) : fallbackDrinks(story);
+  // Hero stays on the SSR story and stills. Visit picks render only in the sections below (avoids ~0.6 CLS).
+  const story = requireStory(initialId);
+  const picked = fallbackDrinks(story);
   const brokenSet = new Set(broken);
   const replaced = [...picked.filter((drink) => !brokenSet.has(drink.slug)), ...extras.map((drink) => ({
     slug: drink.slug,
@@ -218,7 +218,8 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
     };
   }, []);
 
-  const more = (page ?? []).slice(1);
+
+  const more = page ?? [];
   // Stories only render after the visit is picked on the client, so today's JST season is safe here.
   const season = seasonOf(new Date());
 
@@ -237,9 +238,12 @@ export function VisitHero({ labelledBy, initialId, aside, title, actions }: Visi
       >
         <Chip intro>{story.kicker}</Chip>
         <Text variant="lead" intro>
-          <Phrase>{story.lead[0]}</Phrase>
-          <br />
-          <Phrase>{story.lead[1]}</Phrase>
+          {/* Keyed so a story swap replaces the lines in place. CSS reserves 4 lines; short leads sit at the bottom. */}
+          <Fragment key={story.id}>
+            <Phrase>{story.lead[0]}</Phrase>
+            <br />
+            <Phrase>{story.lead[1]}</Phrase>
+          </Fragment>
         </Text>
       </HeroStage>
       {more.map((item) => {

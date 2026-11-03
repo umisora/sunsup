@@ -1,0 +1,25 @@
+/* Japanese faces, loaded after first paint by the async <link> in app/layout.tsx.
+   Until they arrive the page uses Hiragino / Yu (see --font-display and --font-text in tokens.css). */
+@font-face {
+  font-family: "Shippori Mincho";
+  src: url("/fonts/shippori-mincho-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zen Kaku Gothic New";
+  src: url("/fonts/zen-kaku-gothic-new-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zen Kaku Gothic New";
+  src: url("/fonts/zen-kaku-gothic-new-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}

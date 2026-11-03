@@ -250,6 +250,7 @@
     height: auto;
     aspect-ratio: auto;
     scroll-snap-align: start;
+    min-height: calc(clamp(200px, 32svh, 272px) + 12px + 3.2em);
   }
 
   .hit {
@@ -302,6 +303,7 @@
     position: static;
     width: auto;
     height: auto;
+    min-height: calc(1.45em * 2);
     margin: 0;
     padding-inline: 4px;
     overflow: visible;

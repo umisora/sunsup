@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { demoteReasons, isDemoted } from "./demote";
 
 const COLUMNS = [
   "slug",
@@ -125,7 +126,7 @@ const FALLBACK_STILL = /^\/drinks\/fallback-[a-z0-9]+(?:-[a-z0-9]+)*\.webp$/;
 
 const AMAZON_PRODUCT = /^\/(?:dp|gp\/product|gp\/aw\/d)\/[A-Za-z0-9]{10}(?:\/|$)/;
 
-export const SITE_ORIGIN = "https://sunsup-dv4.pages.dev";
+export const SITE_ORIGIN = "https://stylish.sunsup.me";
 
 export function hasRealStill(drink: Drink): boolean {
   return drink.stillUrl !== "" && !FALLBACK_STILL.test(drink.stillUrl);
@@ -392,7 +393,7 @@ export function categoryKey(category: string): string {
 /** One real drink for each category, in the order the office page lists them. */
 export const OFFICE_ENTRY_SLUGS = [
   "kimino-yuzu",
-  "kuranooto-koshu",
+  "kagome-grape-100",
   "fujiya-nectar-peach",
   "suntory-oolong-340",
   "kitayama-jabarush",
@@ -410,6 +411,11 @@ export function officeEntries(): Drink[] {
   const keys = entries.map((drink) => categoryKey(drink.category));
   if (new Set(keys).size !== entries.length) {
     throw new Error("office entries must be one drink per category");
+  }
+  for (const drink of entries) {
+    if (isDemoted(drink)) {
+      throw new Error(`office entry ${drink.slug} is demoted (${demoteReasons(drink).join(", ")})`);
+    }
   }
   return entries;
 }
@@ -432,13 +438,28 @@ const CATEGORY_IDS: Record<string, string> = {
   "缶・パーティー向き": "party",
 };
 
+/** Categories with their own page at /category/<id>/. All six. */
+export const CATEGORY_PAGE_IDS: ReadonlySet<string> = new Set(["citrus", "grape", "nectar", "tea", "craft", "party"]);
+
+/** Every category has its own page. */
+export function categoryHref(id: string): string {
+  if (!CATEGORY_PAGE_IDS.has(id)) {
+    throw new Error(`category ${id} has no page`);
+  }
+  return `/category/${id}/`;
+}
+
 export type DrinkGroup = {
   id: string;
   category: string;
   drinks: Drink[];
 };
 
+/** Demoted drinks (data/demote-rule.json) stay listed, but sort to the end of their shelf and never open one. */
 function discoveryRank(drink: Drink): number {
+  if (isDemoted(drink)) {
+    return 3;
+  }
   const entry = (OFFICE_ENTRY_SLUGS as readonly string[]).includes(drink.slug);
   if (hasRealStill(drink) && entry) {
     return 0;
@@ -476,10 +497,11 @@ export type CategorySummary = {
   id: string;
   category: string;
   count: number;
+  href: string;
 };
 
 export function categorySummaries(): CategorySummary[] {
-  return drinkGroups().map((group) => ({ id: group.id, category: group.category, count: group.drinks.length }));
+  return drinkGroups().map((group) => ({ id: group.id, category: group.category, count: group.drinks.length, href: categoryHref(group.id) }));
 }
 
 export function categoryId(drink: Drink): string {
@@ -565,6 +587,7 @@ export function seasonalPicks(season: Season, count: number): { label: string; l
     group.drinks.filter(
       (drink) =>
         hasRealStill(drink) &&
+        !isDemoted(drink) &&
         spec.keywords.some((keyword) => drink.name.includes(keyword)) &&
         !(spec.exclude ?? []).some((word) => drink.name.includes(word)),
     ),

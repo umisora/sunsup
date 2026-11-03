@@ -5,6 +5,7 @@ import {
   DrinkShowcase,
   DrinkTrail,
   ExternalPhoto,
+  PreloadExternal,
   FactList,
   Motion,
   Photo,
@@ -27,6 +28,7 @@ import {
 } from "@/design-system";
 import {
   catalogNumber,
+  categoryHref,
   categoryId,
   SITE_ORIGIN,
   drinkDescription,
@@ -38,6 +40,10 @@ import {
   shelfNeighbours,
   storeRows,
 } from "@/lib/drinks";
+import { OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
+import { drinkJsonLd, jsonLdText } from "@/lib/jsonld";
+import { scenePath, scenesFor } from "@/lib/scenes";
+import { heroSpecs } from "@/lib/servings";
 import { hasSeasonStills } from "@/lib/still-seasons";
 import { seasonOf } from "@/lib/visit";
 
@@ -96,12 +102,12 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
   const [primary] = rows;
   const related = relatedDrinks(drink);
   const neighbours = shelfNeighbours(drink);
-  const shelf = `/drink/#${categoryId(drink)}`;
+  const shelf = categoryHref(categoryId(drink));
   const folio = `No. ${String(catalogNumber(drink)).padStart(3, "0")} / ${loadDrinks().length}`;
   const still = (priority: boolean) =>
     drink.stillUrl ? (
       <StillLife ratio="1:1" radius="lg" fit="plinth" intro={priority}>
-        <ExternalPhoto src={drink.stillUrl} alt={priority ? drink.name : ""} priority={priority} />
+        <ExternalPhoto src={drink.stillUrl} alt={priority ? drink.name : ""} priority={priority} sizes={priority ? undefined : "(max-width: 959px) 80vw, 420px"} />
       </StillLife>
     ) : undefined;
   // Drinks with seasonal studio stills open on today's season; the white cutout stays for the close-up card.
@@ -111,8 +117,17 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
     still(true)
   );
 
+  // Read by the click beacon to tell which store a link goes to. "<" is escaped so the JSON cannot close the tag.
+  const outLinks = JSON.stringify(outLinkMap(drink.slug, rows)).replace(/</g, "\\u003c");
+
   return (
     <Motion>
+      {drinkJsonLd(drink).map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
+      {rows.length > 0 ? <script type="application/json" id={OUT_LINKS_ID} dangerouslySetInnerHTML={{ __html: outLinks }} /> : null}
+      {/* A season still's <img> is eager with fetchPriority high, so React already emits its preload (with the srcset). */}
+      {!hasSeasonStills(drink.slug) && drink.stillUrl ? <PreloadExternal src={drink.stillUrl} /> : null}
       <ProductHero
         id="drink-title"
         crumbs={[
@@ -122,6 +137,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         folio={folio}
         title={drink.name}
         meta={drink.size}
+        specs={heroSpecs(drink)}
         media={hero}
         extra={<TableToggle drink={{ slug: drink.slug, name: drink.name, stillUrl: drink.stillUrl, category: drink.category }} />}
       >
@@ -172,6 +188,18 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
           </Stack>
         </Section>
       ) : null}
+
+      {scenesFor(drink.slug).map((scene) => (
+        <Section key={scene.slug} space="md" label={scene.short}>
+          <VenueLink
+            href={scenePath(scene)}
+            media={<Photo name={scene.hero} sizes="(min-width: 768px) 420px, 100vw" position="50% 50%" decorative />}
+            eyebrow={scene.short}
+            title={<Phrase>{scene.title}</Phrase>}
+            body={scene.backLink}
+          />
+        </Section>
+      ))}
 
       <Section space="md" label="オフィスの飲み会">
         <VenueLink

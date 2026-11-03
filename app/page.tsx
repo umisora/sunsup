@@ -17,17 +17,21 @@ import {
   Section,
   SectionHead,
   Stack,
-  TABLE_CAST,
   TableShelf,
   Text,
-  VisitHero,
   Tile,
+  VenueLink,
 } from "@/design-system";
+import { VisitHero } from "@/design-system/components/VisitHero/VisitHero";
+import { TABLE_CAST } from "@/design-system/components/TableArrival/cast";
 import { categorySummaries, getDrink, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
+import { SCENES, scenePath } from "@/lib/scenes";
 import { DEFAULT_STORY_ID, STORIES, storyById, type Daypart, type Season } from "@/lib/visit";
+import { jsonLdText, siteJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: { absolute: SITE_NAME },
+  alternates: { canonical: "/" },
   openGraph: {
     title: `${SITE_NAME}｜飲み会向けのノンアルコール`,
     description: "オフィスの飲み会を任された人が、定時後に出すノンアルコールを選ぶサイトです。",
@@ -103,6 +107,9 @@ export default function HomePage() {
 
   return (
     <Motion>
+      {siteJsonLd().map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
       <VisitHero
         labelledBy="home-title"
         initialId={DEFAULT_STORY_ID}
@@ -185,9 +192,24 @@ export default function HomePage() {
               <Phrase>オープンな飲み会</Phrase>
             </>
           }
-          body="定時後に会議室を囲む飲み会です。お酒を飲まない人も、仕事が残っている人もいます。"
+          body="定時後に会議室を囲む飲み会です。ソフトドリンクが好きな人も、仕事が残っている人もいます。"
           action="詳しく見る"
         />
+      </Section>
+
+      <Section space="md" label="飲み会">
+        <Stack gap={5} align="stretch">
+          {[...SCENES].sort((a, b) => (a.slug === "bonenkai" ? -1 : b.slug === "bonenkai" ? 1 : 0)).map((scene) => (
+            <VenueLink
+              key={scene.slug}
+              href={scenePath(scene)}
+              media={<Photo name={scene.hero} sizes="(min-width: 768px) 420px, 100vw" position="50% 50%" decorative />}
+              eyebrow={scene.eyebrow}
+              title={<Phrase>{scene.title}</Phrase>}
+              body={scene.backLink}
+            />
+          ))}
+        </Stack>
       </Section>
 
       <Section labelledBy="choose-title">

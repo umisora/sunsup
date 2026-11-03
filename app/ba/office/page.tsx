@@ -8,6 +8,7 @@ import {
   MediaPanel,
   Motion,
   PageIntro,
+  PreloadPhoto,
   Photo,
   Phrase,
   Section,
@@ -20,13 +21,15 @@ import {
   Tile,
 } from "@/design-system";
 import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drinks";
+import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
-  description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒を飲まない人にも渡せる缶と瓶を紹介しています。",
+  alternates: { canonical: "/ba/office/" },
+  description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。",
   openGraph: {
     title: `オフィスのオープンな飲み会｜${SITE_NAME}`,
-    description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒を飲まない人にも渡せる缶と瓶を紹介しています。",
+    description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。",
     url: "/ba/office/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -58,6 +61,10 @@ export default function OfficePage() {
 
   return (
     <Motion>
+      {pageJsonLd("/ba/office/", "オフィスのオープンな飲み会").map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
+      <PreloadPhoto name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />
       <PageIntro
         id="office-title"
         step="ba"
@@ -74,7 +81,7 @@ export default function OfficePage() {
           <FillText
             variant="prose"
             lines={[
-              "定時後のオフィスで、会議室のテーブルを囲んで立ち飲み。お酒を飲まない人も、まだ仕事が残っている人もいる場です。片手で持てる缶や小ぶりの瓶を中心に、少しだけ特別な一本を混ぜると盛り上がります。",
+              "定時後のオフィスで、会議室のテーブルを囲んで立ち飲み。ソフトドリンクが好きな人も、まだ仕事が残っている人もいる場です。片手で持てる缶や小ぶりの瓶を中心に、少しだけ特別な一本を混ぜると盛り上がります。",
             ]}
           />
         </Grid>
@@ -94,6 +101,15 @@ export default function OfficePage() {
           <DrinkShowcase label="この飲み会のドリンク" drinks={officeEntries().map((drink) => ({ ...drink, label: drink.category }))} />
           <Text variant="body">
             同じカテゴリの他の商品は、<TextLink href="/drink/">ドリンク一覧</TextLink>にあります。
+          </Text>
+          <Text variant="body">
+            お店で開く会社の飲み会は<TextLink href="/ba/kaisha/">会社の飲み会のノンアルコール</TextLink>に、年末と年始の飲み会は
+            <TextLink href="/ba/bonenkai/">忘年会・新年会のノンアルコール</TextLink>に、春の歓迎会と送別会は
+            <TextLink href="/ba/kansougeikai/">歓送迎会のノンアルコール</TextLink>にまとめています。
+          </Text>
+          <Text variant="body">
+            飲み会のほかに、<TextLink href="/ba/sashiire/">差し入れ・手土産</TextLink>と
+            <TextLink href="/ba/okurimono/">ソフトドリンク好きに贈る一本</TextLink>のページもあります。
           </Text>
         </Stack>
       </Section>
