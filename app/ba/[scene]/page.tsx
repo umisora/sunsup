@@ -43,17 +43,17 @@ export async function generateMetadata({ params }: ScenePageProps): Promise<Meta
   }
   const path = scenePath(scene);
   return {
-    title: scene.title,
+    title: scene.metaTitle,
     description: scene.description,
     alternates: { canonical: path },
     openGraph: {
-      title: `${scene.title}｜${SITE_NAME}`,
+      title: `${scene.metaTitle}｜${SITE_NAME}`,
       description: scene.description,
       url: path,
       siteName: SITE_NAME,
       locale: "ja_JP",
       type: "article",
-      images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} ${scene.title}` }],
+      images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} ${scene.metaTitle}` }],
     },
   };
 }
@@ -173,7 +173,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
               {scene.invite.headline[1]}
             </Text>
             <JourneyCta to="drink">ドリンクを見る</JourneyCta>
-            <ShareRow url={`${SITE_ORIGIN}${scenePath(scene)}`} text={`${scene.title}｜${SITE_NAME}`} />
+            <ShareRow url={`${SITE_ORIGIN}${scenePath(scene)}`} text={`${scene.metaTitle}｜${SITE_NAME}`} />
           </Stack>
         </MediaPanel>
       </Section>
