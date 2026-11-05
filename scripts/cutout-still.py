@@ -7,6 +7,11 @@ room, table, or shelf is masked with rembg (U2-Net by default; pass
 
     python3 scripts/cutout-still.py public/drinks/cc-lemon-pet.webp
     python3 scripts/cutout-still.py --model birefnet-general --out /tmp/out.webp source.webp
+    python3 scripts/cutout-still.py --model birefnet-general --master stills/masters/<slug>.png \
+        --out public/drinks/<slug>.webp source.webp
+
+--master also writes the transparent master (RGBA, same canvas and placement) that
+scripts/compose-season-stills.py composes the four season stills from. It always masks.
 """
 
 from __future__ import annotations
@@ -54,7 +59,7 @@ def corners_clean(image: Image.Image) -> bool:
     return all(pixel[0] >= 248 and pixel[1] >= 248 and pixel[2] >= 248 for pixel in samples)
 
 
-def place(plate: Image.Image) -> Image.Image:
+def place(plate: Image.Image, mode: str = "RGB") -> Image.Image:
     side = max(plate.size)
     fitted = int(round(CANVAS * (1 - PADDING * 2)))
     scale = fitted / side
@@ -62,9 +67,24 @@ def place(plate: Image.Image) -> Image.Image:
         (max(1, int(round(plate.width * scale))), max(1, int(round(plate.height * scale)))),
         Image.Resampling.LANCZOS,
     )
-    canvas = Image.new("RGB", (CANVAS, CANVAS), (255, 255, 255))
+    canvas = Image.new(mode, (CANVAS, CANVAS), (255, 255, 255) if mode == "RGB" else (255, 255, 255, 0))
     canvas.paste(resized, ((CANVAS - resized.width) // 2, (CANVAS - resized.height) // 2))
     return canvas
+
+
+def master_cutout(source: Image.Image) -> tuple[Image.Image, Image.Image]:
+    """Return (white RGB still, transparent RGBA master) with the same placement."""
+    rgb = source.convert("RGB")
+    masked = remove(rgb, session=session()).convert("RGBA")
+    alpha = np.array(masked.getchannel("A"))
+    ys, xs = np.where(alpha > 16)
+    if xs.size == 0:
+        raise RuntimeError("cutout found no product")
+    cropped = masked.crop((int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1))
+    master = place(cropped, "RGBA")
+    white = Image.new("RGB", master.size, (255, 255, 255))
+    white.paste(master, mask=master.getchannel("A"))
+    return white, master
 
 
 def mask_product(source: Image.Image) -> Image.Image:
@@ -107,10 +127,17 @@ def main() -> None:
     parser.add_argument("--out", type=Path)
     parser.add_argument("--model", default="u2net")
     parser.add_argument("--mask", action="store_true", help="always remove the background")
+    parser.add_argument("--master", type=Path, help="also write the transparent RGBA master here")
     args = parser.parse_args()
     _model = args.model
     destination = args.out or args.source
-    image = cutout(Image.open(args.source), force_mask=args.mask)
+    if args.master:
+        image, master = master_cutout(Image.open(args.source))
+        args.master.parent.mkdir(parents=True, exist_ok=True)
+        master.save(args.master, optimize=True)
+        print(f"wrote {args.master}")
+    else:
+        image = cutout(Image.open(args.source), force_mask=args.mask)
     destination.parent.mkdir(parents=True, exist_ok=True)
     image.save(destination, "WEBP", quality=86, method=6)
     print(f"wrote {destination} {image.size[0]}x{image.size[1]}")
