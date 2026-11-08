@@ -33,10 +33,12 @@ if (!client) {
   const session = beginWebAnalytics(browser.scope, { token: FAKE_TOKEN, host: EU_HOST });
   const again = beginWebAnalytics(browser.scope, { token: FAKE_TOKEN, host: EU_HOST });
   expect(session !== null && again === null, "browser start is single-shot");
+  // The SDK import is still pending. A client navigation in that gap must be kept,
+  // and the landing path must still be the first pageview.
+  browser.history.pushState({ __NA: true }, "", "/ba/office/");
   session?.init(client);
   session?.init(client);
-  // Next hydration can replace the URL, and drop the QA query, before the initial pageview.
-  browser.history.replaceState({ __NA: true }, "", "/");
+  browser.history.replaceState({ __NA: true }, "", "/ba/office/");
   await wait(40);
   browser.history.pushState({ __NA: true }, "", "/about/");
   await wait(20);
@@ -60,11 +62,11 @@ if (!client) {
   });
   const paths = events.map((event) => event.properties?.$pathname);
   expect(
-    events.length === 5 && events.every((event) => event.event === PAGEVIEW_EVENT),
-    `expected 5 pageviews, got ${events.length}: ${events.map((event) => event.event).join(",")}`,
+    events.length === 6 && events.every((event) => event.event === PAGEVIEW_EVENT),
+    `expected 6 pageviews, got ${events.length}: ${events.map((event) => event.event).join(",")}`,
   );
   expect(
-    paths.join("|") === "/|/about/|/drink/kimino-yuzu/|/about/|/drink/kimino-yuzu/",
+    paths.join("|") === "/|/ba/office/|/about/|/drink/kimino-yuzu/|/about/|/drink/kimino-yuzu/",
     `pageview paths were ${paths.join("|")}`,
   );
   expect(events.every((event) => event.properties?.analytics_qa === true), "QA stays true across SPA, back, and forward");

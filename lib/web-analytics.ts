@@ -58,12 +58,13 @@ export interface QaStorage {
 }
 
 export interface AnalyticsScope {
-  location: { hostname: string; search: string };
+  location: { hostname: string; search: string; href?: string };
   sessionStorage?: QaStorage;
 }
 
 export interface AnalyticsClient {
   init(token: string, config?: Partial<PostHogConfig>): void;
+  capture(event: string, properties?: Record<string, unknown>): void;
 }
 
 interface AnalyticsTarget extends AnalyticsScope {
@@ -180,6 +181,9 @@ export function beginWebAnalytics(
       return null;
     }
     scope[INSTALLED_FLAG] = true;
+    // The SDK chunk loads after the first paint. Record the landing path and any
+    // pathname change that happens before init, then send that list once.
+    const trail = createPathTrail(target);
     let started = false;
     return {
       init(client) {
@@ -190,9 +194,9 @@ export function beginWebAnalytics(
         client.init(config.token, {
           api_host: config.host,
           defaults: "2026-08-30",
-          // One pageview mechanism: the initial view plus pathname changes.
-          // Query and hash changes do not create another pageview.
-          capture_pageview: "history_change",
+          // The path trail above is the only pageview mechanism. The SDK's own
+          // history listener would also capture whatever URL is current at init.
+          capture_pageview: false,
           capture_pageleave: false,
           autocapture: false,
           capture_dead_clicks: false,
@@ -224,8 +228,92 @@ export function beginWebAnalytics(
             }
           },
         });
+        trail.start((href) => {
+          try {
+            client.capture(PAGEVIEW_EVENT, { $current_url: href });
+          } catch {
+            // A failed send must not affect navigation.
+          }
+        });
       },
     };
+  } catch {
+    return null;
+  }
+}
+
+const HISTORY_PATCH = "__stylishWebAnalyticsHistory";
+
+function createPathTrail(target: AnalyticsScope): { start(send: (href: string) => void): void } {
+  const pending: string[] = [];
+  let lastPath: string | null = null;
+  let send: ((href: string) => void) | null = null;
+
+  function remember(href: string): void {
+    const path = pathnameOf(href);
+    if (!path || path === lastPath) {
+      return;
+    }
+    lastPath = path;
+    if (send) {
+      send(href);
+      return;
+    }
+    pending.push(href);
+  }
+
+  remember(target.location.href ?? "");
+  watchPathname(target, () => {
+    const href = target.location.href;
+    if (href) {
+      remember(href);
+    }
+  });
+
+  return {
+    start(next) {
+      send = next;
+      const queued = pending.splice(0);
+      for (const href of queued) {
+        send(href);
+      }
+    },
+  };
+}
+
+interface HistoryPatch {
+  pushState: (...args: unknown[]) => unknown;
+  replaceState: (...args: unknown[]) => unknown;
+  [HISTORY_PATCH]?: boolean;
+}
+
+function watchPathname(target: AnalyticsScope, onChange: () => void): void {
+  const scope = target as AnalyticsScope & {
+    history?: HistoryPatch;
+    addEventListener?: (type: string, listener: () => void) => void;
+  };
+  const history = scope.history;
+  if (!history || history[HISTORY_PATCH]) {
+    return;
+  }
+  history[HISTORY_PATCH] = true;
+  for (const method of ["pushState", "replaceState"] as const) {
+    const original = history[method];
+    history[method] = (...args: unknown[]) => {
+      const result = original.apply(history, args);
+      onChange();
+      return result;
+    };
+  }
+  scope.addEventListener?.("popstate", onChange);
+}
+
+function pathnameOf(href: string): string | null {
+  if (!href) {
+    return null;
+  }
+  try {
+    return new URL(href).pathname || "/";
   } catch {
     return null;
   }
