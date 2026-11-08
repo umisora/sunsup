@@ -27,6 +27,11 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          # Inlined into the static export. Repository variables, not secrets:
+          # the project token is a public ingestion token. Empty values leave analytics off.
+          NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: ${{ vars.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN }}
+          NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
         run: npm run build
 
       - name: Check static export
