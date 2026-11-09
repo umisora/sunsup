@@ -7,3 +7,10 @@ __pycache__/
 .env
 .env.*
 !.env.example
+# Written by scripts/build-sitemaps.mjs during next build, then copied to out/.
+/public/sitemap.xml
+/public/sitemap-pages.xml
+/public/sitemap-drinks.xml
+/public/sitemap.xml.*.tmp
+/public/sitemap-pages.xml.*.tmp
+/public/sitemap-drinks.xml.*.tmp
