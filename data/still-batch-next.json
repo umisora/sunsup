@@ -28,8 +28,19 @@
           "image": "https://cdn.shopify.com/s/files/1/1659/0709/products/1273964_listImage.jpg",
           "size": "300x530",
           "verdict": "fail: too small, and it is IRIKA green tea, not Ruby"
+        },
+        {
+          "image": "https://cdn.kyodonewsprwire.jp/prwfile/release/M104157/202101149767/_prw_PI4fl_P66bNh0p.jpeg",
+          "size": "481x602",
+          "verdict": "fail: press photo with a glass and a paper box beside the bottle"
+        },
+        {
+          "image": "https://cdn.kyodonewsprwire.jp/prwfile/release/M104157/202101149767/_prw_PI3fl_BicUeqCQ.jpeg",
+          "size": "607x480",
+          "verdict": "fail: bottle lies in a wooden box with a glass"
         }
-      ]
+      ],
+      "note": "2026-10-26: no seller other than the maker's own shop was found; every maker image is 550px or smaller and shows a glass or box."
     },
     {
       "slug": "rbt-darjeeling-rajah-grand-750",
@@ -58,8 +69,19 @@
           "image": "https://cdn.shopify.com/s/files/1/1659/0709/products/746152_listImage-re.jpg",
           "size": "300x530",
           "verdict": "fail: too small"
+        },
+        {
+          "image": "https://www.makaibari.co.jp/shopping/tea/royal_darjeeling_rajah/image/winebottle01.3.jpg",
+          "size": "600x300",
+          "verdict": "fail: too small, banner crop"
+        },
+        {
+          "image": "https://www.makaibari.co.jp/shopping/tea/royal_darjeeling_rajah/image/winebottle02.3.jpg",
+          "size": "320x320",
+          "verdict": "fail: too small"
         }
-      ]
+      ],
+      "note": "2026-10-26: Makaibari's page and the maker's shop only have images 600px or smaller."
     },
     {
       "slug": "kuranooto-koshu",
@@ -68,7 +90,25 @@
       "page": "https://kurashiwine.com/product/koshu_juice/",
       "current": "/drinks/kuranooto-koshu.webp",
       "why": "current still is on a grey studio backdrop, not white",
-      "candidates": []
+      "candidates": [
+        {
+          "image": "https://shop.r10s.jp/fujiclair/cabinet/10135276/imgrc0104195085.jpg",
+          "page": "https://item.rakuten.co.jp/fujiclair/koshu_juice/",
+          "size": "1000x1000",
+          "verdict": "pass: maker's own Rakuten store, single bottle on white, upright, whole, label sharp"
+        },
+        {
+          "image": "https://kurashiwine.com/wp-content/uploads/2026/05/20260617-クラノオト-山梨甲州葡萄100ジュース-2-scaled.jpg",
+          "size": "2560x1707",
+          "verdict": "fail: bottle lies tilted with streaks of window light"
+        },
+        {
+          "image": "https://nachumaru.com/store/html/upload/save_image/0619162250_6a34ee4a6eb73.jpeg",
+          "size": "3024x4032",
+          "verdict": "fail: snapshot on a wooden table against a plaster wall"
+        }
+      ],
+      "status": "cut out on this branch; waiting for the owner to see the sheet"
     },
     {
       "slug": "niki-tomato-1000",
@@ -77,7 +117,14 @@
       "page": "https://otarukazoku.com/products/detail/66",
       "current": "/drinks/niki-tomato-1000.webp",
       "why": "current still is a photo on a beige ground, not white",
-      "candidates": []
+      "candidates": [
+        {
+          "image": "https://otarukazoku.com/html/upload/save_image/0928111508_61527aac5a5ad.jpg",
+          "size": "600x450",
+          "verdict": "fail: snapshot on blue cloth, too small (seen through the Wayback Machine)"
+        }
+      ],
+      "note": "2026-10-26: the seller's shop returns 503 (maintenance) and no other seller of this exact product was found. Check again later."
     },
     {
       "slug": "ikeda-budo-cider-240",
@@ -86,7 +133,20 @@
       "page": "https://tornw.tokachi.biz/product/soda001/",
       "current": "/drinks/ikeda-budo-cider-240.webp",
       "why": "current still is on a light grey ground, not white",
-      "candidates": []
+      "candidates": [
+        {
+          "image": "https://tokachisoda.com/wp-content/uploads/R5_6091-scaled.jpg",
+          "page": "https://tokachisoda.com/soda/ikeda/",
+          "size": "1707x2560",
+          "verdict": "pass: official Tokachi ji-cider studio pack shot, single upright bottle on a light seamless ground, label sharp; cut out with BiRefNet"
+        },
+        {
+          "image": "https://tornw.tokachi.biz/wp-content/uploads/2021/01/photo-soda001.jpg",
+          "size": "450x450",
+          "verdict": "fail: clean pack shot but too small"
+        }
+      ],
+      "status": "cut out on this branch; waiting for the owner to see the sheet"
     },
     {
       "slug": "sarabetsu-sumomo-cider-240",
@@ -95,7 +155,20 @@
       "page": "https://tornw.tokachi.biz/product/soda003/",
       "current": "/drinks/sarabetsu-sumomo-cider-240.webp",
       "why": "current still is on a light grey ground, not white",
-      "candidates": []
+      "candidates": [
+        {
+          "image": "https://tokachisoda.com/wp-content/uploads/R5_6088-scaled.jpg",
+          "page": "https://tokachisoda.com/soda/sarabetsu/",
+          "size": "1707x2560",
+          "verdict": "pass: official Tokachi ji-cider studio pack shot, single upright bottle on a light seamless ground, label sharp; cut out with BiRefNet"
+        },
+        {
+          "image": "https://tornw.tokachi.biz/wp-content/uploads/2021/01/photo-soda003.jpg",
+          "size": "450x450",
+          "verdict": "fail: clean pack shot but too small"
+        }
+      ],
+      "status": "cut out on this branch; waiting for the owner to see the sheet"
     }
   ]
 }
