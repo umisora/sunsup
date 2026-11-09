@@ -6,6 +6,7 @@ import { isGenericProduct } from "./generic-rule.mjs";
 import "./check-jsonld.mjs";
 import "./check-scenes.mjs";
 import "./check-categories.mjs";
+import "./check-sitemaps.mjs";
 
 const failures = [];
 
@@ -504,7 +505,7 @@ if (shell.includes('data-store-primary="true"')) {
   fail("shell has a store CTA");
 }
 
-const sitemap = read("sitemap.xml");
+const sitemap = `${read("sitemap-pages.xml")}\n${read("sitemap-drinks.xml")}`;
 const robots = read("robots.txt");
 if (!robots.includes("Sitemap: https://stylish.sunsup.me/sitemap.xml")) {
   fail("robots.txt is missing the sitemap");
@@ -748,8 +749,8 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
   if (!gift.includes('<link rel="canonical" href="https://stylish.sunsup.me/ba/okurimono/"') || !gift.includes("ソフトドリンク好きに贈る一本")) {
     fail("/ba/okurimono/ has no canonical to itself or no 「ソフトドリンク好きに贈る一本」 title");
   }
-  if (!read("sitemap.xml").includes("<loc>https://stylish.sunsup.me/ba/okurimono/</loc>")) {
-    fail("sitemap.xml does not list /ba/okurimono/");
+  if (!sitemap.includes("<loc>https://stylish.sunsup.me/ba/okurimono/</loc>")) {
+    fail("sitemap does not list /ba/okurimono/");
   }
 }
 

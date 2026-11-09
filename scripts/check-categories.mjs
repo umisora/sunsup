@@ -10,7 +10,7 @@ const failures = [];
 const fail = (message) => failures.push(message);
 const read = (path) => readFileSync(join("out", path), "utf8");
 
-const sitemap = read("sitemap.xml");
+const sitemap = `${read("sitemap-pages.xml")}\n${read("sitemap-drinks.xml")}`;
 const origin = (read("robots.txt").match(/Sitemap: (https:\/\/[^/]+)\//) ?? [])[1] ?? "";
 const root = join("out", "category");
 const ids = existsSync(root)

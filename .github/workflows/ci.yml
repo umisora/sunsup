@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          # Full history so sitemap lastmod can use git blame. A shallow clone omits lastmod.
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v6
