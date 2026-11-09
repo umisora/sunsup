@@ -3,13 +3,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/build-visit-pool.mjs && node scripts/build-season-routes.mjs && node --experimental-strip-types --import ./scripts/register-ts.mjs scripts/check-visit-picks.mts && node --experimental-strip-types --import ./scripts/register-ts.mjs scripts/check-shopping.mts && next build",
+    "build": "node scripts/build-visit-pool.mjs && node scripts/build-season-routes.mjs && node --experimental-strip-types --import ./scripts/register-ts.mjs scripts/check-visit-picks.mts && node --experimental-strip-types --import ./scripts/register-ts.mjs scripts/check-shopping.mts && node --experimental-strip-types --import ./scripts/register-ts.mjs scripts/check-web-analytics.mts && next build",
     "preview": "serve out",
     "fonts": "node scripts/subset-fonts.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",
     "next": "^15.5.28",
+    "posthog-js": "^1.447.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
