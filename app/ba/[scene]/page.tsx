@@ -125,7 +125,13 @@ export default async function ScenePage({ params }: ScenePageProps) {
 
       {hasList ? (
         <Section id="list" space="md" labelledBy="list-title">
-          <ShoppingList headingId="list-title" title={list.title} cards={list.cards} url={`${SITE_ORIGIN}${scenePath(scene)}`} />
+          <ShoppingList
+            headingId="list-title"
+            title={list.title}
+            cards={list.cards}
+            url={`${SITE_ORIGIN}${scenePath(scene)}`}
+            emphasizeStores={scene.slug === "bonenkai"}
+          />
         </Section>
       ) : null}
 
