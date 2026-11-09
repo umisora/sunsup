@@ -2,10 +2,15 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import {
   beginWebAnalytics,
+  captureOutboundClick,
   ESSENTIAL_EVENT_PROPERTIES,
+  OUTBOUND_CLICK_EVENT,
+  OUTBOUND_CLICK_PROPERTIES,
   PAGEVIEW_EVENT,
   rememberAnalyticsQa,
   resolveIngestionConfig,
+  sanitizeCapturedEvent,
+  sanitizeCapturedOutboundClick,
   sanitizeCapturedPageview,
   shouldCaptureHostname,
   type AnalyticsClient,
@@ -167,10 +172,81 @@ expect(
   "an email distinct id is not sent",
 );
 
+
+const outboundAllowed = new Set<string>([...ESSENTIAL_EVENT_PROPERTIES, ...OUTBOUND_CLICK_PROPERTIES]);
+const outboundDirty = {
+  uuid: "00000000-0000-4000-8000-000000000002",
+  event: OUTBOUND_CLICK_EVENT,
+  properties: {
+    token: FAKE_TOKEN,
+    distinct_id: "0190aabb-ccdd-7eef-8000-000000000001",
+    shop: "amazon",
+    host: "www.amazon.co.jp",
+    drink_slug: "kimino-yuzu",
+    path: "/ba/bonenkai/",
+    venue: "bonenkai",
+    position: 2,
+    source: "list",
+    $session_id: "0190session",
+    $window_id: "0190window",
+    $insert_id: "insert456",
+    $lib: "web",
+    $lib_version: "1.447.3",
+    $time: 1_700_000_001,
+    $process_person_profile: false,
+    $is_identified: false,
+    $raw_user_agent: "Mozilla/5.0 secret",
+    email: "person@example.com",
+    title: "STYLISH!",
+  },
+  $set: { email: "person@example.com" },
+};
+const outboundCleaned = sanitizeCapturedOutboundClick(outboundDirty, { search: "?analytics_qa=1", storage: memoryStorage() });
+expect(outboundCleaned?.event === OUTBOUND_CLICK_EVENT, "an outbound_click is kept");
+expect(outboundCleaned?.properties.shop === "amazon", "shop kind is kept");
+expect(outboundCleaned?.properties.host === "www.amazon.co.jp", "shop host is kept");
+expect(outboundCleaned?.properties.drink_slug === "kimino-yuzu", "drink slug is kept");
+expect(outboundCleaned?.properties.path === "/ba/bonenkai/", "page path is kept");
+expect(outboundCleaned?.properties.venue === "bonenkai", "venue slug is kept");
+expect(outboundCleaned?.properties.position === 2, "link position is kept");
+expect(outboundCleaned?.properties.source === "list", "click source is kept");
+expect(outboundCleaned?.properties.analytics_qa === true, "the QA mark is on the sanitized outbound_click");
+expect(
+  Object.keys(outboundCleaned?.properties ?? {}).every((key) => outboundAllowed.has(key)),
+  `unexpected outbound property: ${Object.keys(outboundCleaned?.properties ?? {}).filter((key) => !outboundAllowed.has(key)).join(",")}`,
+);
+expect(JSON.stringify(outboundCleaned).includes("Mozilla") === false, "device fields are stripped from outbound_click");
+expect(
+  sanitizeCapturedOutboundClick(
+    { ...outboundDirty, properties: { ...outboundDirty.properties, shop: "ebay" } },
+    { search: "", storage: memoryStorage() },
+  ) === null,
+  "an unknown shop kind is refused",
+);
+expect(
+  sanitizeCapturedOutboundClick(
+    { ...outboundDirty, properties: { ...outboundDirty.properties, drink_slug: "../etc" } },
+    { search: "", storage: memoryStorage() },
+  ) === null,
+  "a non-slug drink id is refused",
+);
+expect(
+  sanitizeCapturedEvent(outboundDirty, { search: "", storage: memoryStorage() })?.event === OUTBOUND_CLICK_EVENT,
+  "sanitizeCapturedEvent keeps outbound_click",
+);
+expect(
+  sanitizeCapturedEvent({ ...dirty, event: "$pageleave" }, { search: "", storage: memoryStorage() }) === null,
+  "sanitizeCapturedEvent still drops pageleave",
+);
+
 let inits = 0;
+const captured: { event: string; properties?: Record<string, unknown> }[] = [];
 const mockClient: AnalyticsClient = {
   init() {
     inits += 1;
+  },
+  capture(event, properties) {
+    captured.push({ event, properties });
   },
 };
 expect(
@@ -194,6 +270,20 @@ first?.init(mockClient);
 first?.init(mockClient);
 expect(inits === 1, "init runs once even if the starter is invoked twice");
 expect(scope.sessionStorage.snapshot().analytics_qa === "1", "QA is stored before init");
+captureOutboundClick({
+  shop: "rakuten",
+  host: "item.rakuten.co.jp",
+  drinkSlug: "kimino-yuzu",
+  path: "/drink/kimino-yuzu/",
+  position: 0,
+  source: "page",
+});
+expect(captured.length === 1 && captured[0]?.event === OUTBOUND_CLICK_EVENT, "captureOutboundClick sends outbound_click");
+expect(captured[0]?.properties?.shop === "rakuten", "captureOutboundClick keeps shop");
+expect(captured[0]?.properties?.drink_slug === "kimino-yuzu", "captureOutboundClick keeps drink_slug");
+expect(captured[0]?.properties?.path === "/drink/kimino-yuzu/", "captureOutboundClick keeps path");
+expect(captured[0]?.properties?.position === 0, "captureOutboundClick keeps position");
+expect(captured[0]?.properties?.venue === undefined, "captureOutboundClick omits venue off a ba page");
 
 for (const file of ["lib/web-analytics.ts", "instrumentation-client.ts", ".github/workflows/ci.yml", "docs/analytics.md", "app/layout.tsx"]) {
   const source = readFileSync(file, "utf8");
@@ -219,6 +309,6 @@ if (failures.length > 0) {
   console.error(failures.map((message) => `web-analytics: ${message}`).join("\n"));
   process.exit(1);
 }
-console.log("web-analytics ok: config, hostname, QA mark, sanitized pageview, and one history pageview path");
+console.log("web-analytics ok: config, hostname, QA mark, sanitized pageview, outbound_click, and one history pageview path");
 process.exit(0);
 
