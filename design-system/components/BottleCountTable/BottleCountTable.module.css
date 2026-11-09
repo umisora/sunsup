@@ -1,0 +1,133 @@
+/*
+  Early bottle table. Ink and hairline rules only: no fill, no accent bar.
+  Five columns stay in the wrap. On a narrow container the headcount and the
+  total stay large, and the three bottle counts (and their labels) stay small.
+*/
+.block {
+  container-type: inline-size;
+  max-inline-size: 40rem;
+  margin-inline: auto;
+  color: var(--text-primary);
+}
+
+.table {
+  width: 100%;
+  max-inline-size: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: inherit;
+  background: none;
+}
+
+.colPeople {
+  width: 30%;
+}
+
+.colTotal {
+  width: 18%;
+}
+
+.colKind {
+  width: 17.333%;
+}
+
+.caption {
+  caption-side: top;
+  padding-block-end: var(--space-4);
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 4.6cqi, 2rem);
+  font-weight: 500;
+  font-feature-settings: var(--features-display);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-heading);
+  text-align: start;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+.table :is(th, td) {
+  border-block-end: 1px solid currentColor;
+  background: none;
+  padding-block: 0.55em;
+  padding-inline: 0.2em;
+  color: inherit;
+  vertical-align: bottom;
+}
+
+.table thead :is(th, td) {
+  border-block-start: 1px solid currentColor;
+}
+
+.table :is(th, td):first-child {
+  padding-inline-start: 0;
+  text-align: start;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.peopleHead,
+.totalHead,
+.kindHead {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+
+.totalHead,
+.kindHead,
+.total,
+.kind {
+  text-align: end;
+}
+
+.people,
+.total {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 6.4cqi, 2rem);
+  font-weight: 500;
+  font-feature-settings: var(--features-display);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.kind {
+  font-size: clamp(0.75rem, 3.1cqi, 1rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.note {
+  margin-block-start: var(--space-3);
+  color: inherit;
+  font-size: var(--step-small);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-body);
+}
+
+@container (width < 28rem) {
+  .caption {
+    font-size: 1.25rem;
+    letter-spacing: 0.04em;
+  }
+
+  .peopleHead,
+  .totalHead,
+  .kindHead {
+    font-size: 0.6875rem;
+    line-height: 1.25;
+  }
+
+  .table :is(th, td) {
+    padding-inline: 0.12em;
+  }
+
+  .kind {
+    font-size: 0.75rem;
+  }
+}

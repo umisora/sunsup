@@ -63,6 +63,35 @@ export function setTotal(lines: readonly SetLine[]): number {
   return lines.reduce((sum, line) => sum + line.units, 0);
 }
 
+export type BottleCounts = {
+  headcount: number;
+  /** 小さな瓶: one per person (乾杯用). */
+  kanpai: number;
+  /** 大きな瓶: one per 4 people (テーブル用). */
+  table: number;
+  /** 甘さ控えめ: one per 2 people (食事用). */
+  meal: number;
+  total: number;
+};
+
+/**
+ * Bottles for a headcount, through the same `setLines` / `setTotal` path the list uses.
+ * The printed table must call this so its cells cannot drift from the calculator.
+ */
+export function bottleCounts(headcount: number): BottleCounts {
+  const item: SetItem = { slug: "count", name: "count", still: "", size: "", stores: [] };
+  const cards: SetCard[] = SET_ROLES.map((role) => ({ role, reason: "", items: [item] }));
+  const lines = setLines(cards, {}, headcount);
+  const units = (role: SetRole) => lines.find((line) => line.role === role)?.units ?? 0;
+  return {
+    headcount: clampHeadcount(headcount),
+    kanpai: units("kanpai"),
+    table: units("table"),
+    meal: units("meal"),
+    total: setTotal(lines),
+  };
+}
+
 /** The list as plain text, for LINE and the copy button. */
 export function setText(title: string, headcount: number, lines: readonly SetLine[], url: string): string {
   return [

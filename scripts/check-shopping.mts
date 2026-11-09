@@ -5,7 +5,7 @@ import { getDrink } from "../lib/drinks.ts";
 import { listHeadingText } from "../lib/list-heading.ts";
 import { groupDrinks, SCENE_SETS, SCENES, sceneSet } from "../lib/scenes.ts";
 import { servingUnit } from "../lib/servings.ts";
-import { DEFAULT_HEADCOUNT, lineShareUrl, roleUnits, SET_ROLES, setLines, setText, setTotal, type SetCard } from "../lib/shopping-list.ts";
+import { bottleCounts, DEFAULT_HEADCOUNT, lineShareUrl, roleUnits, SET_ROLES, setLines, setText, setTotal, type SetCard } from "../lib/shopping-list.ts";
 
 const failures: string[] = [];
 function expect(ok: boolean, message: string) {
@@ -30,6 +30,22 @@ expect(unit("名前だけ", "届くのは24本です。", "ビン") === undefine
 expect(DEFAULT_HEADCOUNT === 4, "the set opens for 4 people");
 expect(roleUnits("kanpai", 4) === 4 && roleUnits("table", 4) === 1 && roleUnits("meal", 4) === 2, "4 people: 4, 1, 2");
 expect(roleUnits("table", 5) === 2 && roleUnits("meal", 5) === 3 && roleUnits("kanpai", 5) === 5, "units round up");
+// The bonenkai table prints these four rows from bottleCounts (setLines + setTotal), not from hand-typed cells.
+const tableRows = [5, 10, 20, 30].map((people) => bottleCounts(people));
+expect(
+  tableRows.map((row) => `${row.headcount}:${row.kanpai}+${row.table}+${row.meal}=${row.total}`).join() ===
+    "5:5+2+3=10,10:10+3+5=18,20:20+5+10=35,30:30+8+15=53",
+  `bonenkai bottle table ${tableRows.map((row) => `${row.headcount}:${row.kanpai}+${row.table}+${row.meal}=${row.total}`).join()}`,
+);
+for (const row of tableRows) {
+  expect(
+    row.kanpai === roleUnits("kanpai", row.headcount) &&
+      row.table === roleUnits("table", row.headcount) &&
+      row.meal === roleUnits("meal", row.headcount) &&
+      row.total === row.kanpai + row.table + row.meal,
+    `${row.headcount} people drifted from roleUnits`,
+  );
+}
 expect(roleUnits("kanpai", 0) === 1 && roleUnits("kanpai", 999) === 200, "headcount is kept between 1 and 200");
 const card = (role: SetCard["role"], ...slugs: string[]): SetCard => ({
   role,
@@ -81,17 +97,29 @@ for (const scene of SCENES) {
   }
 }
 
-// The list heading is shared until a scene sets listHeading. Setting it on one scene
-// changes that scene's heading and lead only; the others keep the shared text.
+// The shared heading stays the fallback. Only bonenkai may set listHeading;
+// the same guard fails, as it did when nobody set one, if any other scene sets it.
 const sharedHeading = listHeadingText(undefined, 3);
 expect(
   sharedHeading.heading === "乾杯のソフトドリンクは、この3種類で" && sharedHeading.lead === undefined,
   `shared list heading ${JSON.stringify(sharedHeading)}`,
 );
+const allowsListHeading = (scene: { slug: string; listHeading?: unknown }) => scene.slug === "bonenkai" || scene.listHeading === undefined;
+expect(SCENES.every(allowsListHeading), "listHeading is set on a scene other than bonenkai");
+const bonenkaiHeading = listHeadingText(SCENES.find((scene) => scene.slug === "bonenkai")?.listHeading, 3);
 expect(
-  SCENES.every((scene) => scene.listHeading === undefined),
-  "no scene sets listHeading; pages keep the shared heading",
+  bonenkaiHeading.heading === "人数を入れて、飲み物の量と買うものを決める" && bonenkaiHeading.lead === undefined,
+  `bonenkai list heading ${JSON.stringify(bonenkaiHeading)}`,
 );
+for (const scene of SCENES) {
+  if (scene.slug === "bonenkai") {
+    continue;
+  }
+  const text = listHeadingText(scene.listHeading, 3);
+  expect(text.heading === sharedHeading.heading && text.lead === undefined, `${scene.slug} list heading changed`);
+}
+const withKaishaHeading = SCENES.map((scene) => (scene.slug === "kaisha" ? { ...scene, listHeading: { lines: ["EXTRA"] } } : scene));
+expect(!withKaishaHeading.every(allowsListHeading), "a listHeading on kaisha must fail the bonenkai-only guard");
 const override = { lines: ["SCENE-HEADING-", "{count}"], lead: "SCENE-LEAD" };
 const headed = SCENES.map((scene) => (scene.slug === "bonenkai" ? { ...scene, listHeading: override } : scene));
 const changed = headed.filter((scene) => {
@@ -167,4 +195,4 @@ if (failures.length > 0) {
   console.error(failures.map((message) => `shopping: ${message}`).join("\n"));
   process.exit(1);
 }
-console.log(`shopping ok: ${SCENES.length} scene list(s), servings, role bottles, swaps, LINE text, list heading fallback, click source and the okurimono 301`);
+console.log(`shopping ok: ${SCENES.length} scene list(s), servings, role bottles, bonenkai table, swaps, LINE text, bonenkai-only list heading, click source and the okurimono 301`);

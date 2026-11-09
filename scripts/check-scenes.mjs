@@ -87,7 +87,8 @@ if (existsSync(fidelityPath)) {
 }
 
 // STYLISH!'s recommended set, first painted for 4 people toasting with a soft drink: the tag and the
-// heading 「乾杯のソフトドリンクは、この3種類で」, three role cards (乾杯用 4本, テーブル用 1本, 食事用 2本 = 7本)
+// shared heading 「乾杯のソフトドリンクは、この3種類で」 (bonenkai alone sets its own listHeading),
+// three role cards (乾杯用 4本, テーブル用 1本, 食事用 2本 = 7本)
 // each with a reason, the drink page's own store links (same URL, same kind) tagged source=list with no
 // affiliate parameters and swap buttons for the other drinks of the role, then 「全部で7本」 and the LINE link.
 const AFFILIATE = /[?&](tag|ascsubtag|linkCode|aff(iliate)?(_?id)?|scid|a8|afid)=/i;
@@ -97,6 +98,79 @@ const attr = (tag, name) => {
   return match ? unescape(match[1]) : undefined;
 };
 const strip = (text) => unescape(text.replace(/<!-- -->/g, "").replace(/<[^>]+>/g, ""));
+const times = (haystack, needle) => {
+  if (needle.length === 0) {
+    return 0;
+  }
+  let count = 0;
+  let from = 0;
+  while (from <= haystack.length) {
+    const index = haystack.indexOf(needle, from);
+    if (index < 0) {
+      break;
+    }
+    count += 1;
+    from = index + needle.length;
+  }
+  return count;
+};
+
+// Approved bonenkai copy, outside scripts, in the element that owns it.
+function checkBonenkaiCopy(html, path) {
+  const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+  const once = (label, needle) => {
+    const count = times(visible, needle);
+    if (count !== 1) {
+      fail(`${path} ${label} occurs ${count} times outside scripts`);
+    }
+  };
+  const metaTitle = "忘年会のノンアルコール、何を何本？ 乾杯から料理まで";
+  const description =
+    "忘年会のノンアルコールは、10人なら18本が目安です。乾杯用に小さな瓶をひとり1本、あとはテーブルで注ぎ分ける大きな瓶と、料理に合う甘さ控えめの瓶をそろえます。人数ごとの本数表つきで、買い出しリストはそのままLINEで送れます。";
+  const h1Text = "忘年会のノンアル、乾杯の一本から";
+  const lead =
+    "乾杯は小さな瓶でひとり1本。テーブルには大きな瓶を置いて注ぎ分け、料理が進んだら甘さ控えめの瓶を開けます。ソフトドリンクで乾杯する人が10人なら、あわせて18本が目安です。";
+  const smallHeading = "乾杯の飲み物は、ひとり1本の小さな瓶で";
+  const caption = "何人で何本？ ノンアルの本数早見表";
+  const note =
+    "小さな瓶はひとり1本、大きな瓶は4人に1本、甘さ控えめは2人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。";
+  if (!html.includes(`<title>${metaTitle}｜STYLISH!</title>`)) {
+    fail(`${path} title is not the approved meta title`);
+  }
+  if (!html.includes(`<meta name="description" content="${description}"/>`)) {
+    fail(`${path} meta description is not the approved sentence`);
+  }
+  const h1 = /<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html);
+  if (!h1 || strip(h1[1]) !== h1Text || times(html, "<h1") !== 1) {
+    fail(`${path} h1: ${h1 ? strip(h1[1]) : "missing"}`);
+  }
+  once("lead", lead);
+  once("small-bottle heading", smallHeading);
+  once("list heading", "人数を入れて、飲み物の量と買うものを決める");
+  once("table caption", caption);
+  once("table note", note);
+  const dry = visible.indexOf('id="group-dry"');
+  const tableAt = visible.indexOf(caption);
+  const listAt = visible.indexOf('id="list"');
+  const listHeadingAt = visible.indexOf("人数を入れて、飲み物の量と買うものを決める");
+  if (!(dry >= 0 && tableAt > dry && listAt > tableAt && listHeadingAt > listAt)) {
+    fail(`${path} count table is not between 甘くない一本 and the list heading`);
+  }
+  if (visible.indexOf("<table") > listAt || visible.indexOf('data-shopping-list=""') < tableAt) {
+    fail(`${path} count table is inside the shopping list or only after it`);
+  }
+  const headers = [...visible.matchAll(/<th\b[^>]*\bscope="col"[^>]*>([\s\S]*?)<\/th>/g)].map((cell) => strip(cell[1]));
+  if (headers.join("|") !== "ソフトドリンクで乾杯する人|合計|小さな瓶|大きな瓶|甘さ控えめ") {
+    fail(`${path} count table headers: ${headers.join("|") || "missing"}`);
+  }
+  const rows = [...visible.matchAll(/<tr>([\s\S]*?)<\/tr>/g)]
+    .slice(1)
+    .map((row) => [...row[1].matchAll(/<(?:th|td)\b[^>]*>([\s\S]*?)<\/(?:th|td)>/g)].map((cell) => strip(cell[1])).join("|"));
+  const expectedRows = ["5人|10本|5|2|3", "10人|18本|10|3|5", "20人|35本|20|5|10", "30人|53本|30|8|15"];
+  if (rows.join() !== expectedRows.join()) {
+    fail(`${path} count table rows: ${rows.join() || "missing"}`);
+  }
+}
 const ROLES = [
   ["kanpai", "乾杯用", 4],
   ["table", "テーブル用", 1],
@@ -120,10 +194,20 @@ for (const slug of scenes) {
   if (!/<p class="[^"]*">STYLISH!のおすすめ<\/p>/.test(part)) {
     fail(`${path} set has no STYLISH!のおすすめ tag`);
   }
-  // No scene sets listHeading, so this is the shared fallback on every page.
+  // listHeading is allowed on bonenkai only. Any other scene that sets one fails here,
+  // because its exported h2 would no longer be the shared heading.
+  const expectedHeading = slug === "bonenkai" ? "人数を入れて、飲み物の量と買うものを決める" : "乾杯のソフトドリンクは、この3種類で";
   const heading = /<h2 id="list-title"[^>]*>([\s\S]*?)<\/h2>/.exec(part);
-  if (!heading || strip(heading[1]) !== "乾杯のソフトドリンクは、この3種類で") {
+  if (!heading || strip(heading[1]) !== expectedHeading) {
     fail(`${path} set heading: ${heading ? strip(heading[1]) : "missing"}`);
+  }
+  if (slug !== "bonenkai" && html.includes("人数を入れて、飲み物の量と買うものを決める")) {
+    fail(`${path} uses the bonenkai list heading`);
+  }
+  if (slug === "bonenkai") {
+    checkBonenkaiCopy(html, path);
+  } else if (html.includes("<caption")) {
+    fail(`${path} has a count table; only bonenkai does`);
   }
   if (!part.includes(">ソフトドリンクで乾杯する人</span>")) {
     fail(`${path} set has no ソフトドリンクで乾杯する人 headcount`);
