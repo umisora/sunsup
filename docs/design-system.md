@@ -95,7 +95,7 @@ design-system/
 | `data-reveal` | `SectionHead`, `InfoRow`, `Surface reveal` | fade up once on scroll. At ≤767px, anything already in the first screen stays visible. | yes, except the phone first screen |
 | `data-stagger-item` | `Tile`, `Surface staggerItem` | batched card entrance (`ScrollTrigger.batch`). At ≤767px, anything already in the first screen stays visible. | yes, except the phone first screen |
 | `data-rise` | `FeatureCard`, `MediaPanel`, `ClosingPanel`, `Surface rise` | slide up on scroll | **never** |
-| `data-fill` | `FillText` | per-character ink, scrubbed | no (dimmed only) |
+| `data-fill` | `FillText` | per-character ink, scrubbed. Static HTML is one text copy; characters are split here, only when motion runs | no (dimmed only) |
 | `data-parallax` | `StillLife parallax` | image drifts ±5%, scrubbed | no |
 | `data-drift` | `HeroStage` card | card drifts up as the hero leaves | no |
 | `data-arrive` | `TableArrival` | stills slide onto the table on load, then two toast and settle (~8s). Own timeline, not `playIntro` | off-table until it runs |

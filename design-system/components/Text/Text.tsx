@@ -114,22 +114,19 @@ type FillTextProps = {
   lines: readonly string[];
 };
 
-/** Text that inks in character by character as it scrolls through the viewport. */
+/**
+ * Text that inks in character by character as it scrolls.
+ * Static HTML keeps each line once, as a normal text node. `runMotion` splits those
+ * lines into characters after hydration, and only when motion is allowed.
+ */
 export function FillText({ as: Tag = "p", id, variant = "statement", lines }: FillTextProps) {
   return (
     <Tag id={id} className={styles[variant]} data-fill>
-      <span className={styles.srOnly}>{lines.join("")}</span>
-      <span aria-hidden="true">
-        {lines.map((line) => (
-          <span key={line} className={styles.fillLine}>
-            {Array.from(line).map((char, index) => (
-              <span key={index} data-fill-char>
-                {char}
-              </span>
-            ))}
-          </span>
-        ))}
-      </span>
+      {lines.map((line) => (
+        <span key={line} className={styles.fillLine} data-fill-line>
+          {line}
+        </span>
+      ))}
     </Tag>
   );
 }

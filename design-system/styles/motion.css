@@ -5,6 +5,16 @@
 */
 
 @layer motion {
+  /* Screen-reader copy added when FillText is split into characters. Same clip as the old .srOnly. */
+  [data-fill-sr] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     html.js [data-intro],
     html.js [data-line],
