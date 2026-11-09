@@ -5,6 +5,7 @@
  */
 import { isDemoted } from "./demote";
 import { getDrink, hasRealStill, SITE_ORIGIN, storeRows, type Drink } from "./drinks";
+import { drinkItemList } from "./jsonld";
 import type { ListHeading } from "./list-heading";
 import { isGoalKind, outKind } from "./out-links";
 import { volumeMl } from "./servings";
@@ -356,22 +357,8 @@ export function scenePath(scene: Scene): string {
 
 export function sceneJsonLd(scene: Scene): object[] {
   const url = `${SITE_ORIGIN}${scenePath(scene)}`;
-  const drinks = sceneDrinks(scene);
   return [
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "@id": `${url}#drinks`,
-      name: scene.title,
-      url,
-      numberOfItems: drinks.length,
-      itemListElement: drinks.map((drink, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name: drink.name,
-        url: `${SITE_ORIGIN}/drink/${drink.slug}/`,
-      })),
-    },
+    drinkItemList(scenePath(scene), scene.title, sceneDrinks(scene)),
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",

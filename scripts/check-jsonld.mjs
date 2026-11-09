@@ -2,8 +2,9 @@
 // Every exported route (out/**/index.html) must parse, carry the STYLISH! Organization,
 // and carry one WebPage or CollectionPage whose isPartOf is the WebSite and whose publisher
 // is that Organization. Name and description must match the page's title and meta description.
-// Category pages keep an ItemList of drink URLs. A Product must have a name, and a drink page's
-// Product still comes only from catalog facts (no price, offer, rating, review or brand).
+// Category pages and /ba/ pages, including /ba/office/, keep an ItemList of drink URLs.
+// A Product must have a name, and a drink page's Product still comes only from catalog facts
+// (no price, offer, rating, review or brand).
 // Next also writes 404.html, the status-code copy of /404/. That file is not a second route.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -136,13 +137,35 @@ export function pageProblems(html, route, origin) {
     }
   }
 
-  if (route.startsWith("/category/")) {
+  if (route.startsWith("/category/") || route.startsWith("/ba/")) {
     const lists = items.filter((item) => item["@type"] === "ItemList");
     const entries = lists[0]?.itemListElement;
     if (lists.length !== 1 || !Array.isArray(entries) || entries.length < 1) {
       problem("needs an ItemList with at least one drink");
     } else if (entries.some((entry) => typeof entry?.url !== "string" || !entry.url.startsWith(`${origin}/drink/`))) {
       problem("ItemList entries must be drink URLs");
+    }
+    if (route === "/ba/office/") {
+      const listed = (Array.isArray(entries) ? entries : []).map((entry, index) => {
+        const url = typeof entry?.url === "string" ? entry.url : "";
+        const slug = url.startsWith(`${origin}/drink/`) ? url.slice(`${origin}/drink/`.length).replace(/\/$/, "") : "";
+        const numbered = entry?.["@type"] === "ListItem" && entry.position === index + 1;
+        return numbered ? slug : "";
+      });
+      // The labeled lists are the drink showcases. Journey links outside them are not part of the list.
+      // ItemList keeps the first occurrence of each drink when a page shows one twice.
+      const linked = [];
+      const seen = new Set();
+      for (const showcase of html.matchAll(/<ul\b[^>]*\baria-label="[^"]*"[^>]*>[\s\S]*?<\/ul>/g)) {
+        for (const match of showcase[0].matchAll(/href="\/drink\/([a-z0-9-]+)\/"/g)) {
+          if (seen.has(match[1])) continue;
+          seen.add(match[1]);
+          linked.push(match[1]);
+        }
+      }
+      if (listed.length < 1 || listed.some((slug) => slug === "") || listed.join() !== linked.join()) {
+        problem("ItemList does not match the drinks on the page");
+      }
     }
   }
 
@@ -211,6 +234,100 @@ function selfTest() {
   );
   if (!category.some((message) => message.includes("ItemList"))) {
     throw new Error("self-test: a category page without an ItemList was accepted");
+  }
+
+  const office = pageProblems(
+    `<title>オフィスのオープンな飲み会｜STYLISH!</title><meta name="description" content="desc"/><link rel="canonical" href="${origin}/ba/office/"/>${script(organization)}${script({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      url: `${origin}/ba/office/`,
+      name: "オフィスのオープンな飲み会｜STYLISH!",
+      description: "desc",
+      isPartOf: { "@id": `${origin}/#website` },
+      publisher: { "@id": `${origin}/#organization` },
+    })}`,
+    "/ba/office/",
+    origin,
+  );
+  if (!office.some((message) => message.includes("ItemList"))) {
+    throw new Error("self-test: /ba/office/ without an ItemList was accepted");
+  }
+
+  const officeGraph = (nodes, body = "") =>
+    `<title>オフィスのオープンな飲み会｜STYLISH!</title><meta name="description" content="desc"/><link rel="canonical" href="${origin}/ba/office/"/>${body}${nodes.map(script).join("")}`;
+  const officePage = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    url: `${origin}/ba/office/`,
+    name: "オフィスのオープンな飲み会｜STYLISH!",
+    description: "desc",
+    isPartOf: { "@id": `${origin}/#website` },
+    publisher: { "@id": `${origin}/#organization` },
+  };
+  const officeList = (...slugs) => ({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: slugs.map((slug, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: slug,
+      url: `${origin}/drink/${slug}/`,
+    })),
+  });
+  const officeMismatch = pageProblems(
+    officeGraph(
+      [organization, officePage, officeList("kimino-yuzu", "other")],
+      `<ul aria-label="この飲み会のドリンク"><a href="/drink/kimino-yuzu/"></a></ul>`,
+    ),
+    "/ba/office/",
+    origin,
+  );
+  if (!officeMismatch.some((message) => message.includes("ItemList"))) {
+    throw new Error("self-test: /ba/office/ ItemList that does not match the page was accepted");
+  }
+  const officeReversed = pageProblems(
+    officeGraph(
+      [
+        organization,
+        officePage,
+        {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "a", url: `${origin}/drink/aaa/` },
+            { "@type": "ListItem", position: 2, name: "b", url: `${origin}/drink/bbb/` },
+          ],
+        },
+      ],
+      `<ul aria-label="この飲み会のドリンク"><a href="/drink/bbb/"></a><a href="/drink/aaa/"></a></ul>`,
+    ),
+    "/ba/office/",
+    origin,
+  );
+  if (!officeReversed.some((message) => message.includes("does not match the drinks"))) {
+    throw new Error("self-test: /ba/office/ ItemList in a different order from the page was accepted");
+  }
+  const officeMatch = pageProblems(
+    officeGraph(
+      [organization, officePage, officeList("kimino-yuzu", "kagome-grape-100")],
+      `<a href="/drink/kimino-yuzu/">歩</a><ul aria-label="この飲み会のドリンク"><a href="/drink/kimino-yuzu/"></a><a href="/drink/kagome-grape-100/"></a></ul><ul aria-label="秋のおすすめ"><a href="/drink/kagome-grape-100/"></a></ul><a href="/drink/other/">見る</a>`,
+    ),
+    "/ba/office/",
+    origin,
+  );
+  if (officeMatch.length > 0) {
+    throw new Error(`self-test: /ba/office/ ItemList matching the page was rejected (${officeMatch.join("; ")})`);
+  }
+  const officeDup = pageProblems(
+    officeGraph(
+      [organization, officePage, officeList("kimino-yuzu", "kagome-grape-100", "kagome-grape-100")],
+      `<ul aria-label="この飲み会のドリンク"><a href="/drink/kimino-yuzu/"></a><a href="/drink/kagome-grape-100/"></a></ul><ul aria-label="秋のおすすめ"><a href="/drink/kagome-grape-100/"></a></ul>`,
+    ),
+    "/ba/office/",
+    origin,
+  );
+  if (!officeDup.some((message) => message.includes("does not match the drinks"))) {
+    throw new Error("self-test: /ba/office/ ItemList with a duplicate drink was accepted");
   }
 
   const nameless = pageProblems(
