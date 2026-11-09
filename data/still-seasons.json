@@ -1,11 +1,31 @@
 {
-  "note": "Drinks with seasonal studio stills. Each slug has public/drinks/<slug>.webp (white cutout) and public/drinks/season/<slug>_<season>.webp for all four seasons. Paths follow this convention; drinks.csv is unchanged. Rebuild with scripts/compose-season-stills.py.",
+  "note": "Drinks with seasonal studio stills. Each slug has public/drinks/<slug>.webp (white cutout) and public/drinks/season/<slug>_<season>.webp for all four seasons. Paths follow this convention; drinks.csv is unchanged. Rebuild with scripts/compose-season-stills.py. A drink marked \"glass\": false is composed as opaque (cans, white paper labels).",
   "seasons": ["spring", "summer", "autumn", "winter"],
   "drinks": {
     "cc-lemon-pet": { "tint": [250, 236, 170] },
     "noda-shio-cider": { "tint": [214, 236, 238] },
     "fever-tree-tonic": { "tint": [240, 232, 210] },
     "tennensui-sparkling-lemon-500": { "tint": [250, 246, 214] },
-    "ishigaki-ginger-ale-200": { "tint": [240, 206, 166] }
+    "ishigaki-ginger-ale-200": { "tint": [240, 206, 166] },
+    "kimino-ringo": { "tint": [238, 222, 185], "glass": false },
+    "kimino-ume": { "tint": [239, 220, 188], "glass": false },
+    "kimino-yuzu": { "tint": [230, 220, 197], "glass": false },
+    "kodama-ginger-250": { "tint": [234, 219, 194] },
+    "maison-perrier-lime-ginger-330": { "tint": [227, 230, 196] },
+    "kimura-akafuji": { "tint": [234, 210, 202] },
+    "kimura-fuji-yuzu": { "tint": [238, 227, 181], "glass": false },
+    "kimura-mikan100-200": { "tint": [243, 221, 184], "glass": false },
+    "kimura-momo-cider": { "tint": [239, 211, 196], "glass": false },
+    "kimura-shine-muscat": { "tint": [227, 225, 197], "glass": false },
+    "kimura-yamanashi-budo": { "tint": [226, 212, 208], "glass": false },
+    "perrier-glass-750": { "tint": [217, 228, 209] },
+    "nfs-tomato-720": { "tint": [235, 216, 201], "glass": false },
+    "kimino-momo": { "tint": [237, 217, 193], "glass": false },
+    "kimino-mikan": { "tint": [242, 222, 182], "glass": false },
+    "kimino-yuzu-water": { "tint": [244, 224, 179], "glass": false },
+    "shodoshima-olive-cider-200": { "tint": [223, 223, 202] },
+    "neo-ginger-200": { "tint": [238, 231, 206] },
+    "neo-tonic-200": { "tint": [233, 223, 190] },
+    "fever-tree-ginger-beer-200": { "tint": [222, 222, 205], "glass": false }
   }
 }
