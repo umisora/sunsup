@@ -4,13 +4,15 @@ import { categoryHref, drinkGroups } from "@/lib/drinks";
 import { SCENES, scenePath } from "@/lib/scenes";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
+const description = "次の飲み会に持っていく一本を、カテゴリから選べます。";
+
 export const metadata: Metadata = {
   title: "ドリンク一覧",
-  description: "次の飲み会に持っていく一本を、カテゴリから選べます。",
+  description,
   alternates: { canonical: "/drink/" },
   openGraph: {
     title: `ドリンク一覧｜${SITE_NAME}`,
-    description: "次の飲み会に持っていく一本を、カテゴリから選べます。",
+    description,
     url: "/drink/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -26,7 +28,7 @@ export default function DrinkIndexPage() {
 
   return (
     <Motion>
-      {pageJsonLd("/drink/", "ドリンク一覧").map((data, index) => (
+      {pageJsonLd("/drink/", "ドリンク一覧", description).map((data, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
       <PageIntro

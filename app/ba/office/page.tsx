@@ -23,13 +23,15 @@ import {
 import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
+const description = "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。";
+
 export const metadata: Metadata = {
   title: "オフィスのオープンな飲み会",
   alternates: { canonical: "/ba/office/" },
-  description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。",
+  description,
   openGraph: {
     title: `オフィスのオープンな飲み会｜${SITE_NAME}`,
-    description: "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。",
+    description,
     url: "/ba/office/",
     siteName: SITE_NAME,
     locale: "ja_JP",
@@ -61,7 +63,7 @@ export default function OfficePage() {
 
   return (
     <Motion>
-      {pageJsonLd("/ba/office/", "オフィスのオープンな飲み会").map((data, index) => (
+      {pageJsonLd("/ba/office/", "オフィスのオープンな飲み会", description).map((data, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
       <PreloadPhoto name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />
