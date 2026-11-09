@@ -102,7 +102,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
       <Section space="md" label="選び方">
         <Grid as="ol" columns="thirds" gap="wide">
           {scene.criteria.map((item) => (
-            <Tile key={item.no} no={item.no} title={item.title} titleAs="h2" lines={item.lines} />
+            <Tile key={item.no} no={item.no} title={item.title} titleId={`criteria-${item.no}`} lines={item.lines} />
           ))}
         </Grid>
       </Section>

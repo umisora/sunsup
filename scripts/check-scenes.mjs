@@ -271,6 +271,37 @@ for (const slug of scenes) {
   }
 }
 
+// 見た目 / サイズ / 味 name the criteria groups. They are not section headings:
+// an h1–h6 whose text is one of them adds three extra entries to every scene outline.
+const FILTER_LABELS = ["見た目", "サイズ", "味"];
+const withoutScripts = (html) => html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+const flat = (text) => strip(text).replace(/\s+/g, "");
+const baPages = readdirSync(join("out", "ba"), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name);
+for (const slug of baPages) {
+  const path = `/ba/${slug}/`;
+  const html = withoutScripts(read(`ba/${slug}/index.html`));
+  for (const match of html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)) {
+    const text = flat(match[2]);
+    if (FILTER_LABELS.includes(text)) {
+      fail(`${path} renders 「${text}」 as an h${match[1]}`);
+    }
+  }
+  for (const label of FILTER_LABELS) {
+    const labelled = [...html.matchAll(/<p\b([^>]*)>([\s\S]*?)<\/p>/gi)].filter((match) => flat(match[2]) === label);
+    if (labelled.length !== 1) {
+      fail(`${path} 「${label}」 label occurs ${labelled.length} times, expected one paragraph`);
+      continue;
+    }
+    const id = attr(`<p${labelled[0][1]}>`, "id");
+    const named = id && new RegExp(`<div\\b(?=[^>]*\\brole="group")(?=[^>]*\\baria-labelledby="${id}")[^>]*>`).test(html);
+    if (!named) {
+      fail(`${path} 「${label}」 does not name a group`);
+    }
+  }
+}
+
 if (failures.length > 0) {
   for (const message of failures) {
     console.error(`✗ ${message}`);

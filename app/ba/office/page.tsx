@@ -98,7 +98,7 @@ export default function OfficePage() {
       <Section space="md" label="選び方">
         <Grid as="ol" columns="thirds" gap="wide">
           {CRITERIA.map((item) => (
-            <Tile key={item.no} no={item.no} title={item.title} titleAs="h2" lines={item.lines} />
+            <Tile key={item.no} no={item.no} title={item.title} titleId={`criteria-${item.no}`} lines={item.lines} />
           ))}
         </Grid>
       </Section>

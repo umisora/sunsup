@@ -18,6 +18,12 @@
   padding: 20px 22px 24px;
 }
 
+/* h1–h4 set these in base.css. A paragraph title needs them too, or its wrap differs from the old heading. */
+.groupTitle {
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
 /* text tiles are columns between hairlines, not boxes */
 .text {
   padding: var(--space-5) 0 0;
