@@ -21,6 +21,7 @@ import {
   TextLink,
   Tile,
 } from "@/design-system";
+import { BottleCountTable, BOTTLE_COUNT_CAPTION_ID } from "@/design-system/components/BottleCountTable/BottleCountTable";
 import { ShoppingList, ShoppingListCta } from "@/design-system/components/ShoppingList/ShoppingList";
 import { categoryHref, categoryId, categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText } from "@/lib/jsonld";
@@ -118,10 +119,21 @@ export default async function ScenePage({ params }: ScenePageProps) {
                 {group.line}
               </Text>
             </SectionHead>
-            <DrinkShowcase label={group.title} columns={4} drinks={drinks.map((drink) => ({ ...drink, label: drink.category }))} />
+            <DrinkShowcase
+              // The h2 is this list's name. Repeating that line as aria-label would put the approved sentence on the page twice.
+              label={scene.slug === "bonenkai" && group.id === "single" ? undefined : group.title}
+              columns={4}
+              drinks={drinks.map((drink) => ({ ...drink, label: drink.category }))}
+            />
           </Section>
         );
       })}
+
+      {scene.slug === "bonenkai" ? (
+        <Section space="md" labelledBy={BOTTLE_COUNT_CAPTION_ID}>
+          <BottleCountTable />
+        </Section>
+      ) : null}
 
       {hasList ? (
         <Section id="list" space="md" labelledBy="list-title">
