@@ -28,6 +28,11 @@ type ShoppingListProps = {
   cards: readonly SetCard[];
   /** Absolute URL of the page, the last line of the shared list. */
   url: string;
+  /**
+   * Draw the existing shop anchors as full-width actions.
+   * Only the bonenkai scene sets this; other scenes keep the small chips.
+   */
+  emphasizeStores?: boolean;
 };
 
 /**
@@ -36,7 +41,7 @@ type ShoppingListProps = {
  * drink for another of the same role. Store links carry data-out-* so app/_metrics/Beacons.tsx counts
  * them with source=list. Nothing is stored.
  */
-export function ShoppingList({ headingId, title, cards, url }: ShoppingListProps) {
+export function ShoppingList({ headingId, title, cards, url, emphasizeStores = false }: ShoppingListProps) {
   const [headcount, setHeadcount] = useState(DEFAULT_HEADCOUNT);
   const [draft, setDraft] = useState(String(DEFAULT_HEADCOUNT));
   const [picks, setPicks] = useState<Partial<Record<SetRole, string>>>({});
@@ -64,7 +69,12 @@ export function ShoppingList({ headingId, title, cards, url }: ShoppingListProps
   };
 
   return (
-    <div className={styles.list} data-shopping-list="" data-headcount={headcount}>
+    <div
+      className={styles.list}
+      data-shopping-list=""
+      data-headcount={headcount}
+      data-store-emphasis={emphasizeStores ? "true" : undefined}
+    >
       <p className={styles.tag}>STYLISH!のおすすめ</p>
       <h2 id={headingId} className={styles.key}>
         乾杯のソフトドリンクは、

@@ -113,6 +113,9 @@ for (const slug of scenes) {
   if (!/data-shopping-list="" data-headcount="4"/.test(html)) {
     fail(`${path} set is not first painted for 4 people`);
   }
+  if (/data-store-emphasis="true"/.test(html) !== (slug === "bonenkai")) {
+    fail(`${path} store emphasis is ${slug === "bonenkai" ? "missing" : "set"}; only bonenkai draws shop links as actions`);
+  }
   const part = html.slice(start);
   if (!/<p class="[^"]*">STYLISH!のおすすめ<\/p>/.test(part)) {
     fail(`${path} set has no STYLISH!のおすすめ tag`);
