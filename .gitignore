@@ -7,6 +7,8 @@ __pycache__/
 .env
 .env.*
 !.env.example
+# Written by scripts/build-drink-shelf.mts when Next loads next.config.
+/data/drink-shelf.json
 # Written by scripts/build-sitemaps.mjs during next build, then copied to out/.
 /public/sitemap.xml
 /public/sitemap-pages.xml

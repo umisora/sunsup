@@ -2,26 +2,28 @@ import { spawnSync } from "node:child_process";
 import type { NextConfig } from "next";
 import { PHASE_PRODUCTION_BUILD } from "next/constants";
 
-// `output: "export"` cannot serve a sitemap route. Write the XML into public/
-// while Next is loading this config, before it copies public/ into out/.
-// NEXT_PHASE is not set yet at that moment; the phase argument is.
-function buildSitemaps(): void {
+// NEXT_PHASE is not set yet when this file loads; the phase argument is.
+function runNodeScript(script: string): void {
   const result = spawnSync(
     process.execPath,
-    ["--experimental-strip-types", "--import", "./scripts/register-ts.mjs", "scripts/build-sitemaps.mjs"],
+    ["--experimental-strip-types", "--import", "./scripts/register-ts.mjs", script],
     { stdio: "inherit" },
   );
   if (result.error) {
     throw result.error;
   }
   if (result.status !== 0) {
-    throw new Error(`scripts/build-sitemaps.mjs exited with status ${result.status}`);
+    throw new Error(`${script} exited with status ${result.status}`);
   }
 }
 
 export default function nextConfig(phase: string): NextConfig {
+  // Client shelf data. Dev and build both compile app/drink/DrinkIndexShelf.tsx, which imports it.
+  runNodeScript("scripts/build-drink-shelf.mts");
   if (phase === PHASE_PRODUCTION_BUILD) {
-    buildSitemaps();
+    // `output: "export"` cannot serve a sitemap route. Write the XML into public/
+    // before Next copies public/ into out/.
+    runNodeScript("scripts/build-sitemaps.mjs");
   }
   return {
     output: "export",
