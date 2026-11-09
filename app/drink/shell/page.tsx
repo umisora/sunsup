@@ -13,9 +13,13 @@ import {
   StoreSlot,
   Tile,
 } from "@/design-system";
+import { SITE_DESCRIPTION } from "@/design-system/brand";
+import { jsonLdText, routeJsonLd } from "@/lib/jsonld";
+
+const title = "この飲み会のドリンク";
 
 export const metadata: Metadata = {
-  title: "この飲み会のドリンク",
+  title,
   robots: { index: false, follow: true },
 };
 
@@ -33,6 +37,9 @@ const AXES = [
 export default function DrinkShellPage() {
   return (
     <Motion>
+      {routeJsonLd({ path: "/drink/shell/", title, description: SITE_DESCRIPTION }).map((data, index) => (
+        <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
+      ))}
       <PageIntro
         id="shell-title"
         step="drink"
