@@ -36,6 +36,8 @@ Empty variables are safe: the build still passes and the export does not start P
 
 One `$pageview` mechanism is enabled. The SDK chunk loads asynchronously, so the landing path and any pathname change that happens before the chunk arrives are recorded first and then sent in order. After that, a view is sent only when the pathname changes (client navigations, back, and forward). Same-path `replaceState`, query changes, and hash changes do not add another view. The SDK's own history pageview listener is off, so those navigations are not counted twice.
 
+Shop-link clicks also send a custom `outbound_click` event (Amazon, Rakuten, maker shops, and the same links the D1 `/api/click` beacon already counts). The D1 beacon is unchanged. Each click keeps `shop`, `host`, `drink_slug`, `path`, `venue` (when the page is `/ba/.../`), `position` (0-based index among shop links on the page), `source` (`page` or `list`), and `analytics_qa`, plus the same anonymous SDK fields as a pageview.
+
 Autocapture, session replay, heatmaps, surveys, exception capture, web vitals, and `identify` are off. Events are anonymous (`person_profiles: identified_only`, and identified events are dropped).
 
 Each pageview keeps only:

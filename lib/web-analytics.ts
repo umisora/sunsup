@@ -1,7 +1,7 @@
 import type { CaptureResult, PostHogConfig } from "posthog-js";
 
 /**
- * Anonymous pageviews for https://stylish.sunsup.me only.
+ * Anonymous pageviews and shop-link clicks for https://stylish.sunsup.me only.
  * The SDK is initialized from instrumentation-client.ts after this module
  * accepts the hostname and the build-time ingestion settings.
  */
@@ -10,8 +10,14 @@ export const PRODUCTION_HOSTNAME = "stylish.sunsup.me";
 export const QA_QUERY_PARAM = "analytics_qa";
 export const QA_STORAGE_KEY = "analytics_qa";
 export const PAGEVIEW_EVENT = "$pageview";
+export const OUTBOUND_CLICK_EVENT = "outbound_click";
 const DIRECT = "$direct";
 const INSTALLED_FLAG = "__stylishWebAnalytics";
+const SLUG = /^[a-z0-9][a-z0-9-]{0,80}$/;
+const HOSTNAME = /^[A-Za-z0-9.-]{1,253}$/;
+const PATH = /^\/[A-Za-z0-9/_-]{0,200}$/;
+const OUT_SHOPS = new Set(["amazon", "rakuten", "direct", "other", "official"]);
+const OUT_SOURCES = new Set(["page", "list"]);
 
 /** Official PostHog Cloud ingestion hosts. The active host still comes from env. */
 const OFFICIAL_INGESTION_HOSTS = new Set(["https://eu.i.posthog.com", "https://us.i.posthog.com"]);
@@ -42,6 +48,27 @@ export const ESSENTIAL_EVENT_PROPERTIES = [
   "$is_identified",
 ] as const;
 
+/** Extra fields kept on an outbound_click. Shared SDK fields still come from ESSENTIAL_EVENT_PROPERTIES. */
+export const OUTBOUND_CLICK_PROPERTIES = [
+  "shop",
+  "host",
+  "drink_slug",
+  "path",
+  "venue",
+  "position",
+  "source",
+] as const;
+
+export interface OutboundClickDetail {
+  shop: string;
+  host: string;
+  drinkSlug: string;
+  path: string;
+  venue?: string;
+  position: number;
+  source?: string;
+}
+
 export interface IngestionEnv {
   token?: string;
   host?: string;
@@ -66,6 +93,9 @@ export interface AnalyticsClient {
   init(token: string, config?: Partial<PostHogConfig>): void;
   capture(event: string, properties?: Record<string, unknown>): void;
 }
+
+/** Set while PostHog is live on the production hostname; null everywhere else. */
+let activeClient: AnalyticsClient | null = null;
 
 interface AnalyticsTarget extends AnalyticsScope {
   [INSTALLED_FLAG]?: boolean;
@@ -107,6 +137,108 @@ export function sanitizeCapturedPageview(
   if (event.event !== PAGEVIEW_EVENT || !event.properties) {
     return null;
   }
+  return sanitizeAnonymousEvent(event, context, (properties, qa) => {
+    const current = sanitizeHttpUrl(properties.$current_url);
+    if (!current || current.hostname !== PRODUCTION_HOSTNAME) {
+      return null;
+    }
+    const referrer = sanitizeReferrer(properties.$referrer);
+    const next: Record<string, unknown> = {
+      $current_url: current.href,
+      $pathname: current.pathname,
+      $host: current.hostname,
+      $referrer: referrer.href,
+      $referring_domain: referrer.domain,
+      analytics_qa: qa,
+      $process_person_profile: false,
+      $is_identified: false,
+    };
+    return next;
+  });
+}
+
+export function sanitizeCapturedOutboundClick(
+  event: CaptureResult,
+  context: { search: string; storage: QaStorage },
+): CaptureResult | null {
+  if (event.event !== OUTBOUND_CLICK_EVENT || !event.properties) {
+    return null;
+  }
+  return sanitizeAnonymousEvent(event, context, (properties, qa) => {
+    const shop = properties.shop;
+    const host = properties.host;
+    const drinkSlug = properties.drink_slug;
+    const path = properties.path;
+    const position = properties.position;
+    if (typeof shop !== "string" || !OUT_SHOPS.has(shop)) {
+      return null;
+    }
+    if (typeof host !== "string" || !HOSTNAME.test(host) || host.includes("..")) {
+      return null;
+    }
+    if (typeof drinkSlug !== "string" || !SLUG.test(drinkSlug)) {
+      return null;
+    }
+    if (typeof path !== "string" || !PATH.test(path)) {
+      return null;
+    }
+    if (typeof position !== "number" || !Number.isInteger(position) || position < 0 || position > 999) {
+      return null;
+    }
+    const next: Record<string, unknown> = {
+      shop,
+      host,
+      drink_slug: drinkSlug,
+      path,
+      position,
+      analytics_qa: qa,
+      $process_person_profile: false,
+      $is_identified: false,
+    };
+    const venue = properties.venue;
+    if (typeof venue === "string") {
+      if (!SLUG.test(venue)) {
+        return null;
+      }
+      next.venue = venue;
+    }
+    const source = properties.source;
+    if (typeof source === "string") {
+      if (!OUT_SOURCES.has(source)) {
+        return null;
+      }
+      next.source = source;
+    }
+    return next;
+  });
+}
+
+/** before_send entry: keep only the events this site means to send. */
+export function sanitizeCapturedEvent(
+  event: CaptureResult,
+  context: { search: string; storage: QaStorage },
+): CaptureResult | null {
+  if (event.event === PAGEVIEW_EVENT) {
+    return sanitizeCapturedPageview(event, context);
+  }
+  if (event.event === OUTBOUND_CLICK_EVENT) {
+    return sanitizeCapturedOutboundClick(event, context);
+  }
+  return null;
+}
+
+/**
+ * Shared anonymous / token / distinct_id gate for pageviews and outbound clicks.
+ * `build` returns the event-specific properties (without token / distinct_id / SDK ids).
+ */
+function sanitizeAnonymousEvent(
+  event: CaptureResult,
+  context: { search: string; storage: QaStorage },
+  build: (properties: Record<string, unknown>, qa: boolean) => Record<string, unknown> | null,
+): CaptureResult | null {
+  if (!event.properties) {
+    return null;
+  }
   const properties = event.properties as Record<string, unknown>;
   if (properties.$is_identified === true || properties.$process_person_profile === true) {
     return null;
@@ -115,23 +247,12 @@ export function sanitizeCapturedPageview(
   if (distinctId !== undefined && !isAnonymousId(distinctId)) {
     return null;
   }
-  const current = sanitizeHttpUrl(properties.$current_url);
-  if (!current || current.hostname !== PRODUCTION_HOSTNAME) {
+  if (typeof properties.token !== "string" || !PROJECT_TOKEN.test(properties.token)) {
     return null;
   }
-  const referrer = sanitizeReferrer(properties.$referrer);
   const qa = rememberAnalyticsQa(context.search, context.storage);
-  const next: Record<string, unknown> = {
-    $current_url: current.href,
-    $pathname: current.pathname,
-    $host: current.hostname,
-    $referrer: referrer.href,
-    $referring_domain: referrer.domain,
-    analytics_qa: qa,
-    $process_person_profile: false,
-    $is_identified: false,
-  };
-  if (typeof properties.token !== "string" || !PROJECT_TOKEN.test(properties.token)) {
+  const next = build(properties, qa);
+  if (!next) {
     return null;
   }
   next.token = properties.token;
@@ -146,9 +267,6 @@ export function sanitizeCapturedPageview(
   copyString(properties, "$lib_version", next);
   if (typeof properties.$time === "number" && Number.isFinite(properties.$time)) {
     next.$time = properties.$time;
-  }
-  if (typeof properties.token !== "string") {
-    return null;
   }
   const sanitized: CaptureResult = { ...event, properties: next };
   delete sanitized.$set;
@@ -191,6 +309,7 @@ export function beginWebAnalytics(
           return;
         }
         started = true;
+        activeClient = client;
         client.init(config.token, {
           api_host: config.host,
           defaults: "2026-08-30",
@@ -219,7 +338,7 @@ export function beginWebAnalytics(
           disable_compression: true,
           before_send: (event) => {
             try {
-              return sanitizeCapturedPageview(event, {
+              return sanitizeCapturedEvent(event, {
                 search: target.location.search ?? "",
                 storage,
               });
@@ -239,6 +358,34 @@ export function beginWebAnalytics(
     };
   } catch {
     return null;
+  }
+}
+
+/**
+ * Record a shop-link click in PostHog. No-ops when analytics is off (non-production
+ * host, missing config, or SDK not yet initialized). Never throws into the click path.
+ */
+export function captureOutboundClick(detail: OutboundClickDetail): void {
+  try {
+    if (!activeClient) {
+      return;
+    }
+    const props: Record<string, unknown> = {
+      shop: detail.shop,
+      host: detail.host,
+      drink_slug: detail.drinkSlug,
+      path: detail.path,
+      position: detail.position,
+    };
+    if (detail.venue) {
+      props.venue = detail.venue;
+    }
+    if (detail.source) {
+      props.source = detail.source;
+    }
+    activeClient.capture(OUTBOUND_CLICK_EVENT, props);
+  } catch {
+    // Counting is best effort.
   }
 }
 

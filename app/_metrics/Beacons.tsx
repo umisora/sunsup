@@ -2,11 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { isOutKind, OUT_LINKS_ID, type OutLinkMap } from "@/lib/out-links";
+import { isOutKind, OUT_LINKS_ID, type OutKind, type OutLinkMap } from "@/lib/out-links";
+import { captureOutboundClick } from "@/lib/web-analytics";
 
 /**
  * Counts page views and store-link clicks with navigator.sendBeacon.
  * Nothing here touches the click itself: the link opens as usual even if the beacon is blocked or fails.
+ * On the same click, PostHog also gets an outbound_click when analytics is live.
  */
 
 function send(endpoint: string, body: Record<string, string>): void {
@@ -33,6 +35,64 @@ function linkMap(): OutLinkMap | undefined {
   }
 }
 
+type ResolvedShop = {
+  slug: string;
+  kind: OutKind;
+  source: string;
+  href: string;
+};
+
+function resolveShop(anchor: Element, href: string): ResolvedShop | null {
+  const slug = anchor.getAttribute("data-out-slug");
+  const tagged = anchor.getAttribute("data-out-kind");
+  if (slug && isOutKind(tagged)) {
+    return {
+      slug,
+      kind: tagged,
+      source: anchor.getAttribute("data-out-source") ?? "page",
+      href,
+    };
+  }
+  const map = linkMap();
+  const kind = map?.links[href];
+  if (!map || !isOutKind(kind)) {
+    return null;
+  }
+  return { slug: map.slug, kind, source: "page", href };
+}
+
+function shopHost(href: string): string | null {
+  try {
+    return new URL(href, window.location.href).hostname;
+  } catch {
+    return null;
+  }
+}
+
+function venueOf(path: string): string | undefined {
+  const match = /^\/ba\/([a-z0-9][a-z0-9-]{0,80})\/?$/.exec(path);
+  return match?.[1];
+}
+
+/** 0-based index among shop links on the page (document order). */
+function shopPosition(anchor: Element): number {
+  let index = 0;
+  for (const node of document.querySelectorAll("a[href]")) {
+    if (!(node instanceof Element)) {
+      continue;
+    }
+    const href = node.getAttribute("href");
+    if (!href || !resolveShop(node, href)) {
+      continue;
+    }
+    if (node === anchor) {
+      return index;
+    }
+    index += 1;
+  }
+  return index;
+}
+
 function onClick(event: MouseEvent): void {
   try {
     if (event.type === "auxclick" && event.button !== 1) {
@@ -43,19 +103,31 @@ function onClick(event: MouseEvent): void {
     if (!target || !href) {
       return;
     }
-    // Links outside a drink page (the scene shopping list) name their drink and kind on the link itself.
-    const slug = target.getAttribute("data-out-slug");
-    const tagged = target.getAttribute("data-out-kind");
-    if (slug && isOutKind(tagged)) {
-      send("/api/click", { slug, kind: tagged, path: window.location.pathname, source: target.getAttribute("data-out-source") ?? "page" });
+    const shop = resolveShop(target, href);
+    if (!shop) {
       return;
     }
-    const map = linkMap();
-    const kind = map?.links[href];
-    if (!map || !isOutKind(kind)) {
+    // D1 click beacon — unchanged payload and endpoint.
+    send("/api/click", {
+      slug: shop.slug,
+      kind: shop.kind,
+      path: window.location.pathname,
+      source: shop.source,
+    });
+    const host = shopHost(shop.href);
+    if (!host) {
       return;
     }
-    send("/api/click", { slug: map.slug, kind, path: window.location.pathname, source: "page" });
+    const path = window.location.pathname;
+    captureOutboundClick({
+      shop: shop.kind,
+      host,
+      drinkSlug: shop.slug,
+      path,
+      venue: venueOf(path),
+      position: shopPosition(target),
+      source: shop.source,
+    });
   } catch {
     // Never get in the way of the link.
   }
