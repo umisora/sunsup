@@ -1,4 +1,4 @@
-/* STYLISH!'s recommended set: tag, the answer, one headcount pill, three role cards, the total, the send bar. */
+/* STYLISH!'s recommended set: tag, the answer, an optional lead, one headcount pill, three role cards, the total, the send bar. */
 .list {
   display: grid;
   gap: 18px;
@@ -41,6 +41,13 @@
   font-variant-numeric: lining-nums tabular-nums;
   color: var(--text-accent);
   padding-inline: 0.04em;
+}
+
+.lead {
+  margin: 0;
+  font-size: var(--step-0);
+  line-height: var(--leading-snug);
+  color: var(--text-secondary);
 }
 
 /* headcount pill */
