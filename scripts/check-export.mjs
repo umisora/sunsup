@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { fillExportIssues, selfTestFillHtml } from "./check-fill-html.mjs";
 import { isGenericProduct } from "./generic-rule.mjs";
 // JSON-LD on drink pages has its own checker; importing runs it first.
 import "./check-jsonld.mjs";
@@ -768,6 +769,11 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
   if (missing.length > 20) {
     fail(`…and ${missing.length - 20} more drink thumbs are missing`);
   }
+}
+
+selfTestFillHtml();
+for (const message of fillExportIssues("out")) {
+  fail(message);
 }
 
 if (failures.length > 0) {

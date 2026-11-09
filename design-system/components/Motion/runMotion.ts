@@ -147,10 +147,46 @@ function driftMedia(scope: HTMLElement) {
   });
 }
 
+/**
+ * FillText ships one text node per line. Split those into per-character spans only when this
+ * motion path runs (prefers-reduced-motion: no-preference). A clipped copy keeps the line readable
+ * to screen readers; the characters are aria-hidden so they are not read one by one.
+ */
+function splitFillChars(element: HTMLElement): HTMLElement[] {
+  const existing = element.querySelectorAll<HTMLElement>("[data-fill-char]");
+  if (existing.length > 0) {
+    return Array.from(existing);
+  }
+  const lines = Array.from(element.querySelectorAll<HTMLElement>("[data-fill-line]"));
+  if (lines.length === 0) {
+    return [];
+  }
+  const sr = document.createElement("span");
+  sr.dataset.fillSr = "";
+  sr.textContent = lines.map((line) => line.textContent ?? "").join("");
+  element.prepend(sr);
+  lines.forEach((line) => {
+    const text = line.textContent ?? "";
+    line.setAttribute("aria-hidden", "true");
+    line.replaceChildren();
+    for (const char of text) {
+      const span = document.createElement("span");
+      span.dataset.fillChar = "";
+      span.textContent = char;
+      line.appendChild(span);
+    }
+  });
+  return Array.from(element.querySelectorAll<HTMLElement>("[data-fill-char]"));
+}
+
 function revealOnScroll(scope: HTMLElement, wide: boolean) {
   scope.querySelectorAll<HTMLElement>("[data-fill]").forEach((element) => {
+    const chars = splitFillChars(element);
+    if (chars.length === 0) {
+      return;
+    }
     gsap.fromTo(
-      element.querySelectorAll("[data-fill-char]"),
+      chars,
       { opacity: 0.2 },
       {
         opacity: 1,
