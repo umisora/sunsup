@@ -153,9 +153,13 @@ export function pageProblems(html, route, origin) {
         return numbered ? slug : "";
       });
       // The labeled lists are the drink showcases. Journey links outside them are not part of the list.
+      // ItemList keeps the first occurrence of each drink when a page shows one twice.
       const linked = [];
+      const seen = new Set();
       for (const showcase of html.matchAll(/<ul\b[^>]*\baria-label="[^"]*"[^>]*>[\s\S]*?<\/ul>/g)) {
         for (const match of showcase[0].matchAll(/href="\/drink\/([a-z0-9-]+)\/"/g)) {
+          if (seen.has(match[1])) continue;
+          seen.add(match[1]);
           linked.push(match[1]);
         }
       }
@@ -305,7 +309,7 @@ function selfTest() {
   }
   const officeMatch = pageProblems(
     officeGraph(
-      [organization, officePage, officeList("kimino-yuzu", "kagome-grape-100", "kagome-grape-100")],
+      [organization, officePage, officeList("kimino-yuzu", "kagome-grape-100")],
       `<a href="/drink/kimino-yuzu/">歩</a><ul aria-label="この飲み会のドリンク"><a href="/drink/kimino-yuzu/"></a><a href="/drink/kagome-grape-100/"></a></ul><ul aria-label="秋のおすすめ"><a href="/drink/kagome-grape-100/"></a></ul><a href="/drink/other/">見る</a>`,
     ),
     "/ba/office/",
@@ -313,6 +317,17 @@ function selfTest() {
   );
   if (officeMatch.length > 0) {
     throw new Error(`self-test: /ba/office/ ItemList matching the page was rejected (${officeMatch.join("; ")})`);
+  }
+  const officeDup = pageProblems(
+    officeGraph(
+      [organization, officePage, officeList("kimino-yuzu", "kagome-grape-100", "kagome-grape-100")],
+      `<ul aria-label="この飲み会のドリンク"><a href="/drink/kimino-yuzu/"></a><a href="/drink/kagome-grape-100/"></a></ul><ul aria-label="秋のおすすめ"><a href="/drink/kagome-grape-100/"></a></ul>`,
+    ),
+    "/ba/office/",
+    origin,
+  );
+  if (!officeDup.some((message) => message.includes("does not match the drinks"))) {
+    throw new Error("self-test: /ba/office/ ItemList with a duplicate drink was accepted");
   }
 
   const nameless = pageProblems(

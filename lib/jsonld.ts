@@ -159,18 +159,26 @@ export function siteJsonLd(): object[] {
 
 /**
  * ItemList of drinks already shown on a collection page, in that page's order.
- * Scene, category and office pages share this node.
+ * Scene, category and office pages share this node. A drink listed twice keeps
+ * only its first occurrence; positions are renumbered 1..N.
  */
 export function drinkItemList(path: string, name: string, drinks: readonly Drink[]): Record<string, unknown> {
   const url = pageUrl(path);
+  const unique: Drink[] = [];
+  const seen = new Set<string>();
+  for (const drink of drinks) {
+    if (seen.has(drink.slug)) continue;
+    seen.add(drink.slug);
+    unique.push(drink);
+  }
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "@id": `${url}#drinks`,
     name,
     url,
-    numberOfItems: drinks.length,
-    itemListElement: drinks.map((drink, index) => ({
+    numberOfItems: unique.length,
+    itemListElement: unique.map((drink, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: drink.name,
