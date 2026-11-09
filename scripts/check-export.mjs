@@ -7,6 +7,7 @@ import "./check-jsonld.mjs";
 import "./check-scenes.mjs";
 import "./check-categories.mjs";
 import "./check-sitemaps.mjs";
+import "./check-html-size.mjs";
 
 const failures = [];
 

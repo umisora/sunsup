@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { CategoryNav, DrinkShelf, Motion, PageIntro, Phrase, Photo, Section, ShelfHead, SITE_NAME, Stack, TableShelf, Text, TextLink, VenueLink } from "@/design-system";
+import { CategoryNav, Motion, PageIntro, Phrase, Photo, Section, ShelfHead, SITE_NAME, Stack, TableShelf, Text, TextLink, VenueLink } from "@/design-system";
 import { categoryHref, drinkGroups } from "@/lib/drinks";
 import { SCENES, scenePath } from "@/lib/scenes";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
+import { DrinkIndexShelf } from "./DrinkIndexShelf";
 
 const description = "次の飲み会に持っていく一本を、カテゴリから選べます。";
 
@@ -61,7 +62,7 @@ export default function DrinkIndexPage() {
           <Text variant="body">
             容器ごとに分けた<TextLink href={categoryHref(group.id)}>{group.category}のページ</TextLink>もあります。
           </Text>
-          <DrinkShelf drinks={group.drinks} opening={index === 0} defer={index > 0} />
+          <DrinkIndexShelf id={group.id} count={group.drinks.length} opening={index === 0} defer={index > 0} />
         </Section>
       ))}
     </Motion>
