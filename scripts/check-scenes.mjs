@@ -120,6 +120,7 @@ for (const slug of scenes) {
   if (!/<p class="[^"]*">STYLISH!のおすすめ<\/p>/.test(part)) {
     fail(`${path} set has no STYLISH!のおすすめ tag`);
   }
+  // No scene sets listHeading, so this is the shared fallback on every page.
   const heading = /<h2 id="list-title"[^>]*>([\s\S]*?)<\/h2>/.exec(part);
   if (!heading || strip(heading[1]) !== "乾杯のソフトドリンクは、この3種類で") {
     fail(`${path} set heading: ${heading ? strip(heading[1]) : "missing"}`);

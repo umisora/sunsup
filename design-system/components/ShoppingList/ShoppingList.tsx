@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState, type ReactNode } from "react";
+import { resolveListHeading, type ListHeading } from "@/lib/list-heading";
 import {
   clampHeadcount,
   DEFAULT_HEADCOUNT,
@@ -33,7 +34,23 @@ type ShoppingListProps = {
    * Only the bonenkai scene sets this; other scenes keep the small chips.
    */
   emphasizeStores?: boolean;
+  /** Per-scene heading and lead. Absent: the shared heading, and no lead. */
+  heading?: ListHeading;
 };
+
+/** One heading line. `{count}` is the number of kinds, in the shared mark. */
+function headingLine(line: string, count: number): ReactNode {
+  const parts = line.split("{count}");
+  if (parts.length === 1) {
+    return line;
+  }
+  return parts.map((part, index) => (
+    <Fragment key={index}>
+      {part}
+      {index < parts.length - 1 ? <span className={styles.num}>{count}</span> : null}
+    </Fragment>
+  ));
+}
 
 /**
  * STYLISH!'s recommended set: the heading says what we recommend, each card says why, and the
@@ -41,13 +58,14 @@ type ShoppingListProps = {
  * drink for another of the same role. Store links carry data-out-* so app/_metrics/Beacons.tsx counts
  * them with source=list. Nothing is stored.
  */
-export function ShoppingList({ headingId, title, cards, url, emphasizeStores = false }: ShoppingListProps) {
+export function ShoppingList({ headingId, title, cards, url, emphasizeStores = false, heading }: ShoppingListProps) {
   const [headcount, setHeadcount] = useState(DEFAULT_HEADCOUNT);
   const [draft, setDraft] = useState(String(DEFAULT_HEADCOUNT));
   const [picks, setPicks] = useState<Partial<Record<SetRole, string>>>({});
   const [copied, setCopied] = useState(false);
 
   const shown = cards.filter((card) => card.items.length > 0);
+  const listHeading = resolveListHeading(heading);
   const lines = setLines(shown, picks, headcount);
   const total = setTotal(lines);
   const text = setText(title, headcount, lines, url);
@@ -77,10 +95,14 @@ export function ShoppingList({ headingId, title, cards, url, emphasizeStores = f
     >
       <p className={styles.tag}>STYLISH!のおすすめ</p>
       <h2 id={headingId} className={styles.key}>
-        乾杯のソフトドリンクは、
-        <br />
-        この<span className={styles.num}>{shown.length}</span>種類で
+        {listHeading.lines.map((line, index) => (
+          <Fragment key={index}>
+            {index > 0 ? <br /> : null}
+            {headingLine(line, shown.length)}
+          </Fragment>
+        ))}
       </h2>
+      {listHeading.lead ? <p className={styles.lead}>{listHeading.lead}</p> : null}
 
       <div className={styles.people}>
         <span className={styles.peopleLabel} id={`${headingId}-people`}>

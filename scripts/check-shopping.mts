@@ -2,6 +2,7 @@
 import { onRequest as middleware } from "../functions/_middleware.ts";
 import { onRequestPost } from "../functions/api/click.ts";
 import { getDrink } from "../lib/drinks.ts";
+import { listHeadingText } from "../lib/list-heading.ts";
 import { groupDrinks, SCENE_SETS, SCENES, sceneSet } from "../lib/scenes.ts";
 import { servingUnit } from "../lib/servings.ts";
 import { DEFAULT_HEADCOUNT, lineShareUrl, roleUnits, SET_ROLES, setLines, setText, setTotal, type SetCard } from "../lib/shopping-list.ts";
@@ -80,6 +81,31 @@ for (const scene of SCENES) {
   }
 }
 
+// The list heading is shared until a scene sets listHeading. Setting it on one scene
+// changes that scene's heading and lead only; the others keep the shared text.
+const sharedHeading = listHeadingText(undefined, 3);
+expect(
+  sharedHeading.heading === "乾杯のソフトドリンクは、この3種類で" && sharedHeading.lead === undefined,
+  `shared list heading ${JSON.stringify(sharedHeading)}`,
+);
+expect(
+  SCENES.every((scene) => scene.listHeading === undefined),
+  "no scene sets listHeading; pages keep the shared heading",
+);
+const override = { lines: ["SCENE-HEADING-", "{count}"], lead: "SCENE-LEAD" };
+const headed = SCENES.map((scene) => (scene.slug === "bonenkai" ? { ...scene, listHeading: override } : scene));
+const changed = headed.filter((scene) => {
+  const text = listHeadingText(scene.listHeading, 3);
+  return text.heading !== sharedHeading.heading || text.lead !== undefined;
+});
+expect(
+  changed.length === 1 &&
+    changed[0]?.slug === "bonenkai" &&
+    listHeadingText(changed[0].listHeading, 3).heading === "SCENE-HEADING-3" &&
+    listHeadingText(changed[0].listHeading, 3).lead === "SCENE-LEAD",
+  `list heading override touched ${changed.map((scene) => scene.slug).join() || "nothing"}`,
+);
+
 // /api/click keeps the source, falls back to the old insert before the migration, and drops unknown sources to page.
 type Call = { sql: string; values: unknown[] };
 function fakeDb(failWithSource: boolean) {
@@ -141,4 +167,4 @@ if (failures.length > 0) {
   console.error(failures.map((message) => `shopping: ${message}`).join("\n"));
   process.exit(1);
 }
-console.log(`shopping ok: ${SCENES.length} scene list(s), servings, role bottles, swaps, LINE text, click source and the okurimono 301`);
+console.log(`shopping ok: ${SCENES.length} scene list(s), servings, role bottles, swaps, LINE text, list heading fallback, click source and the okurimono 301`);

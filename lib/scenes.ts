@@ -5,6 +5,7 @@
  */
 import { isDemoted } from "./demote";
 import { getDrink, hasRealStill, SITE_ORIGIN, storeRows, type Drink } from "./drinks";
+import type { ListHeading } from "./list-heading";
 import { isGoalKind, outKind } from "./out-links";
 import { volumeMl } from "./servings";
 import { SET_ROLES, type SetCard, type SetItem, type SetRole } from "./shopping-list";
@@ -42,6 +43,11 @@ export type Scene = {
   invite: { note: string; headline: readonly [string, string] };
   /** First image: a row of this page's own drinks, made only from real product stills by scripts/compose-scene-hero.py. */
   hero: PhotoName;
+  /**
+   * Heading of the recommended-drinks list. Absent: the shared
+   * 「乾杯のソフトドリンクは、このN種類で」, and no lead under it.
+   */
+  listHeading?: ListHeading;
 };
 
 export const SCENES: readonly Scene[] = [

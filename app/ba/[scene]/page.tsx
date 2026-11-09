@@ -131,6 +131,7 @@ export default async function ScenePage({ params }: ScenePageProps) {
             cards={list.cards}
             url={`${SITE_ORIGIN}${scenePath(scene)}`}
             emphasizeStores={scene.slug === "bonenkai"}
+            heading={scene.listHeading}
           />
         </Section>
       ) : null}
