@@ -21,22 +21,23 @@ import {
   Tile,
 } from "@/design-system";
 import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drinks";
-import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
+import { drinkItemList, jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
+const title = "オフィスのオープンな飲み会";
 const description = "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。";
 
 export const metadata: Metadata = {
-  title: "オフィスのオープンな飲み会",
+  title,
   alternates: { canonical: "/ba/office/" },
   description,
   openGraph: {
-    title: `オフィスのオープンな飲み会｜${SITE_NAME}`,
+    title: `${title}｜${SITE_NAME}`,
     description,
     url: "/ba/office/",
     siteName: SITE_NAME,
     locale: "ja_JP",
     type: "article",
-    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} オフィスのオープンな飲み会` }],
+    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} ${title}` }],
   },
 };
 
@@ -59,11 +60,16 @@ const CRITERIA = [
 ] as const;
 
 export default function OfficePage() {
+  const entries = officeEntries();
   const season = seasonalPicks(seasonOf(new Date()), 4);
+  const listed = [...entries, ...season.drinks];
 
   return (
     <Motion>
-      {pageJsonLd("/ba/office/", "オフィスのオープンな飲み会", description).map((data, index) => (
+      {[
+        ...pageJsonLd("/ba/office/", title, description, `${SITE_ORIGIN}/ba/office/#drinks`),
+        drinkItemList("/ba/office/", title, listed),
+      ].map((data, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
       <PreloadPhoto name="office" sizes="(min-width: 960px) 720px, calc(100vw - 32px)" />
@@ -100,7 +106,7 @@ export default function OfficePage() {
       <Section labelledBy="entries-title">
         <SectionHead id="entries-title" eyebrow="ドリンク" title={<Phrase>この飲み会のドリンク</Phrase>} />
         <Stack gap={7} align="stretch">
-          <DrinkShowcase label="この飲み会のドリンク" drinks={officeEntries().map((drink) => ({ ...drink, label: drink.category }))} />
+          <DrinkShowcase label="この飲み会のドリンク" drinks={entries.map((drink) => ({ ...drink, label: drink.category }))} />
           <Text variant="body">
             同じカテゴリの他の商品は、<TextLink href="/drink/">ドリンク一覧</TextLink>にあります。
           </Text>

@@ -157,14 +157,37 @@ export function siteJsonLd(): object[] {
   ];
 }
 
+/**
+ * ItemList of drinks already shown on a collection page, in that page's order.
+ * Scene, category and office pages share this node.
+ */
+export function drinkItemList(path: string, name: string, drinks: readonly Drink[]): Record<string, unknown> {
+  const url = pageUrl(path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${url}#drinks`,
+    name,
+    url,
+    numberOfItems: drinks.length,
+    itemListElement: drinks.map((drink, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: drink.name,
+      url: `${SITE_ORIGIN}/drink/${drink.slug}/`,
+    })),
+  };
+}
+
 /** A top-level page: publisher, the page node, and STYLISH! › the page. `name` is the metadata title. */
-export function pageJsonLd(path: string, name: string, description = SITE_DESCRIPTION): object[] {
+export function pageJsonLd(path: string, name: string, description = SITE_DESCRIPTION, mainEntity?: string): object[] {
   return [
     ...routeJsonLd({
       path,
       title: name,
       description,
       about: path === "/about/" ? ORGANIZATION_ID : undefined,
+      mainEntity,
     }),
     {
       "@context": "https://schema.org",

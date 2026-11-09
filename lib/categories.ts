@@ -5,7 +5,7 @@
  */
 import type { PhotoName } from "@/design-system/components/StillLife/photos";
 import { CATEGORY_PAGE_IDS, drinkGroups, SITE_ORIGIN, type Drink } from "./drinks";
-import { routeJsonLd } from "./jsonld";
+import { drinkItemList, routeJsonLd } from "./jsonld";
 import { SCENES, sceneDrinks, type Scene } from "./scenes";
 import { volumeMl } from "./servings";
 
@@ -198,20 +198,7 @@ export function categoryJsonLd(page: CategoryPage, drinks: readonly Drink[]): ob
       description: categoryDescription(page, drinks),
       mainEntity: `${url}#drinks`,
     }),
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "@id": `${url}#drinks`,
-      name: page.title,
-      url,
-      numberOfItems: drinks.length,
-      itemListElement: drinks.map((drink, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name: drink.name,
-        url: `${SITE_ORIGIN}/drink/${drink.slug}/`,
-      })),
-    },
+    drinkItemList(path, page.title, drinks),
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",

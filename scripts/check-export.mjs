@@ -690,7 +690,7 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
 }
 
 
-// Scene and category pages ship ItemList + BreadcrumbList; top pages ship WebSite or BreadcrumbList.
+// Scene, office and category pages ship ItemList + BreadcrumbList; top pages ship WebSite or BreadcrumbList.
 {
   const need = [
     ["ba/bonenkai/index.html", ["ItemList", "BreadcrumbList"]],
@@ -698,7 +698,7 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
     ["index.html", ["WebSite"]],
     ["about/index.html", ["BreadcrumbList"]],
     ["drink/index.html", ["BreadcrumbList"]],
-    ["ba/office/index.html", ["BreadcrumbList"]],
+    ["ba/office/index.html", ["ItemList", "BreadcrumbList"]],
     ["drink/kimino-yuzu/index.html", ["Product", "BreadcrumbList"]],
   ];
   for (const [file, types] of need) {
