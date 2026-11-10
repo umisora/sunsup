@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { isRetailerHref, SHOP_LINK_REL, SHOP_LINK_TARGET } from "@/lib/out-links";
 import { cx } from "../../cx";
 import { JOURNEY, type JourneyStep } from "../../journey";
 import styles from "./Button.module.css";
@@ -26,6 +27,8 @@ type ButtonProps = {
   intro?: boolean;
   /** The one store call to action on a drink page. */
   storePrimary?: boolean;
+  /** Buy link (Amazon, Rakuten, direct shop, other retailer). Internal links ignore this. */
+  sponsored?: boolean;
   children: ReactNode;
 };
 
@@ -37,6 +40,7 @@ export function Button({
   href,
   intro = false,
   storePrimary = false,
+  sponsored = false,
   children,
 }: ButtonProps) {
   const className = cx(
@@ -78,8 +82,8 @@ export function Button({
       <a
         href={href}
         className={className}
-        target="_blank"
-        rel="noopener nofollow"
+        target={SHOP_LINK_TARGET}
+        rel={sponsored || isRetailerHref(href) ? SHOP_LINK_REL : "noopener nofollow"}
         data-intro={intro || undefined}
         {...storeMark}
       >
