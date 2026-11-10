@@ -10,6 +10,7 @@ import "./check-sitemaps.mjs";
 import "./check-html-size.mjs";
 import "./check-shop-links.mjs";
 import "./check-meta.mjs";
+import "./check-tags.mjs";
 
 const failures = [];
 

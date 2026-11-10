@@ -31,6 +31,11 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/tag/mutou/" className={styles.link}>
+                  無糖のドリンク
+                </Link>
+              </li>
             </ul>
           </div>
           <div className={styles.column}>

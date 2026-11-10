@@ -32,7 +32,7 @@ function documentTitle(title: string, absoluteTitle?: boolean): string {
 }
 
 function pageKind(path: string): "WebPage" | "CollectionPage" {
-  if (path === "/drink/" || path.startsWith("/category/") || path.startsWith("/ba/")) {
+  if (path === "/drink/" || path.startsWith("/category/") || path.startsWith("/ba/") || path.startsWith("/tag/")) {
     return "CollectionPage";
   }
   return "WebPage";
@@ -159,7 +159,7 @@ export function siteJsonLd(): object[] {
 
 /**
  * ItemList of drinks already shown on a collection page, in that page's order.
- * Scene, category and office pages share this node. A drink listed twice keeps
+ * Scene, category, tag and office pages share this node. A drink listed twice keeps
  * only its first occurrence; positions are renumbered 1..N.
  */
 export function drinkItemList(path: string, name: string, drinks: readonly Drink[]): Record<string, unknown> {
