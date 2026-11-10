@@ -1,0 +1,201 @@
+slug,product,amazon_url,rakuten_url,confidence,note
+kimino-mikan-water,MIKANスパークリングウォーター,,https://item.rakuten.co.jp/nozomi-market/b585-8/,rak:high,Amazon未確認; 楽天350ml缶×24
+kagome-autumn-grape-berry,秋のフルーツこれ一本 ぶどう＆ミックスベリーブレンド,,https://item.rakuten.co.jp/nakae/4901306033449-3c/,rak:high,Amazon未確認; 楽天200ml紙パック×72
+pokka-prune-300,サンスウィート プルーンエキス,,https://item.rakuten.co.jp/pokkasapporo/24902471071810/,rak:high,Amazon未確認; 楽天300g瓶×3
+meiji-tsuji-hojicha-200,辻利 ほうじ茶ラテ 200ml,,https://item.rakuten.co.jp/minamimatumoto/t_houjichalatte_24/,rak:high,Amazon未確認; 楽天200ml×24
+hata-ramune,ハタラムネ ビー玉ラムネ,,https://item.rakuten.co.jp/misono-support/b56-3/,rak:high,AmazonはASIN不一致; 楽天200ml瓶×30
+sanpellegrino-limonata,サンペレグリノ リモナータ,,,,ページがリモナータ缶330mlとあるだけでブランド名がなく、サンペレグリノと断定できないため空欄
+neo-soda-200,n.e.o プレミアムソーダ,https://www.amazon.co.jp/dp/B07SHBMLY7,https://item.rakuten.co.jp/nakae/4964621180618/,amz:high;rak:high,Amazon200ml瓶×24; 楽天200ml瓶×24
+kagome-shine-muscat,野菜生活100 長野シャインマスカットミックス,,https://item.rakuten.co.jp/izmic-ec/681972-03/,rak:high,Amazon未確認; 楽天195ml×72
+kagome-morning-fruit,朝のフルーツこれ一本 200ml,,https://item.rakuten.co.jp/nakae/4901306086520-4c/,rak:high,AmazonはASIN不一致; 楽天200ml紙パック×96
+meiji-tsuji-koi-matcha-210,辻利 お濃い抹茶ラテ 210ml,,https://item.rakuten.co.jp/ju-suya/2002166-1/,rak:high,AmazonはASIN不一致; 楽天210ml紙パック×12
+kimura-shizuoka-cola,静岡コーラ,,,,候補はしずおか茶コーラ240mlで、静岡コーラとは別商品のため空欄
+yuagari-sauna,湯あがり堂 サウナ,,,,95ml瓶の単品未確認。アソートは除外
+yuagari-cider,湯あがり堂サイダー,,,,95ml瓶の単品未確認。アソートは除外
+kagome-fruit-iron,私のフルーツこれ一本 1日分の鉄分 330ml,,https://item.rakuten.co.jp/soukaidrink/622857/,rak:high,Amazon未確認; 楽天330ml×24
+pom-iyokan-125,POM みかん・いよかんジュース 125ml,,,,125ml紙パックの同一商品ページ未確認
+pokka-hibiscus-tea,宮古島ハイビスカスティー 500ml,,,,500mlペットの商品URL未確認
+kimura-fujisan-cider,富士山サイダー,,,,240ml瓶の商品URL未確認
+pom-mikan-190,POM 愛媛みかん 190g,,,,190g缶の商品URL未確認
+yuagari-honey-lemon,湯あがり堂 蜂蜜れもん,,,,95ml瓶の単品未確認。アソートは除外
+pom-grape-800,POM グレープジュース 800ml,,,,800mlの容器（ペット）明記ページなし
+pom-gyutto-momo,POM ギュっと丸搾りもも 800ml,,https://item.rakuten.co.jp/cancan/4908729109898/,rak:high,Amazon未確認; 楽天800mlペット×6
+pokka-sanpin-600,沖縄ポッカさんぴん茶 600ml,,,,600mlペットの商品URL未確認
+swan-cider,スワンサイダー,,https://item.rakuten.co.jp/cancan/4964621155456/,rak:high,Amazon未確認; 楽天330ml瓶×24
+pom-toki-190,POM 青森トキ 190g,,,,190g缶の商品URL未確認
+pokka-clear-lemon,サッポロクリアタンサン レモン 500ml,https://www.amazon.co.jp/dp/B0DSJL72YH,https://item.rakuten.co.jp/at-cvs/4582155810582/,amz:high;rak:high,Amazon500mlペット×24; 楽天500mlペット×24
+hata-blueberry-ramune,ハタ瓶ラムネ ブルーベリー味 200ml,,https://item.rakuten.co.jp/japan-ds/h-060-4902494110042/,rak:high,楽天200ml瓶×60
+kagome-raiden-melon,野菜生活100 北海道らいでんメロンミックス 195ml,,https://item.rakuten.co.jp/umaimon-gyoumupro/66120570-96/,rak:high,楽天195ml紙パック×96
+meiji-hojicha-latte-210,辻利 濃く香るほうじ茶ラテ 210ml,,https://item.rakuten.co.jp/ju-suya/2002303-1/,rak:high,楽天210ml紙パック×12。Amazonは12本のASINが複数で不一致
+tomomasu-mango,ともます飲料 マンゴーサイダー,,https://item.rakuten.co.jp/nakae/4964621180519/,rak:high,楽天300ml瓶×24
+pom-jonagold-190,POM 青森ジョナゴールド 190g,,,,190g缶の同一商品を楽天・Amazonで確認できず
+pom-sparkling,POM ポンスパークリング 410ml,,https://item.rakuten.co.jp/misono-support/b44-50-2/,rak:high,楽天410mlPET×48。Amazonは24本のASINが複数で不一致
+kimura-akafuji,赤富士サイダー 240ml,,https://item.rakuten.co.jp/drink-market/b105-79/,rak:high,楽天240ml瓶×20
+pom-gyutto-mikan,POM ギュっと丸搾りみかん 800ml,,https://item.rakuten.co.jp/aburajin/pom-marushibo800ss/,rak:high,楽天800mlPET×12
+pom-mugicha-600,POM 日本の麦茶 600ml,https://www.amazon.co.jp/dp/B0FCMZKQMD,https://item.rakuten.co.jp/misonoya/b44-54/,amz:high;rak:high,楽天・Amazonとも600ml×24
+frula-lychee,フルーラ ライチ,,https://item.rakuten.co.jp/nozomi-market/b95-5/,rak:high,楽天200ml瓶×30
+pom-kokusan-190,POM 国産果実野菜ジュース 190g,,,,190g缶の同一商品を楽天・Amazonで確認できず
+kimino-momo-water,MOMOスパークリングウォーター 350ml,,,,350ml缶のASINが複数で不一致。楽天は250ml瓶のみで不採用
+hata-ichigo-ramune,ハタ瓶ラムネ イチゴ味 200ml,,https://item.rakuten.co.jp/aburajin/hata-ramuneichigo200/,rak:high,楽天200ml瓶×30
+pom-ashita-mikan,POM アシタノカラダ みかんジュース 125ml,,https://item.rakuten.co.jp/drink-cvs/4908729106705/,rak:high,楽天125ml紙パック×15
+pom-ocha-500,POM 日本のお茶 500ml,,https://item.rakuten.co.jp/nozomi-market/b44-19/,rak:high,楽天500mlPET×24
+neo-ginger-200,n.e.o プレミアムジンジャーエール,https://www.amazon.co.jp/dp/B0781GBQVT,https://item.rakuten.co.jp/drink-market/b95-88/,amz:high;rak:high,楽天・Amazonとも200ml瓶×24
+sangaria-marohuwa-190,まろふわメロンクリームソーダ 190g,https://www.amazon.co.jp/dp/B0921FQDBQ,https://item.rakuten.co.jp/cancan/4902179021533-2c/,amz:high;rak:high,楽天・Amazonとも190g缶×60
+pokka-yubari-melon,北海道搾り夕張メロンソーダ 500ml,,,,500mlPETの楽天・Amazonページを確認できず
+hata-clear-grape,ハタ クリアフルーツ グレープ 200ml,,,,楽天見出しに200mlの記載を確認できず
+kimura-mikan100-200,静岡県産みかん100% 200ml,,,,200ml瓶の販売ページを確認できず。720mlは別容量
+pom-kuro-oolong,POM 黒烏龍茶 500ml,https://www.amazon.co.jp/dp/B0F12JV511,https://item.rakuten.co.jp/umaimon-gyoumupro/66315300-24/,amz:high;rak:high,楽天・Amazonとも500ml×24
+swan-ramune,スワンラムネ,https://www.amazon.co.jp/dp/B075QYTJ3J,https://item.rakuten.co.jp/misono-support/b95-99/,amz:high;rak:high,楽天200ml瓶×30; Amazon200ml瓶×60
+sangaria-vita-acerola,ビタソーダ アセロラ 350g,,https://item.rakuten.co.jp/drink-market/b18-640-2/,rak:high,楽天350g缶×48
+hata-orange-ramune,ハタ瓶ラムネ オレンジ味 200ml,,https://item.rakuten.co.jp/toytoifactory/4902494140025/,rak:high,楽天200ml瓶×30
+hata-clear-strawberry,ハタ クリアフルーツ ストロベリー 200ml,,,,楽天見出しに200mlの記載を確認できず
+sangaria-tsubu-orange-500,つぶつぶオレンジ 500ml,https://www.amazon.co.jp/dp/B0CZMG79W3,https://item.rakuten.co.jp/mjshop-1/4902179023476/,amz:high;rak:high,楽天500mlPET×24; Amazon500ml×24
+sangaria-kouchahime-275,紅茶姫ロイヤルミルクティー 275g,https://www.amazon.co.jp/dp/B0BMPGGHY5,https://item.rakuten.co.jp/aburajin/sg-royalmilktea275/,amz:high;rak:high,楽天275g缶×24; Amazon275g缶×24
+tomomasu-hakuto,友桝 豊潤白桃サイダー,,,,300ml瓶の商品ページURLを特定できず
+sangaria-fruitvita-350,スキッとフルーツビタミンソーダ 350g,https://www.amazon.co.jp/dp/B0CZHP21NQ,https://item.rakuten.co.jp/pocket-cvs/4902179023452/,amz:high;rak:high,楽天350g缶×24; Amazon350g缶×24
+kimura-mikan-cola,静岡みかんコーラ 240ml,,,,240ml瓶の商品ページURLを特定できず
+pokka-prune-900,サンスウィートプルーン100% 900ml,,https://item.rakuten.co.jp/nakae/4902471039410-2c/,rak:high,Amazon未確認; 楽天900mlPET×24
+sangaria-nata-momo-500,つぶつぶナタデココ入りもも 500ml,,https://item.rakuten.co.jp/aburajin/sg-tsubunatade-momo500/,rak:high,Amazon未確認; 楽天500mlPET×24
+rbt-yoshida-elite-750,キングオブグリーン ザ・ヨシダ エリート 750ml,,,,750ml瓶は公式のみで市販ページなし
+tomomasu-melon,友桝 マスクメロンサイダー,https://www.amazon.co.jp/dp/B00FJRZHD4,,amz:high,楽天未確認; Amazon300ml瓶×24
+sangaria-hiyashiame-190,ひやしあめ 190g,,,,190g缶の商品ページURLを特定できず
+hata-yuzu-ramune,ハタ瓶ラムネ ユズ味 200ml,,,,200ml瓶の商品ページURLを特定できず
+sangaria-shirobudo-500,すっきりと白ぶどう 500ml,,https://item.rakuten.co.jp/liquor-boss/20781/,rak:high,Amazon未確認; 楽天500mlPET×24
+sangaria-mikkuchu-500,みっくちゅじゅーちゅ 500ml,,https://item.rakuten.co.jp/aburajin/mikkuchu500/,rak:high,Amazon未確認; 楽天500mlPET×24
+rbt-masa-premium-750,キングオブグリーン マーサ プレミアム 750ml,,,,750ml瓶は公式のみで市販ページなし
+tomomasu-suika,友桝 スイカサイダー,,,,300ml瓶の商品ページURLを特定できず
+dydo-chocola-light,チョコラBB スパークリングライト 260ml,,,,260mlPETは自販機・量販店のみでEC掲載なし
+hata-pet-orange,ハタペットラムネ オレンジ味 250ml,,,,250mlPETの商品ページURLを特定できず
+sangaria-nata-budo-500,つぶつぶナタデココ入り白ぶどう 500ml,,https://item.rakuten.co.jp/misono-support/b18-446/,rak:high,Amazon未確認; 楽天500mlPET×24
+sangaria-banana-milk-500,まろやかバナナ＆ミルク 500ml,,,,掲載JANは420ml。500mlPETの同一ページURLは未確認
+rbt-kiyomi-750,キングオブグリーン キヨミ プレミアム 750ml,,,,750ml瓶は公式のみで市販ページなし
+frula-mango,フルーラ マンゴー 200ml,,,,200ml瓶の単味ページURLを特定できず
+hata-soda-suika,HATASODA スイカ味 500g,,,,500gボトル缶の商品ページURLを特定できず
+sangaria-andes-melon,うましゅわ アンデスメロンソーダ 500ml,,,,500mlPETの商品ページURLを特定できず
+sangaria-gokochi-280,つぶごこちナタデココ白ぶどう 280ml,,,,280mlPETの商品ページなし（500mlのみ）
+sangaria-sukkirito-momo-500,すっきりともも 500ml,,https://item.rakuten.co.jp/misonoya/b18-570/,rak:high,Amazon未確認; 楽天500mlPET×24
+rbt-hiro-premium-750,キングオブグリーン ヒロ プレミアム 750ml,,,,750ml瓶の同一商品を確認できず
+neo-ginger-95,n.e.o プロフェッショナルジンジャーエール 95ml,,,,プロフェッショナル95ml瓶とプレミアム95ml瓶は別商品。プレミアムのページしか確認できず空欄
+hata-soda-lychee,HATASODA ライチ味 500g,,https://item.rakuten.co.jp/japan-ds/h-024-4902494240008/,rak:high,楽天500gボトル缶×24
+sangaria-mango-lassi,POPPLE マンゴーラッシーソーダ 450ml,,https://item.rakuten.co.jp/drinkshop/43527-1-901/,rak:high,楽天450mlPET×24
+sangaria-ichigo-milk-500,まろやかいちご＆ミルク 500ml,,,,確認できたのはまろやかいちご500mlで、まろやかいちご＆ミルクとは別商品のため空欄
+dydo-fruit-ole,復刻堂 フルーツオ・レ 280ml,,https://item.rakuten.co.jp/liquor-boss/28118/,rak:high,楽天280mlPET×24
+rbt-riichi-premium-750,キングオブグリーン リイチ プレミアム 750ml,,,,750ml瓶の同一商品を確認できず
+tomomasu-durian,友桝 ドリアンサイダー 300ml,https://www.amazon.co.jp/dp/B0BL6Z92P8,https://item.rakuten.co.jp/cancan/4964621180243/,amz:high;rak:high,300ml瓶×24
+hata-soda-hakuto,HATASODA 白桃 500g,,https://item.rakuten.co.jp/japan-ds/h-024-4902494210223/,rak:high,楽天500gボトル缶×24
+dydo-mistio-lychee,ミスティオ 塩とライチスパークリング 410ml,,,,410mlと明記された同一商品を確認できず
+sangaria-grape-ramu-500,グレープラムボトル 500g,https://www.amazon.co.jp/dp/B0D5FXP4PY,https://item.rakuten.co.jp/easylifeshop/mufbc55cef67/,amz:high;rak:high,500gボトル缶×24
+cheerio-goody-apple-280,チェリオ GOODYりんご 280ml,,,,280mlPETの販売ページを確認できず
+rbt-koichiro-750,キングオブグリーン コウイチロウ 750ml,,,,750ml瓶の同一商品を確認できず
+swan-cider-mini,スワンサイダー ミニ 95ml,https://www.amazon.co.jp/dp/B003L5C9L4,https://item.rakuten.co.jp/misono-support/b95-3/,amz:high;rak:high,95ml瓶×48
+cheerio-black-185,チェリオ ブルースコーヒー The BLACK 無糖 185g,,,,185g缶の販売ページを確認できず
+cheerio-nihon-cider-500,チェリオ 日本のサイダー 500ml,https://www.amazon.co.jp/dp/B0089877LA,https://item.rakuten.co.jp/liquor-boss/20552/,amz:high;rak:high,500mlPET×24
+hata-soda-grape,HATASODA グレープ味 500g,,https://item.rakuten.co.jp/japan-ds/h-024-4902494200149/,rak:high,楽天500gボトル缶×24
+niigata-lelectier-180,ルレクチェジュース 180ml,,https://item.rakuten.co.jp/yamayokajyuen/yr-06/,rak:high,楽天180ml×1
+rbt-kaho-hojicha-750,玉露ほうじ茶 香焙 750ml,,,,750ml瓶の同一商品を確認できず
+kimino-ringo-water,RINGOスパークリングウォーター 350ml,,,,350ml缶の国内販売ページを確認できず
+cheerio-cocoa-185,チェリオ 手作り風ココア 185g,,https://item.rakuten.co.jp/drink-next/4902074018034-301/,rak:high,楽天185g缶×30
+pural-orange-mango-500,Pural オレンジ＆マンゴーウォーター 500ml,https://www.amazon.co.jp/dp/B0GR8Y156R,https://item.rakuten.co.jp/enetwakuwaku/7346574/,amz:high;rak:high,500mlPET×24
+hata-aiba,ハタ瓶ラムネ 藍葉あい 200ml,,https://item.rakuten.co.jp/japan-ds/h-030-4902494250298/,rak:high,楽天200ml瓶×30
+hyuganatsu-100-125,日向夏100% 125ml,,https://item.rakuten.co.jp/choosefood/ch-food2129/,rak:high,楽天125ml紙パック×12
+rbt-irika-ryokucha-750,釜炒り緑茶 炒香 750ml,,,,750ml瓶の同一商品を確認できず
+fujiya-sparkling-peach,ネクタースパークリング 白桃＆シャルドネ 380ml,,,,白桃＆シャルドネ380mlボトル缶の一致ページ未確認
+perrier-can-330,ペリエ 缶 330ml,https://www.amazon.co.jp/dp/B0D9L9DN31,https://item.rakuten.co.jp/onestep/s00757/,amz:high;rak:high,Amazon330ml缶×24; 楽天330ml缶×24
+maison-perrier-lemon-330,メゾンペリエ フォーエバー レモン 330ml,,,,レモン330ml缶の商品ページ未確認
+hata-suzaku,ハタ瓶ラムネ 朱雀いちご 200ml,,,,朱雀いちご200ml瓶の商品ページ未確認
+mikkabi-mikan-1000,三ヶ日みかんジュース 1000ml,,,,1000ml瓶の同一商品ページ未確認
+rbt-irika-sapphire-750,釜炒り青茶 炒香 サファイア 750ml,,,,750ml瓶の市販ページ未確認
+kimura-fujisan-ramune,富士山ラムネ 400ml,,,,400ml瓶の商品ページ未確認
+sanpellegrino-can-330,サンペレグリノ 缶 330ml,,,,プレーン330ml缶の商品ページ未確認
+maison-perrier-lime-330,メゾンペリエ フォーエバー ライム 330ml,https://www.amazon.co.jp/dp/B0DCMH33Y7,,amz:high,Amazon330ml缶×24; 楽天未確認
+essenza-tangerine-330,エッセンザ タンジェリン＆ワイルドストロベリー 330ml,,https://item.rakuten.co.jp/landofharvest/11002375/,rak:high,Amazon未確認; 楽天330ml缶×24
+shiny-hatorazu-280,葉とらずりんご 280ml,,,,葉とらず280mlの同一商品未確認
+rbt-first-love-750,文山包種茶 ファーストラブ 750ml,,,,750ml瓶の市販ページ未確認
+hata-melon-ramune,ハタ瓶ラムネ メロン味 200ml,,,,メロン味200ml瓶の商品ページ未確認
+yamagata-lafrance-cider-200,山形ラ・フランスサイダー 200ml,,,,200ml缶の単一銘柄ページ未確認
+essenza-lemon-330,エッセンザ レモン＆レモンゼスト 330ml,,,,単一銘柄330ml缶のページ未確認
+essenza-cherry-330,エッセンザ チェリー＆ザクロ 330ml,,,,単一銘柄330ml缶のページ未確認
+shiny-ohrin-pet-280,青森のおもてなし王林 280ml,https://www.amazon.co.jp/dp/B098D19P33,https://item.rakuten.co.jp/misonoya/b160-47/,amz:high;rak:high,Amazon280mlPET×24; 楽天280mlPET×24
+rbt-fall-in-love-grand-750,フォールインラブ グランド 750ml,,,,750ml瓶の市販ページ未確認
+hata-pine-ramune,ハタ瓶ラムネ パイン味 200ml,,,,パイン味200ml瓶の商品ページ未確認
+yamagata-cherry-cider-200,山形サクランボサイダー 200ml,,,,200ml缶の単一銘柄ページ未確認
+sanpellegrino-pompelmo-330,サンペレグリノ ポンペルモ 330ml,,https://item.rakuten.co.jp/landofharvest/11001700/,rak:high,Amazon未確認; 楽天330ml缶
+sanpellegrino-melograno-330,サンペレグリノ メログラーノアランチャ 330ml,,https://item.rakuten.co.jp/ladies-online-shop/10032415/,rak:high,Amazon未確認; 楽天330ml缶×24
+kumamoto-dekopon-195,熊本デコポンストレート 195ml,,https://item.rakuten.co.jp/f192091-hokuto/h285-001/,rak:high,Amazon未確認; 楽天195ml紙パック×12
+rbt-queen-of-blue-premium-750,クイーンオブブルー プレミアム 750ml,,,,750ml瓶の市販ページ未確認
+hata-matcha-ramune,ハタ瓶ラムネ 抹茶 200ml,,,,抹茶200ml瓶の商品ページ未確認
+kanto-tochigi-lemon-200,関東・栃木レモン 200ml,,,,200ml紙パックの商品URL未確認
+sanpellegrino-aranciata-rossa-330,サンペレグリノ アランチャータ・ロッサ 330ml,https://www.amazon.co.jp/dp/B01M0RFF5L,https://item.rakuten.co.jp/rakuten24/8002270196904/,amz:high;rak:high,Amazon330ml缶×24; 楽天330ml×24
+sanpellegrino-ciliegia-330,サンペレグリノ チリエージャリモーネ 330ml,,,,330ml缶の商品URL未確認
+ishigaki-pine-juice-500,石垣島パイナップルジュース 500ml,,https://item.rakuten.co.jp/yaeyamafram/4562119120407/,rak:high,楽天500ml（JAN4562119120407）
+hakone-mori-ryokucha-500,箱根の森から緑茶 500ml,,,,500mlペットの商品URL未確認
+kimura-corn-cider,とうもろこしサイダー 240ml,,,,240ml瓶の商品URL未確認
+kanto-tochigi-lemon-500,関東・栃木レモン 500ml,,https://item.rakuten.co.jp/happydelica/46128/,rak:high,楽天500ml×6
+sanpellegrino-chinotto-330,サンペレグリノ キノット 330ml,,https://item.rakuten.co.jp/landofharvest/11003871/,rak:high,楽天330ml×24
+ikeda-budo-cider-240,池田ぶどうサイダー 240ml,,,,240ml瓶の商品URL未確認
+yanbaru-tankan-juice-500,やんばるタンカンジュース 500ml,,https://item.rakuten.co.jp/yaeyamafram/4562119120414/,rak:high,楽天500ml（JAN4562119120414）
+sayama-ichibancha-350,狭山茶 一番茶100% 350ml,,,,350mlペットの商品URL未確認
+kimura-rose-cider,ローズサイダー 240ml,,,,240ml瓶の商品URL未確認
+shirobara-coffee-200,白バラコーヒー 200ml,,,,瓶は未確認（楽天は紙パック）
+nope-600,ギルティ炭酸 NOPE 600ml,https://www.amazon.co.jp/dp/B0GTTTG5Y3,https://item.rakuten.co.jp/ccsz/218-0035/,amz:high;rak:high,Amazon600mlPET×24; 楽天600mlPET×24
+sarabetsu-sumomo-cider-240,更別すももサイダー 240ml,,,,240ml瓶の商品URL未確認
+okinawa-mango-juice-500,沖縄マンゴー果汁飲料 500ml,,https://item.rakuten.co.jp/yaeyamafram/4562119120421/,rak:high,楽天果汁50%500ml（JAN4562119120421）
+shirobara-chai-ole-900,白バラチャイオレ 900ml,,,,900ml瓶の商品URL未確認
+kimura-banana-cider,完熟バナナサイダー 240ml,,,,240ml瓶の商品URL未確認
+shirobara-coffee-500,白バラコーヒー 500ml,,,,瓶は未確認（楽天は紙パック）
+sanpellegrino-aranciata-200,サンペレグリノ アランチャータ 200ml,,,,200ml缶は未確認（見つかったのは瓶）
+nojima-haskap-ramune-200,ハスカップラムネ 200ml,,,,カップは未確認（楽天はガラス瓶）
+nfs-apple-80,ノースファームストック アップルボトル 80ml,,,,80ml瓶の商品URL未確認
+gotas-gyokuro-700,ゴッタス 玉露 700ml,,https://item.rakuten.co.jp/uji-en/g001_gotas/,rak:high,楽天700ml瓶
+kimura-muskmelon,静岡マスクメロンサイダー 240ml,,,,240ml瓶の単品URL未確認
+daisen-cafe-au-lait-900,大山おいしいカフェ・オ・レ 900ml,,https://item.rakuten.co.jp/ju-suya/10000806-t/,rak:high,楽天900ml瓶×12
+sanpellegrino-aranciata-rossa-200,サンペレグリノ アランチャータ・ロッサ 200ml,,,,200mlは瓶の掲載のみ。缶の同一品は未確認
+kuzumaki-yamabudo-cider-350,葛巻山ぶどうサイダー 350ml,,,,350ml缶の楽天・Amazon一致なし
+nfs-tomato-80,ノースファームストック ミニトマトボトル 80ml,,,,80ml瓶の楽天・Amazon一致なし
+gotas-sencha-700,ゴッタス 煎茶 700ml,,,,楽天は玉露700mlのみ。煎茶700mlは未確認
+hata-hakuto-ramune,ハタ瓶ラムネ 白桃味 200ml,,https://item.rakuten.co.jp/japan-ds/h-060-4902494250021/,rak:high,Amazon未確認; 楽天200ml瓶×60
+shiny-kin-nebuta-195,金のねぶた 195g,https://www.amazon.co.jp/dp/B00GX02VDK,https://item.rakuten.co.jp/misonoya/b160-8/,amz:high;rak:high,Amazon195g缶×30; 楽天195g缶×30
+sanpellegrino-limonata-200,サンペレグリノ リモナータ 200ml,,,,200mlは瓶の掲載のみ。缶の同一品は未確認
+hata-awawa-blueberry-500,ハタ びっくりあわわ ブルーベリー味 500g,,,,500g瓶の楽天・Amazon一致なし
+ringowork-refresh-720,りんごワーク研究所 リフレッシュテイスト 720ml,,,,720ml瓶の楽天・Amazon一致なし
+amami-kubiki-tea-500,くび木のお茶 500ml,,,,一覧に500ml×24の記載のみ。商品URL未確認
+hata-suika-ramune,ハタ瓶ラムネ スイカ味 200ml,,https://item.rakuten.co.jp/japan-ds/h-060-4902494230061/,rak:high,Amazon未確認; 楽天200ml瓶×60
+shiny-zeitaku-ringo-160,贅沢りんご 160g,,https://item.rakuten.co.jp/misonoya/b160-14/,rak:high,Amazon未確認; 楽天160g缶×24
+sanpellegrino-pompelmo-200,サンペレグリノ ポンペルモ 200ml,,,,200mlは瓶の掲載のみ。缶の同一品は未確認
+hata-awawa-ichigo-500,ハタ びっくりあわわ いちご味 500g,,,,500g瓶の楽天・Amazon一致なし
+ringowork-original-180,りんごワーク研究所 オリジナルテイスト 180ml,,,,180ml瓶の楽天・Amazon一致なし
+ise-jingu-tea-500,伊勢茶 伊勢神宮版 500ml,,,,500mlペットの楽天・Amazon一致なし
+kimura-currypan,カレーパンサイダー 240ml,,https://item.rakuten.co.jp/misonoya/b105-110/,rak:high,Amazon未確認; 楽天240ml瓶×20
+shiny-ourin-160,贅沢りんご王林 160g,,https://item.rakuten.co.jp/misonoya/b160-15/,rak:high,Amazon未確認; 楽天160g缶×24
+sanpellegrino-chinotto-200,サンペレグリノ キノット 200ml,,,,200mlは瓶の掲載のみ。缶の同一品は未確認
+ringowork-sweet-180,りんごワーク研究所 スウィートテイスト 180ml,,,,180ml瓶の楽天・Amazon一致なし
+izumo-hatomugi-tea-500,発芽焙煎出雲はとむぎ茶 500ml,,,,カテゴリ一覧の500ml×24のみ。商品URL未確認
+kimura-melonpan,メロンパンサイダー 240ml,,https://item.rakuten.co.jp/misono-support/b105-109/,rak:high,Amazon未確認; 楽天240ml瓶×20
+boso-nashi-cider-190,おいしい房総サイダー 梨風味 190ml,,,,190ml缶の楽天・Amazon一致なし
+awa-sudachi-cider-245,すだちサイダー 245ml,,,,245ml瓶の一致なし。350mlは別容量
+ringowork-refresh-180,りんごワーク研究所 リフレッシュテイスト 180ml,,,,180ml瓶の楽天・Amazon一致なし
+shodoshima-olive-tea-280,小豆島オリーブ茶 280ml,,https://item.rakuten.co.jp/drink-market/b331-1/,rak:high,Amazon未確認; 楽天280mlPET×24
+kimura-shizuoka-340,静岡サイダー 340ml,https://www.amazon.co.jp/dp/B00AF3GPA6,https://item.rakuten.co.jp/misono-support/b105-77/,amz:high;rak:high,Amazon340ml×20; 楽天340ml瓶×20
+boso-biwa-cider-190,おいしい房総サイダー びわ風味 190ml,,,,190ml缶の商品ページ未確認
+hiroshima-hassaku-cider-250,広島はっさくサイダー 250ml,,https://item.rakuten.co.jp/hiroshima-gourmet/hr-340580020/,rak:high,Amazon未確認; 楽天250ml瓶×24
+alain-cox-apple-1000,アラン・ミリア コックス種アップル ジュース 1L,https://www.amazon.co.jp/dp/B0BXC5R8B2,https://item.rakuten.co.jp/umano/alainmilliat_apple1000/,amz:high;rak:high,Amazon1Lボトル; 楽天1000ml
+sonogi-tea-490,そのぎ茶 490ml,,https://item.rakuten.co.jp/drink-market/b508-1/,rak:high,Amazon未確認; 楽天490mlボトル缶×24
+kimura-shizuoka-beach,静岡サイダー ビーチラベル 340ml,https://www.amazon.co.jp/dp/B003LBSPVG,https://item.rakuten.co.jp/drink-market/b105-78/,amz:high;rak:high,Amazon340ml×20; 楽天340ml瓶×20
+ogawa-organic-muto-1000,小川珈琲 有機珈琲 アイスコーヒー 無糖 1000ml,,,,確認分は1000ml紙パックでPETと不一致
+mishima-citron-330,三島シトロン 330ml,,https://item.rakuten.co.jp/nakae/4955352201116/,rak:high,Amazonは混載のみ; 楽天330ml瓶×24
+alain-pear-330,アラン・ミリア サマーペア ネクター 330ml,,https://item.rakuten.co.jp/cerestshop/318000603/,rak:high,Amazonは味違いセットのみ; 楽天330ml
+royalblue-queen-deluxe-750,ロイヤルブルーティー クイーンオブブルー 750ml,,,,750ml瓶の商品ページ未確認
+hata-clear-apple,ハタ クリアフルーツ アップル 200ml,,,,200ml瓶の商品ページ未確認
+ogawa-sumiyaki-muto-1000,小川珈琲 炭焼珈琲 アイスコーヒー 無糖 1000ml,,,,確認分は1000ml紙パックでPETと不一致
+unzen-lemonade-330,温泉レモネード 330ml,,https://item.rakuten.co.jp/syuraku-shop/53986x24/,rak:high,Amazon未確認; 楽天330ml瓶×24
+royalblue-fallinlove-deluxe-750,ロイヤルブルーティー フォーリンラブ 750ml,,https://item.rakuten.co.jp/f222062-mishima/rbt001/,rak:high,Amazon未確認; 楽天750ml瓶×1
+kimura-curry-ramune,カレーラムネ 200ml,https://www.amazon.co.jp/dp/B0GZBNF9DP,,amz:high,Amazon200ml×18; 楽天未確認
+ogawa-sumiyaki-bito-1000,小川珈琲 炭焼珈琲 アイスコーヒー 微糖 1000ml,,,,確認分は1000ml紙パックでPETと不一致
+kimura-biidama,ビーダマンラムネ 200ml,https://www.amazon.co.jp/dp/B0CQ1XLYWW,https://item.rakuten.co.jp/nozomi-market/b105-72/,amz:high;rak:high,Amazon200ml瓶×6; 楽天200ml瓶×18
+ogawa-sumiyaki-kato-1000,小川珈琲 炭焼珈琲 アイスコーヒー 加糖 1000ml,,,,確認分は1000ml紙パックでPETと不一致
+kimura-miso-cola,岡崎味噌コーラ 240ml,https://www.amazon.co.jp/dp/B09M427B2G,https://item.rakuten.co.jp/nozomi-market/b105-113/,amz:high;rak:high,Amazon240ml×20; 楽天240ml瓶×20
+ogawa-organic-bito-500,小川珈琲 直営店 オーガニック アイス 微糖 500ml,,,,微糖500mlPETの商品ページ未確認
+kimura-chibimaru,ちびまる子ちゃんさくらコーラ 240ml,https://www.amazon.co.jp/dp/B07PP6NPB1,https://item.rakuten.co.jp/misono-support/b105-100/,amz:high;rak:high,Amazon240ml瓶×20; 楽天240ml瓶×20
+kawashima-ice-muto-1000,コーヒー乃川島 リキッドアイスコーヒー 無糖 1000ml,,https://item.rakuten.co.jp/misono-support/b542-1/,rak:high,AmazonのASIN未確定; 楽天1000ml紙パック×6
+hata-cream-soda,ハタ クリームソーダ 180ml,https://www.amazon.co.jp/dp/B08BJR5DFD,https://item.rakuten.co.jp/drink-market/b56-2/,amz:high;rak:high,Amazon180ml瓶×60（30×2）; 楽天180ml瓶×30
+hata-blue-cola,ハタ 青い方のコーラ味ラムネ 200ml,https://www.amazon.co.jp/dp/B08PLXKN7T,https://item.rakuten.co.jp/sanyodo-shop/4902494170039/,amz:high;rak:high,Amazon200ml×30; 楽天200ml瓶×30
