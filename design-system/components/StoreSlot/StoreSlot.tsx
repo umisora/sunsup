@@ -1,3 +1,4 @@
+import { isShopRow } from "@/lib/out-links";
 import { Button } from "../Button/Button";
 import styles from "./StoreSlot.module.css";
 
@@ -36,14 +37,14 @@ export function StoreSlot({ rows }: StoreSlotProps = {}) {
     return (
       <section id="store-row" className={styles.slot} aria-label="購入先">
         <p className={styles.label}>購入先</p>
-        <Button variant="primary" size="lg" icon="external" stretch href={primary.href} storePrimary>
+        <Button variant="primary" size="lg" icon="external" stretch href={primary.href} storePrimary sponsored={isShopRow(primary, rows)}>
           {storeAction(primary)}
         </Button>
         {rest.length > 0 ? (
           <ul className={styles.more}>
             {rest.map((row) => (
               <li key={row.label}>
-                <Button variant="secondary" icon="external" stretch href={row.href}>
+                <Button variant="secondary" icon="external" stretch href={row.href} sponsored={isShopRow(row, rows)}>
                   {storeAction(row)}
                 </Button>
               </li>

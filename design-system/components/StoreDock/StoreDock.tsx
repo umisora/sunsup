@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { isRetailerHref, SHOP_LINK_REL, SHOP_LINK_TARGET } from "@/lib/out-links";
 import styles from "./StoreDock.module.css";
 
 type StoreDockProps = {
@@ -9,10 +10,12 @@ type StoreDockProps = {
   action: string;
   /** Hide the dock while this element is on screen or still below it. */
   anchorId: string;
+  /** Buy link. A brand-site dock keeps the plain external rel. */
+  sponsored?: boolean;
 };
 
 /** Keeps the store one tap away once the page's own store button has scrolled out of view. */
-export function StoreDock({ name, href, action, anchorId }: StoreDockProps) {
+export function StoreDock({ name, href, action, anchorId, sponsored = false }: StoreDockProps) {
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
@@ -44,7 +47,7 @@ export function StoreDock({ name, href, action, anchorId }: StoreDockProps) {
   return (
     <div className={styles.dock} data-shown={shown || undefined} aria-hidden={!shown || undefined}>
       <p className={styles.name}>{name}</p>
-      <a href={href} className={styles.action} target="_blank" rel="noopener nofollow" tabIndex={shown ? undefined : -1}>
+      <a href={href} className={styles.action} target={SHOP_LINK_TARGET} rel={sponsored || isRetailerHref(href) ? SHOP_LINK_REL : "noopener nofollow"} tabIndex={shown ? undefined : -1}>
         {action}
         <svg viewBox="0 0 12 12" aria-hidden="true">
           <path d="M1 11 11 1M3 1h8v8" fill="none" stroke="currentColor" strokeWidth="1.4" />

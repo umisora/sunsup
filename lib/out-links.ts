@@ -49,3 +49,44 @@ export function outLinkMap(slug: string, rows: readonly { label: string; href: s
 }
 
 export const OUT_LINKS_ID = "out-links";
+
+/** Every shop anchor opens in a new tab. Share links and in-site links do not use this. */
+export const SHOP_LINK_TARGET = "_blank";
+
+/**
+ * rel on a link that sends a reader to buy the drink.
+ * Includes product URLs that do not carry an affiliate tag yet.
+ * noopener and noreferrer belong with target=_blank; nofollow is the relationship these links already had.
+ */
+export const SHOP_LINK_REL = "sponsored noopener noreferrer nofollow";
+
+const RETAILER_DOMAINS = [
+  "amazon.co.jp",
+  "rakuten.co.jp",
+  "askul.co.jp",
+  "shopping.yahoo.co.jp",
+  "yodobashi.com",
+  "monotaro.com",
+  "tanomail.com",
+  "yamada-denkiweb.com",
+] as const;
+
+export function isRetailerHref(href: string): boolean {
+  try {
+    const host = new URL(href).hostname.toLowerCase();
+    return RETAILER_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`));
+  } catch {
+    return false;
+  }
+}
+
+/** A buy link: a goal-kind row, a known retailer host, or the same URL as one of those. 公式 alone is not. */
+export function isShopRow(
+  row: { label: string; href: string },
+  rows: readonly { label: string; href: string }[],
+): boolean {
+  if (isGoalKind(outKind(row.label)) || isRetailerHref(row.href)) {
+    return true;
+  }
+  return rows.some((other) => other.href === row.href && isGoalKind(outKind(other.label)));
+}

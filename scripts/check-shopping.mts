@@ -26,26 +26,42 @@ const counted = unit("梅シロップ 500ml", "500mlの瓶です。水で割る�
 expect(counted?.dilute === true && counted.people === 10 && counted.text.startsWith("割って"), "a syrup with a catalog count keeps it, marked 割って");
 expect(unit("名前だけ", "届くのは24本です。", "ビン") === undefined, "no volume and no count gives no unit");
 
-// Bottles per role: 乾杯用 one a person, テーブル用 one big bottle per 4, 食事用 one per 2.
+// Bottles per role: 乾杯用 one a person, テーブル用 one big bottle per 5, 食事用 one per 10.
+// Each role rounds up on its own (Math.ceil), then the three counts are summed.
 expect(DEFAULT_HEADCOUNT === 4, "the set opens for 4 people");
-expect(roleUnits("kanpai", 4) === 4 && roleUnits("table", 4) === 1 && roleUnits("meal", 4) === 2, "4 people: 4, 1, 2");
-expect(roleUnits("table", 5) === 2 && roleUnits("meal", 5) === 3 && roleUnits("kanpai", 5) === 5, "units round up");
-// The bonenkai table prints these four rows from bottleCounts (setLines + setTotal), not from hand-typed cells.
-const tableRows = [5, 10, 20, 30].map((people) => bottleCounts(people));
-expect(
-  tableRows.map((row) => `${row.headcount}:${row.kanpai}+${row.table}+${row.meal}=${row.total}`).join() ===
-    "5:5+2+3=10,10:10+3+5=18,20:20+5+10=35,30:30+8+15=53",
-  `bonenkai bottle table ${tableRows.map((row) => `${row.headcount}:${row.kanpai}+${row.table}+${row.meal}=${row.total}`).join()}`,
-);
-for (const row of tableRows) {
+expect(roleUnits("kanpai", 4) === 4 && roleUnits("table", 4) === 1 && roleUnits("meal", 4) === 1, "4 people: 4, 1, 1");
+expect(roleUnits("table", 6) === 2 && roleUnits("meal", 6) === 1 && roleUnits("kanpai", 6) === 6, "units round up per role");
+// 5 / 10 / 20 / 30 people, per role and total. The bonenkai table prints these rows from bottleCounts.
+const expectedByHeadcount = [
+  { people: 5, kanpai: 5, table: 1, meal: 1, total: 7 },
+  { people: 10, kanpai: 10, table: 2, meal: 1, total: 13 },
+  { people: 20, kanpai: 20, table: 4, meal: 2, total: 26 },
+  { people: 30, kanpai: 30, table: 6, meal: 3, total: 39 },
+] as const;
+for (const expected of expectedByHeadcount) {
+  const row = bottleCounts(expected.people);
   expect(
-    row.kanpai === roleUnits("kanpai", row.headcount) &&
-      row.table === roleUnits("table", row.headcount) &&
-      row.meal === roleUnits("meal", row.headcount) &&
+    roleUnits("kanpai", expected.people) === expected.kanpai &&
+      roleUnits("table", expected.people) === expected.table &&
+      roleUnits("meal", expected.people) === expected.meal &&
+      row.headcount === expected.people &&
+      row.kanpai === expected.kanpai &&
+      row.table === expected.table &&
+      row.meal === expected.meal &&
+      row.total === expected.total &&
+      row.kanpai === roleUnits("kanpai", expected.people) &&
+      row.table === roleUnits("table", expected.people) &&
+      row.meal === roleUnits("meal", expected.people) &&
       row.total === row.kanpai + row.table + row.meal,
-    `${row.headcount} people drifted from roleUnits`,
+    `${expected.people} people: ${row.kanpai}+${row.table}+${row.meal}=${row.total}, expected ${expected.kanpai}+${expected.table}+${expected.meal}=${expected.total}`,
   );
 }
+const tableRows = expectedByHeadcount.map((expected) => bottleCounts(expected.people));
+expect(
+  tableRows.map((row) => `${row.headcount}:${row.kanpai}+${row.table}+${row.meal}=${row.total}`).join() ===
+    "5:5+1+1=7,10:10+2+1=13,20:20+4+2=26,30:30+6+3=39",
+  `bonenkai bottle table ${tableRows.map((row) => `${row.headcount}:${row.kanpai}+${row.table}+${row.meal}=${row.total}`).join()}`,
+);
 expect(roleUnits("kanpai", 0) === 1 && roleUnits("kanpai", 999) === 200, "headcount is kept between 1 and 200");
 const card = (role: SetCard["role"], ...slugs: string[]): SetCard => ({
   role,
@@ -54,12 +70,12 @@ const card = (role: SetCard["role"], ...slugs: string[]): SetCard => ({
 });
 const cards = [card("kanpai", "a", "a2"), card("table", "b"), card("meal", "c", "c2")];
 const lines = setLines(cards, {}, 4);
-expect(lines.map((line) => `${line.item.slug}${line.units}`).join() === "a4,b1,c2" && setTotal(lines) === 7, "4 people take 7 bottles of the first picks");
+expect(lines.map((line) => `${line.item.slug}${line.units}`).join() === "a4,b1,c1" && setTotal(lines) === 6, "4 people take 6 bottles of the first picks");
 const swapped = setLines(cards, { meal: "c2", kanpai: "nope" }, 4);
 expect(swapped.map((line) => line.item.slug).join() === "a,b,c2", "a swap replaces only its role; an unknown pick falls back to the first");
 const text = setText("忘年会・新年会のソフトドリンク", 4, lines, "https://stylish.sunsup.me/ba/bonenkai/");
 expect(
-  text === "忘年会・新年会のソフトドリンク（4人分）\n・a　4本（乾杯用）\n・b　1本（テーブル用）\n・c　2本（食事用）\n全部で7本\nhttps://stylish.sunsup.me/ba/bonenkai/",
+  text === "忘年会・新年会のソフトドリンク（4人分）\n・a　4本（乾杯用）\n・b　1本（テーブル用）\n・c　1本（食事用）\n全部で6本\nhttps://stylish.sunsup.me/ba/bonenkai/",
   `list text: ${JSON.stringify(text)}`,
 );
 const share = lineShareUrl(text);
