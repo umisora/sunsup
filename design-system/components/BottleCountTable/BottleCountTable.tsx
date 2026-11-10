@@ -59,7 +59,7 @@ export function BottleCountTable() {
         </tbody>
       </table>
       <p className={styles.note}>
-        小さな瓶はひとり1本、大きな瓶は4人に1本、甘さ控えめは2人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。
+        小さな瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。
       </p>
     </div>
   );
