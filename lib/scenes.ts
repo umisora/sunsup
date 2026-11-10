@@ -87,7 +87,7 @@ export const SCENES: readonly Scene[] = [
       title: "何人で何本？ ノンアルの本数早見表",
       headingId: "bonenkai-bottle-counts",
       headcountLabel: "ソフトドリンクで乾杯する人",
-      breakdown: ["小さな瓶", "大きな瓶", "甘さ控えめ"],
+      breakdown: ["小さな瓶", "大きな瓶", "食事用"],
       note: "小さな瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。",
     },
     prose:
@@ -101,7 +101,7 @@ export const SCENES: readonly Scene[] = [
       {
         no: "02",
         title: "サイズ",
-        lines: ["720〜780mlの大きな瓶なら、3〜4人で分けられます。", "ひとりで飲む人には、200〜280mlの小さな瓶を一本ずつ渡します。"],
+        lines: ["720〜780mlの大きな瓶は、5人のテーブルに1本が目安です。", "ひとりで飲む人には、200〜280mlの小さな瓶を一本ずつ渡します。"],
       },
       {
         no: "03",
@@ -429,7 +429,7 @@ export const SCENE_SETS: Record<string, SceneSet> = {
     listTitle: "忘年会・新年会のソフトドリンク",
     roles: {
       kanpai: { reason: "小さな瓶なので、注がずにそのまま乾杯できます。", slugs: ["kimino-yuzu", "kimino-ringo", "shinshu-apple-cider-245", "kimura-fuji-yuzu"] },
-      table: { reason: "700mlを超える大きな瓶。4人で注ぎ分けられます。", slugs: tableFirst("pom-mikan-straight-780") },
+      table: { reason: "780mlの大きな瓶。テーブルの真ん中に置いて、みんなで注ぎ分けます。", slugs: tableFirst("pom-mikan-straight-780") },
       meal: { reason: "甘さ控えめで、料理と一緒に飲めます。", slugs: ["kimura-wasabi-ginger", "maison-perrier-raspberry-330", "hyuganatsu-cider-245", "umaji-yuzu-cider-280"] },
     },
   },
