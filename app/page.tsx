@@ -27,10 +27,11 @@ import { TABLE_CAST } from "@/design-system/components/TableArrival/cast";
 import { categorySummaries, getDrink, loadDrinks, officeEntries, seasonalPicks, seasonOf } from "@/lib/drinks";
 import { SCENES, scenePath } from "@/lib/scenes";
 import { DEFAULT_STORY_ID, STORIES, storyById, type Daypart, type Season } from "@/lib/visit";
+import { HOME_TITLE } from "@/design-system/brand";
 import { jsonLdText, siteJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
-  title: { absolute: SITE_NAME },
+  title: { absolute: HOME_TITLE },
   alternates: { canonical: "/" },
   openGraph: {
     title: `${SITE_NAME}｜飲み会向けのノンアルコール`,

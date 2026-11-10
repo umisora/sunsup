@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Eyebrow, Grid, InfoRow, LogoTitle, Motion, Photo, Section, SITE_NAME, Stack, StillLife, Text, TextLink } from "@/design-system";
+import { ABOUT_DESCRIPTION } from "@/design-system/brand";
 import { CLARITY_ID } from "../_metrics/Clarity";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "このサイトについて",
+  description: ABOUT_DESCRIPTION,
   alternates: { canonical: "/about/" },
   openGraph: {
     title: `このサイトについて｜${SITE_NAME}`,
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <Motion>
-      {pageJsonLd("/about/", "このサイトについて").map((data, index) => (
+      {pageJsonLd("/about/", "このサイトについて", ABOUT_DESCRIPTION).map((data, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
       <Section space="md" labelledBy="about-title">
