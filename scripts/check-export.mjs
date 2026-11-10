@@ -9,6 +9,7 @@ import "./check-categories.mjs";
 import "./check-sitemaps.mjs";
 import "./check-html-size.mjs";
 import "./check-shop-links.mjs";
+import "./check-meta.mjs";
 
 const failures = [];
 
@@ -79,7 +80,7 @@ function parseCsv(text) {
 
 const home = read("index.html");
 read("ba/office/index.html");
-if (!home.includes("<title>STYLISH!</title>") || home.includes("drinkup") || home.includes("Drinkup")) {
+if (!home.includes("<title>飲み会のノンアル、おしゃれに選ぶ｜STYLISH!</title>") || home.includes("drinkup") || home.includes("Drinkup")) {
   fail("home no longer uses the STYLISH! name");
 }
 const manifest = read("manifest.webmanifest");
@@ -165,12 +166,77 @@ function isRakutenProduct(url) {
   }
 }
 
+function textLength(value) {
+  return [...value].length;
+}
+
+function preferredStem(drink) {
+  const custom = (drink.titleName ?? "").trim();
+  return custom || drink["品名"];
+}
+
+/** Same resolution as lib/drinks.ts resolveTitleStems. Volume is never stripped. */
+function resolveTitleStems(rows) {
+  const stems = new Map();
+  for (const drink of rows) stems.set(drink.slug, preferredStem(drink));
+  const counts = () => {
+    const tally = new Map();
+    for (const stem of stems.values()) tally.set(stem, (tally.get(stem) ?? 0) + 1);
+    return tally;
+  };
+  let tally = counts();
+  for (const drink of rows) {
+    const stem = stems.get(drink.slug);
+    if ((tally.get(stem) ?? 0) <= 1) continue;
+    if (drink["品名"] !== stem) stems.set(drink.slug, drink["品名"]);
+  }
+  tally = counts();
+  for (const drink of rows) {
+    const stem = stems.get(drink.slug);
+    if ((tally.get(stem) ?? 0) <= 1) continue;
+    stems.set(drink.slug, `${drink["品名"]}｜${drink["カテゴリ"]}`);
+  }
+  return stems;
+}
+
+let titleStemBySlug = new Map();
+
 function drinkTitle(drink) {
-  return `${drink["品名"]}｜${drink["カテゴリ"]}｜STYLISH!`;
+  const stem = titleStemBySlug.get(drink.slug) ?? preferredStem(drink);
+  return `${stem}｜STYLISH!`;
+}
+
+function firstSentence(value) {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  const end = trimmed.indexOf("。");
+  if (end === -1) return trimmed;
+  return trimmed.slice(0, end + 1);
+}
+
+function clipAtSentence(value, max) {
+  if (textLength(value) <= max) return value;
+  const chars = [...value];
+  let end = -1;
+  const limit = Math.min(chars.length, max);
+  for (let index = 0; index < limit; index += 1) {
+    if (chars[index] === "。") end = index;
+  }
+  if (end === -1) return value;
+  return chars.slice(0, end + 1).join("");
 }
 
 function drinkDescription(drink) {
-  return `${drink["品名"]}。${drink["カテゴリ"]}。${drink["場"]}`;
+  let text = `${drink["品名"]}。${drink["場"]}`;
+  if (textLength(text) < 80) {
+    const size = firstSentence(drink["サイズ"]);
+    if (size) text += size;
+  }
+  if (textLength(text) < 80) {
+    const look = firstSentence(drink["見た目"]);
+    if (look) text += look;
+  }
+  return clipAtSentence(text, 120);
 }
 
 /** React escapes `&` in text and attributes. The catalog copy itself stays unchanged. */
@@ -184,6 +250,7 @@ if (!header.includes("定番")) {
   fail("drinks.csv is missing the 定番 column");
 }
 const drinks = table.slice(1).map((row) => Object.fromEntries(header.map((column, index) => [column, (row[index] ?? "").trim()])));
+titleStemBySlug = resolveTitleStems(drinks);
 const genericDrinks = drinks.filter((drink) => drink["定番"] === "1");
 for (const drink of drinks) {
   const flag = drink["定番"];

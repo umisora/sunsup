@@ -3,7 +3,7 @@
  * the catalog row, and the STYLISH! mark. No price, offer, rating, review, contact or address.
  * The brand is left off Product because the catalog has no brand column.
  */
-import { SITE_DESCRIPTION, SITE_NAME } from "../design-system/brand";
+import { HOME_TITLE, SITE_DESCRIPTION, SITE_NAME } from "../design-system/brand";
 import { categoryHref, categoryId, drinkDescription, drinkTitle, SITE_ORIGIN, type Drink } from "./drinks";
 import { volumeMl } from "./servings";
 
@@ -149,7 +149,7 @@ export function siteJsonLd(): object[] {
     },
     pageJsonLdNode({
       path: "/",
-      title: SITE_NAME,
+      title: HOME_TITLE,
       absoluteTitle: true,
       description: SITE_DESCRIPTION,
       about: ORGANIZATION_ID,

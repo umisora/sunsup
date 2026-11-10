@@ -19,6 +19,7 @@ const COLUMNS = [
   "公開",
   "定番",
   "容器",
+  "titleName",
 ] as const;
 
 const REQUIRED = ["品名", "場", "見た目", "サイズ", "味"] as const;
@@ -44,6 +45,11 @@ export type Drink = {
   generic: boolean;
   /** Container. Used to pick large bottles for a formal table. */
   vessel: string;
+  /**
+   * Optional short name for the document title only. Empty means the full product name.
+   * Never a mechanical cut of `name`. The description always uses `name`.
+   */
+  titleName: string;
 };
 
 export type StoreLabel = "Amazon" | "楽天" | "公式ショップ" | "その他の通販" | "公式";
@@ -216,14 +222,105 @@ export function otherStoreText(url: string): string {
   }
 }
 
-/** Document title before the site-name template. */
-export function drinkTitle(drink: Drink): string {
-  return `${drink.name}｜${drink.category}`;
+/** Code points, matching the title and description length check. */
+export function textLength(value: string): number {
+  return [...value].length;
 }
 
-/** Unique per drink. Built from the row, not from shared marketing copy. */
+/** `titleName` when it is set, otherwise the full product name (volume included). */
+export function preferredTitleStem(drink: Pick<Drink, "name" | "titleName">): string {
+  const custom = drink.titleName.trim();
+  return custom || drink.name;
+}
+
+const titleStemBySlug = new Map<string, string>();
+
+/**
+ * Stem of `<title>`, before the layout template adds `｜STYLISH!`.
+ * A set `titleName` is used as written. Volume is never stripped.
+ * If that stem would be shared, the full product name is kept so a volume in the name
+ * still distinguishes the drinks. If the full names are the same too, the category stays
+ * in the stem — that is the only remaining difference already on the row.
+ */
+export function resolveTitleStems(drinks: readonly Drink[]): Map<string, string> {
+  const stems = new Map<string, string>();
+  for (const drink of drinks) {
+    stems.set(drink.slug, preferredTitleStem(drink));
+  }
+  const counts = () => {
+    const tally = new Map<string, number>();
+    for (const stem of stems.values()) {
+      tally.set(stem, (tally.get(stem) ?? 0) + 1);
+    }
+    return tally;
+  };
+  let tally = counts();
+  for (const drink of drinks) {
+    const stem = stems.get(drink.slug) ?? drink.name;
+    if ((tally.get(stem) ?? 0) <= 1) continue;
+    if (drink.name !== stem) stems.set(drink.slug, drink.name);
+  }
+  tally = counts();
+  for (const drink of drinks) {
+    const stem = stems.get(drink.slug) ?? drink.name;
+    if ((tally.get(stem) ?? 0) <= 1) continue;
+    stems.set(drink.slug, `${drink.name}｜${drink.category}`);
+  }
+  return stems;
+}
+
+function indexTitleStems(drinks: readonly Drink[]): void {
+  titleStemBySlug.clear();
+  for (const [slug, stem] of resolveTitleStems(drinks)) {
+    titleStemBySlug.set(slug, stem);
+  }
+}
+
+/** Document title before the site-name template. */
+export function drinkTitle(drink: Drink): string {
+  return titleStemBySlug.get(drink.slug) ?? preferredTitleStem(drink);
+}
+
+const DESCRIPTION_FLOOR = 80;
+const DESCRIPTION_MAX = 120;
+
+function firstSentence(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  const end = trimmed.indexOf("。");
+  if (end === -1) return trimmed;
+  return trimmed.slice(0, end + 1);
+}
+
+/** Keep the longest prefix of whole sentences that fits, and never cut before a `。`. */
+function clipAtSentence(value: string, max: number): string {
+  if (textLength(value) <= max) return value;
+  const chars = [...value];
+  let end = -1;
+  const limit = Math.min(chars.length, max);
+  for (let index = 0; index < limit; index += 1) {
+    if (chars[index] === "。") end = index;
+  }
+  if (end === -1) return value;
+  return chars.slice(0, end + 1).join("");
+}
+
+/**
+ * Meta description. Always the full product name, then the whole 場 text.
+ * While that is under 80 characters, append the first サイズ sentence, then the first 見た目 sentence.
+ * Above 120 characters, drop whole sentences from the end.
+ */
 export function drinkDescription(drink: Drink): string {
-  return `${drink.name}。${drink.category}。${drink.place}`;
+  let text = `${drink.name}。${drink.place}`;
+  if (textLength(text) < DESCRIPTION_FLOOR) {
+    const size = firstSentence(drink.size);
+    if (size) text += size;
+  }
+  if (textLength(text) < DESCRIPTION_FLOOR) {
+    const look = firstSentence(drink.look);
+    if (look) text += look;
+  }
+  return clipAtSentence(text, DESCRIPTION_MAX);
 }
 
 function stillOrEmpty(value: string, slug: string): string {
@@ -323,6 +420,7 @@ export function parseDrinks(text: string): Drink[] {
       otherUrl: httpOrEmpty(cell(row, "その他URL"), slug, "その他URL"),
       generic: cell(row, "定番") === "1",
       vessel: cell(row, "容器"),
+      titleName: cell(row, "titleName"),
     });
     if (cell(row, "公開") === "1") {
       published.add(slug);
@@ -333,6 +431,7 @@ export function parseDrinks(text: string): Drink[] {
     throw new Error("drinks.csv has no publishable rows");
   }
 
+  indexTitleStems(catalog);
   const titles = new Set<string>();
   const descriptions = new Set<string>();
   for (const drink of catalog) {
