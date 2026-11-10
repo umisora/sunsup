@@ -284,12 +284,22 @@ export function drinkTitle(drink: Drink): string {
 const DESCRIPTION_FLOOR = 80;
 const DESCRIPTION_MAX = 120;
 
-function firstSentence(value: string): string {
-  const trimmed = value.trim();
-  if (!trimmed) return "";
-  const end = trimmed.indexOf("。");
-  if (end === -1) return trimmed;
-  return trimmed.slice(0, end + 1);
+/** Longest first, so ペットボトル is not also counted as ボトル. */
+const CONTAINERS = ["ペットボトル", "紙パック", "ガラス瓶", "ビー玉瓶", "ボトル缶", "紙カップ", "カップ", "ボトル", "缶", "瓶"] as const;
+
+const INTENSIFIERS = ["すっぽり", "ぴったり", "ちょうど"] as const;
+
+function sentenceAt(value: string, index: number): string {
+  let rest = value.trim();
+  for (let cursor = 0; cursor < index; cursor += 1) {
+    const end = rest.indexOf("。");
+    if (end === -1) return "";
+    rest = rest.slice(end + 1).trim();
+  }
+  if (!rest) return "";
+  const end = rest.indexOf("。");
+  if (end === -1) return rest;
+  return rest.slice(0, end + 1);
 }
 
 /** Keep the longest prefix of whole sentences that fits, and never cut before a `。`. */
@@ -305,22 +315,136 @@ function clipAtSentence(value: string, max: number): string {
   return chars.slice(0, end + 1).join("");
 }
 
+function volumesIn(value: string): string[] {
+  return value.match(/\d+(?:\.\d+)?(?:ml|mL|ML|kg|g|L)/g) ?? [];
+}
+
+/** `500ml` is not already written when it only occurs inside `1500ml`. */
+function hasVolume(description: string, volume: string): boolean {
+  const escaped = volume.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?:^|[^0-9])${escaped}`).test(description);
+}
+
+function containerTokens(value: string): string[] {
+  const found: string[] = [];
+  let rest = value;
+  for (const word of CONTAINERS) {
+    if (!rest.includes(word)) continue;
+    found.push(word);
+    rest = rest.split(word).join("");
+  }
+  return found;
+}
+
+function foldSizeWords(value: string): string {
+  return value.replace(/小ぶりな|小ぶり|小さな|小さい|小さめ|大きな|大きい|大きめ|低め|低い|高め|高い/g, (word) => {
+    if (word.startsWith("小")) return "小";
+    if (word.startsWith("大")) return "大";
+    if (word.startsWith("低")) return "低";
+    if (word.startsWith("高")) return "高";
+    return word;
+  });
+}
+
+function normalizeSentence(value: string): string {
+  return foldSizeWords(value.replace(/[。、\s]/g, ""));
+}
+
+/**
+ * True when `sentence` repeats a point already in `description`.
+ * Same sentence after folding 小さな/小ぶり, 大きな, 低い/低め, 高い/高め.
+ * Or the words before a trailing です/ます (and の文字 / の表記) are already written.
+ * Or its volume or container is already written and almost no other words remain.
+ * Or every clause, split on 、, is a volume already written or a phrase already written
+ * once すっぽり / ぴったり / ちょうど is removed.
+ */
+function repeatsDescribedPoint(sentence: string, description: string): boolean {
+  const normalized = normalizeSentence(sentence);
+  if (!normalized) return true;
+  const existing = description
+    .split("。")
+    .map((part) => normalizeSentence(part))
+    .filter((part) => part !== "");
+  if (existing.some((part) => part === normalized)) return true;
+
+  const stripped = sentence.replace(/。$/, "").replace(/(?:の文字|の表記)?(?:です|ます)$/, "");
+  if (!stripped.includes("、") && [...stripped].length >= 4 && containsPiece(description, stripped)) return true;
+
+  if (onlyKnownSizeOrContainer(sentence, description)) return true;
+  return clausesAlreadySaid(sentence, description);
+}
+
+function containsPiece(description: string, piece: string): boolean {
+  if (/^\d+(?:\.\d+)?(?:ml|mL|ML|kg|g|L)$/.test(piece)) return hasVolume(description, piece);
+  return description.includes(piece);
+}
+
+function onlyKnownSizeOrContainer(sentence: string, description: string): boolean {
+  const volumes = volumesIn(sentence);
+  const containers = containerTokens(sentence);
+  const known = volumes.some((volume) => hasVolume(description, volume)) || containers.some((word) => description.includes(word));
+  if (!known) return false;
+  let rest = sentence;
+  for (const token of [...volumes, ...CONTAINERS]) rest = rest.split(token).join("");
+  rest = rest.replace(/小ぶりな|小ぶり|小さな|小さい|小さめ|大きな|大きい|大きめ|低め|低い|高め|高い/g, "");
+  rest = rest.replace(/です|ます|ません|でした|ました/g, "");
+  rest = rest.replace(/[。、\sのをにはがともへやで]/g, "");
+  return [...rest].length <= 2;
+}
+
+function clausesAlreadySaid(sentence: string, description: string): boolean {
+  const clauses = sentence
+    .split("、")
+    .map((clause) => clause.trim())
+    .filter((clause) => clause !== "");
+  if (clauses.length === 0) return false;
+  return clauses.every((clause) => clauseAlreadySaid(clause, description));
+}
+
+function clauseAlreadySaid(clause: string, description: string): boolean {
+  const volumes = volumesIn(clause);
+  if (volumes.some((volume) => !hasVolume(description, volume))) return false;
+  let rest = clause.replace(/。$/, "");
+  for (const token of [...volumes, ...INTENSIFIERS]) rest = rest.split(token).join("");
+  rest = rest.replace(/\s/g, "");
+  const substance = rest.replace(/(?:です|ます)$/, "").replace(/[のをにはがともへやで]/g, "");
+  if ([...substance].length === 0) return volumes.length > 0;
+  if ([...substance].length < 4) return false;
+  return description.includes(rest);
+}
+
+function baseDescription(name: string, place: string, size: string, look: string): string {
+  let text = `${name}。${place}`;
+  if (textLength(text) < DESCRIPTION_FLOOR) {
+    const sizeSentence = sentenceAt(size, 0);
+    if (sizeSentence) text += sizeSentence;
+  }
+  if (textLength(text) < DESCRIPTION_FLOOR) {
+    const lookSentence = sentenceAt(look, 0);
+    if (lookSentence) text += lookSentence;
+  }
+  return clipAtSentence(text, DESCRIPTION_MAX);
+}
+
 /**
  * Meta description. Always the full product name, then the whole 場 text.
  * While that is under 80 characters, append the first サイズ sentence, then the first 見た目 sentence.
  * Above 120 characters, drop whole sentences from the end.
+ * Still under 80, append the next サイズ sentence, then the next 見た目 sentence,
+ * skipping one that repeats a point already written or would pass 120.
+ * A description that already reaches 80 is left as it is.
  */
 export function drinkDescription(drink: Drink): string {
-  let text = `${drink.name}。${drink.place}`;
-  if (textLength(text) < DESCRIPTION_FLOOR) {
-    const size = firstSentence(drink.size);
-    if (size) text += size;
+  const base = baseDescription(drink.name, drink.place, drink.size, drink.look);
+  if (textLength(base) >= DESCRIPTION_FLOOR) return base;
+  let text = base;
+  for (const sentence of [sentenceAt(drink.size, 1), sentenceAt(drink.look, 1)]) {
+    if (textLength(text) >= DESCRIPTION_FLOOR) break;
+    if (!sentence || sentence.includes("ノンアルです") || repeatsDescribedPoint(sentence, text)) continue;
+    if (textLength(text + sentence) > DESCRIPTION_MAX) continue;
+    text += sentence;
   }
-  if (textLength(text) < DESCRIPTION_FLOOR) {
-    const look = firstSentence(drink.look);
-    if (look) text += look;
-  }
-  return clipAtSentence(text, DESCRIPTION_MAX);
+  return text;
 }
 
 function stillOrEmpty(value: string, slug: string): string {
