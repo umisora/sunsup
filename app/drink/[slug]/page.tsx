@@ -40,7 +40,7 @@ import {
   shelfNeighbours,
   storeRows,
 } from "@/lib/drinks";
-import { OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
+import { isShopRow, OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
 import { drinkJsonLd, jsonLdText } from "@/lib/jsonld";
 import { scenePath, scenesFor } from "@/lib/scenes";
 import { heroSpecs } from "@/lib/servings";
@@ -160,7 +160,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
           media={still(false)}
           actions={
             primary ? (
-              <Button variant="inverse" icon="external" href={primary.href}>
+              <Button variant="inverse" icon="external" href={primary.href} sponsored={isShopRow(primary, rows)}>
                 {storeAction(primary)}
               </Button>
             ) : null
@@ -218,7 +218,9 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
 
       <TableShelf exclude={drink.slug} known={loadDrinks().map((item) => item.slug)} />
 
-      {primary ? <StoreDock name={drink.name} href={primary.href} action={storeAction(primary)} anchorId="store-row" /> : null}
+      {primary ? (
+        <StoreDock name={drink.name} href={primary.href} action={storeAction(primary)} anchorId="store-row" sponsored={isShopRow(primary, rows)} />
+      ) : null}
     </Motion>
   );
 }

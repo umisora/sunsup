@@ -2,6 +2,7 @@
 
 import { Fragment, useState, type ReactNode } from "react";
 import { resolveListHeading, type ListHeading } from "@/lib/list-heading";
+import { SHOP_LINK_REL, SHOP_LINK_TARGET } from "@/lib/out-links";
 import {
   clampHeadcount,
   DEFAULT_HEADCOUNT,
@@ -170,8 +171,8 @@ export function ShoppingList({ headingId, title, cards, url, emphasizeStores = f
                     <a
                       href={store.href}
                       className={styles.store}
-                      target="_blank"
-                      rel="noopener nofollow"
+                      target={SHOP_LINK_TARGET}
+                      rel={SHOP_LINK_REL}
                       data-out-slug={line.item.slug}
                       data-out-kind={store.kind}
                       data-out-source={LIST_SOURCE}

@@ -8,6 +8,7 @@ import "./check-scenes.mjs";
 import "./check-categories.mjs";
 import "./check-sitemaps.mjs";
 import "./check-html-size.mjs";
+import "./check-shop-links.mjs";
 
 const failures = [];
 
@@ -447,13 +448,12 @@ for (const drink of publicDrinks) {
       fail(`${drink.slug} renders an empty ${emptyMarker}`);
     }
   }
-  if (html.includes("tag=") || html.includes('rel="sponsored"')) {
+  // Query-string affiliate ids stay out. rel=sponsored on buy links is required
+  // and checked in scripts/check-shop-links.mjs, including product URLs with no tag yet.
+  if (html.includes("tag=")) {
     fail(`${drink.slug} includes an affiliate marker`);
   }
   if (amazon || rakuten || direct || other || official) {
-    if (!html.includes('rel="noopener nofollow"')) {
-      fail(`${drink.slug} store links are missing rel="noopener nofollow"`);
-    }
     if (!html.includes('target="_blank"')) {
       fail(`${drink.slug} store links are missing target="_blank"`);
     }
