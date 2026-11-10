@@ -1,6 +1,10 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, type ReactNode } from "react";
 import type { SceneCountTable } from "@/lib/scenes";
 import { bottleCounts } from "@/lib/shopping-list";
+import { setTableOnPage, viewCountTable } from "@/lib/usage-session";
 import styles from "./BottleCountTable.module.css";
 
 /** Headcounts the early table prints. Counts come from `bottleCounts`. */
@@ -35,12 +39,42 @@ function withBreaks(text: string): ReactNode[] {
 /**
  * Static headcount table above the recommended list.
  * Words come from the scene. Cells are the calculator's bottles.
+ * Half of this block on screen counts as one table view for the page.
  */
 export function BottleCountTable({ countTable }: { countTable: SceneCountTable }) {
+  const pathname = usePathname();
+  const blockRef = useRef<HTMLDivElement>(null);
   const rows = HEADCOUNTS.map((people) => bottleCounts(people));
   const [toastLabel, bigLabel, mealLabel] = countTable.breakdown;
+
+  useEffect(() => {
+    setTableOnPage(true);
+    const node = blockRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      return () => {
+        setTableOnPage(false);
+      };
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.5);
+        if (!visible) {
+          return;
+        }
+        observer.disconnect();
+        viewCountTable();
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      setTableOnPage(false);
+    };
+  }, [pathname]);
+
   return (
-    <div className={styles.block}>
+    <div className={styles.block} ref={blockRef}>
       <table className={styles.table}>
         <caption id={countTable.headingId} className={styles.caption}>
           {countTable.title}

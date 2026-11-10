@@ -36,7 +36,17 @@ Empty variables are safe: the build still passes and the export does not start P
 
 One `$pageview` mechanism is enabled. The SDK chunk loads asynchronously, so the landing path and any pathname change that happens before the chunk arrives are recorded first and then sent in order. After that, a view is sent only when the pathname changes (client navigations, back, and forward). Same-path `replaceState`, query changes, and hash changes do not add another view. The SDK's own history pageview listener is off, so those navigations are not counted twice.
 
-Shop-link clicks also send a custom `outbound_click` event (Amazon, Rakuten, maker shops, and the same links the D1 `/api/click` beacon already counts). The D1 beacon is unchanged. Each click keeps `shop`, `host`, `drink_slug`, `path`, `venue` (when the page is `/ba/.../`), `position` (0-based index among shop links on the page), `source` (`page` or `list`), and `analytics_qa`, plus the same anonymous SDK fields as a pageview.
+Shop-link clicks also send a custom `outbound_click` event (Amazon, Rakuten, maker shops, and the same links the D1 `/api/click` beacon already counts). The D1 beacon is unchanged. Each click keeps `shop`, `host`, `drink_slug`, `path`, `venue` (when the page is `/ba/.../`), `position` (0-based index among shop links on the page), `source` (`page` or `list`), and `analytics_qa`, plus the same anonymous SDK fields as a pageview. It also keeps `viewport` (`narrow` when `matchMedia("(max-width: 767px)")` matches, otherwise `wide`), `headcount_changed`, and `count_table_viewed`. A link inside the shopping list also keeps `headcount` (an integer from 1 to 200) and `role` (`kanpai`, `table`, or `meal`, from `data-list-role`).
+
+Three more events use the same filter:
+
+- `count_table_view` — once per pathname, when at least half of the bottle-count table is visible. Properties: `venue`, `viewport`.
+- `headcount_change` — one event per finished edit of the shopping-list headcount (1.5 seconds after the last step, on blur, or immediately before a store or LINE click). Skipped when the count does not change. Properties: `venue`, `headcount_from`, `headcount_to`, `method` (`step_up`, `step_down`, `type`, `mixed`), `change_index`, `table_on_page`, `viewport`.
+- `list_share` — the LINE link or the copy button. Properties: `venue`, `method` (`line` or `copy`), `headcount`, `headcount_changed`, `viewport`. The shared text is not a property.
+
+An out-of-range count, an unknown `method`, `role`, or `viewport`, or a non-boolean flag drops that event. Raw input text is not sent. These marks reset when the pathname changes. `?analytics_qa=1` marks them the same way it marks a pageview.
+
+Manual `$pageview` captures still go through the SDK, which attaches `$pageview_id` to that pageview and to later custom events in the same view. The browser check asserts a following `outbound_click` keeps that id. `$session_id` is kept as well.
 
 Autocapture, session replay, heatmaps, surveys, exception capture, web vitals, and `identify` are off. Events are anonymous (`person_profiles: identified_only`, and identified events are dropped).
 
@@ -47,9 +57,7 @@ Each pageview keeps only:
 - `analytics_qa` (`true` or `false`)
 - the SDK fields required to accept an anonymous event: `token`, `distinct_id`, `$session_id`, `$window_id`, `$pageview_id`, `$insert_id`, `$lib`, `$lib_version`, `$time`, `$process_person_profile`, `$is_identified`
 
-Query strings and hashes are removed from those URLs and from SDK copies such as initial URL and session-entry URL. User agent, browser, device, screen, campaign parameters, and person properties are not sent.
-
-PostHog can still attach the request IP on the server. Discarding client IP is a project setting; this change does not turn it on.
+Query strings and hashes are removed from those URLs and from SDK copies such as initial URL and session-entry URL. User agent, browser, device, screen, campaign parameters, and person properties are not sent. The client does not add a city, IP address, postal code, or coordinates, and those keys are not on the allow list, so a client-supplied value is removed before send. PostHog can still attach GeoIP from the request on the server. That discard list is a project setting (IP, city, postal code, latitude, and longitude); this code does not change it. A location kept later should be limited to country and `$geoip_subdivision_1_*`.
 
 ## QA sessions
 
