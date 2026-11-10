@@ -21,7 +21,7 @@ import {
   TextLink,
   Tile,
 } from "@/design-system";
-import { BottleCountTable, BOTTLE_COUNT_CAPTION_ID } from "@/design-system/components/BottleCountTable/BottleCountTable";
+import { BottleCountTable } from "@/design-system/components/BottleCountTable/BottleCountTable";
 import { ShoppingList, ShoppingListCta } from "@/design-system/components/ShoppingList/ShoppingList";
 import { categoryHref, categoryId, categorySummaries, SITE_ORIGIN } from "@/lib/drinks";
 import { jsonLdText } from "@/lib/jsonld";
@@ -129,9 +129,9 @@ export default async function ScenePage({ params }: ScenePageProps) {
         );
       })}
 
-      {scene.slug === "bonenkai" ? (
-        <Section space="md" labelledBy={BOTTLE_COUNT_CAPTION_ID}>
-          <BottleCountTable />
+      {scene.countTable ? (
+        <Section space="md" labelledBy={scene.countTable.headingId}>
+          <BottleCountTable countTable={scene.countTable} />
         </Section>
       ) : null}
 
