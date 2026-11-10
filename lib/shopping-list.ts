@@ -1,7 +1,7 @@
 /**
  * STYLISH!'s recommended soft-drink set on a scene page: three roles, each with one drink that can be
  * swapped for another drink of the same role. Bottle counts follow the role, not the drink:
- * 乾杯用 one bottle a person, テーブル用 one big bottle per 4 people, 食事用 one bottle per 2 people.
+ * 乾杯用 one bottle a person, テーブル用 one big bottle per 5 people, 食事用 one bottle per 10 people.
  * Pure and fs-free, so the browser component, the build and the checks share it.
  */
 import type { OutKind } from "./out-links";
@@ -17,8 +17,8 @@ export type SetRole = (typeof SET_ROLES)[number];
 /** Visible role tag and how many people one bottle covers. */
 export const ROLE_INFO: Record<SetRole, { label: string; per: number }> = {
   kanpai: { label: "乾杯用", per: 1 },
-  table: { label: "テーブル用", per: 4 },
-  meal: { label: "食事用", per: 2 },
+  table: { label: "テーブル用", per: 5 },
+  meal: { label: "食事用", per: 10 },
 };
 
 export type ListStore = { text: string; href: string; kind: OutKind };
@@ -67,9 +67,9 @@ export type BottleCounts = {
   headcount: number;
   /** 小さな瓶: one per person (乾杯用). */
   kanpai: number;
-  /** 大きな瓶: one per 4 people (テーブル用). */
+  /** 大きな瓶: one per 5 people (テーブル用). */
   table: number;
-  /** 甘さ控えめ: one per 2 people (食事用). */
+  /** 甘さ控えめ: one per 10 people (食事用). */
   meal: number;
   total: number;
 };

@@ -88,9 +88,9 @@ if (existsSync(fidelityPath)) {
 
 // STYLISH!'s recommended set, first painted for 4 people toasting with a soft drink: the tag and the
 // shared heading 「乾杯のソフトドリンクは、この3種類で」 (bonenkai alone sets its own listHeading),
-// three role cards (乾杯用 4本, テーブル用 1本, 食事用 2本 = 7本)
+// three role cards (乾杯用 4本, テーブル用 1本, 食事用 1本 = 6本)
 // each with a reason, the drink page's own store links (same URL, same kind) tagged source=list with no
-// affiliate parameters and swap buttons for the other drinks of the role, then 「全部で7本」 and the LINE link.
+// affiliate parameters and swap buttons for the other drinks of the role, then 「全部で6本」 and the LINE link.
 const AFFILIATE = /[?&](tag|ascsubtag|linkCode|aff(iliate)?(_?id)?|scid|a8|afid)=/i;
 const unescape = (text) => text.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 const attr = (tag, name) => {
@@ -126,14 +126,14 @@ function checkBonenkaiCopy(html, path) {
   };
   const metaTitle = "忘年会のノンアルコール、何を何本？ 乾杯から料理まで";
   const description =
-    "忘年会のノンアルコールは、10人なら18本が目安です。乾杯用に小さな瓶をひとり1本、あとはテーブルで注ぎ分ける大きな瓶と、料理に合う甘さ控えめの瓶をそろえます。人数ごとの本数表つきで、買い出しリストはそのままLINEで送れます。";
+    "忘年会のノンアルコールは、10人なら13本が目安です。乾杯用に小さな瓶をひとり1本、あとはテーブルで注ぎ分ける大きな瓶と、料理に合う甘さ控えめの瓶をそろえます。人数ごとの本数表つきで、買い出しリストはそのままLINEで送れます。";
   const h1Text = "忘年会のノンアル、乾杯の一本から";
   const lead =
-    "乾杯は小さな瓶でひとり1本。テーブルには大きな瓶を置いて注ぎ分け、料理が進んだら甘さ控えめの瓶を開けます。ソフトドリンクで乾杯する人が10人なら、あわせて18本が目安です。";
+    "乾杯は小さな瓶でひとり1本。テーブルには大きな瓶を置いて注ぎ分け、料理が進んだら甘さ控えめの瓶を開けます。ソフトドリンクで乾杯する人が10人なら、あわせて13本が目安です。";
   const smallHeading = "乾杯の飲み物は、ひとり1本の小さな瓶で";
   const caption = "何人で何本？ ノンアルの本数早見表";
   const note =
-    "小さな瓶はひとり1本、大きな瓶は4人に1本、甘さ控えめは2人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。";
+    "小さな瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。";
   if (!html.includes(`<title>${metaTitle}｜STYLISH!</title>`)) {
     fail(`${path} title is not the approved meta title`);
   }
@@ -166,7 +166,7 @@ function checkBonenkaiCopy(html, path) {
   const rows = [...visible.matchAll(/<tr>([\s\S]*?)<\/tr>/g)]
     .slice(1)
     .map((row) => [...row[1].matchAll(/<(?:th|td)\b[^>]*>([\s\S]*?)<\/(?:th|td)>/g)].map((cell) => strip(cell[1])).join("|"));
-  const expectedRows = ["5人|10本|5|2|3", "10人|18本|10|3|5", "20人|35本|20|5|10", "30人|53本|30|8|15"];
+  const expectedRows = ["5人|7本|5|1|1", "10人|13本|10|2|1", "20人|26本|20|4|2", "30人|39本|30|6|3"];
   if (rows.join() !== expectedRows.join()) {
     fail(`${path} count table rows: ${rows.join() || "missing"}`);
   }
@@ -174,7 +174,7 @@ function checkBonenkaiCopy(html, path) {
 const ROLES = [
   ["kanpai", "乾杯用", 4],
   ["table", "テーブル用", 1],
-  ["meal", "食事用", 2],
+  ["meal", "食事用", 1],
 ];
 for (const slug of scenes) {
   const path = `/ba/${slug}/`;
@@ -261,8 +261,8 @@ for (const slug of scenes) {
     sent.push(`　${units}本（${label}）\n`);
   }
   const totalTag = /<p class="[^"]*" data-total="(\d+)">([\s\S]*?)<\/p>/.exec(part);
-  if (!totalTag || Number(totalTag[1]) !== total || total !== 7 || strip(totalTag[2]) !== `全部で${total}本`) {
-    fail(`${path} total is not 「全部で7本」: ${totalTag ? strip(totalTag[2]) : "missing"}`);
+  if (!totalTag || Number(totalTag[1]) !== total || total !== 6 || strip(totalTag[2]) !== `全部で${total}本`) {
+    fail(`${path} total is not 「全部で6本」: ${totalTag ? strip(totalTag[2]) : "missing"}`);
   }
   const line = /<a href="(https:\/\/line\.me\/R\/share\?text=[^"]+)"[^>]*data-list-line="">([^<]*)<\/a>/.exec(part);
   const text = line ? decodeURIComponent(unescape(line[1]).split("text=")[1]) : "";
