@@ -17,6 +17,7 @@ import {
   type SetCard,
   type SetRole,
 } from "@/lib/shopping-list";
+import { flushHeadcountChange, noteHeadcount, shareList } from "@/lib/usage-session";
 import { cx } from "../../cx";
 import { ExternalPhoto, StillLife } from "../StillLife/StillLife";
 import styles from "./ShoppingList.module.css";
@@ -71,13 +72,15 @@ export function ShoppingList({ headingId, title, cards, url, emphasizeStores = f
   const total = setTotal(lines);
   const text = setText(title, headcount, lines, url);
 
-  const setCount = (value: number) => {
+  const setCount = (value: number, method: "step_up" | "step_down") => {
     const next = clampHeadcount(value);
     setHeadcount(next);
     setDraft(String(next));
+    noteHeadcount(next, method);
   };
 
   const copy = async () => {
+    shareList("copy");
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -110,7 +113,7 @@ export function ShoppingList({ headingId, title, cards, url, emphasizeStores = f
           ソフトドリンクで乾杯する人
         </span>
         <div className={styles.stepper} role="group" aria-labelledby={`${headingId}-people`}>
-          <button type="button" className={styles.step} onClick={() => setCount(headcount - 1)} disabled={headcount <= MIN_HEADCOUNT} aria-label="1人減らす">
+          <button type="button" className={styles.step} onClick={() => setCount(headcount - 1, "step_down")} disabled={headcount <= MIN_HEADCOUNT} aria-label="1人減らす">
             −
           </button>
           <label className={styles.count}>
@@ -126,14 +129,19 @@ export function ShoppingList({ headingId, title, cards, url, emphasizeStores = f
                 setDraft(event.target.value);
                 const value = Number(event.target.value);
                 if (event.target.value !== "" && Number.isFinite(value)) {
-                  setHeadcount(clampHeadcount(value));
+                  const next = clampHeadcount(value);
+                  setHeadcount(next);
+                  noteHeadcount(next, "type");
                 }
               }}
-              onBlur={() => setDraft(String(headcount))}
+              onBlur={() => {
+                setDraft(String(headcount));
+                flushHeadcountChange();
+              }}
             />
             <span className={styles.unit}>人</span>
           </label>
-          <button type="button" className={styles.step} onClick={() => setCount(headcount + 1)} disabled={headcount >= MAX_HEADCOUNT} aria-label="1人増やす">
+          <button type="button" className={styles.step} onClick={() => setCount(headcount + 1, "step_up")} disabled={headcount >= MAX_HEADCOUNT} aria-label="1人増やす">
             ＋
           </button>
         </div>
@@ -224,7 +232,7 @@ export function ShoppingList({ headingId, title, cards, url, emphasizeStores = f
       </p>
 
       <div className={styles.send}>
-        <a href={lineShareUrl(text)} className={styles.line} target="_blank" rel="noreferrer" data-list-line="">
+        <a href={lineShareUrl(text)} className={styles.line} target="_blank" rel="noreferrer" data-list-line="" onClick={() => shareList("line")}>
           買い出しの人にLINEで送る
         </a>
         <button type="button" className={styles.copy} onClick={copy} aria-live="polite">
