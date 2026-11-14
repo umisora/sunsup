@@ -38,7 +38,7 @@ Google Search Console の 2026-11-09 時点は、326 URL が「クロール済�
 | `/drink/pokka-kireto-155/` | `/drink/pokka-kireto-lemon/` | 公式の WX64 と WB52 はどちらも「キレートレモン（155ml）」、JAN `49780741`、Amazon `B0F9WZ5FJS` |
 | `/drink/pokka-kireto-wlemon-500/` | `/drink/pokka-kireto-wlemon/` | 公式の WV74 と WY96 はどちらも 500ml のペットボトル、JAN `4589850829062`、Amazon `B0H7F94ZG6` |
 
-余分に公開されているのは 4 ページ。
+余分に公開されているのは 4 ページ。この PR ではどれも外していない。リモナータと生茶は [#99](https://github.com/umisora/sunsup/pull/99) が扱う。キレートレモン 155ml と Wレモン 500ml は、公開のまま 301 しない。
 
 名前を揃えると同じ呼び方だが、容量か容器が違う組は 47 組、107 ページ。200ml と 330ml のような別商品なので、301 していない。
 
@@ -76,14 +76,14 @@ Amazon の ASIN が同じでも商品が違う組は、まとめない。野菜�
 
 ## この変更で直すこと
 
-- 上の 4 スラッグは `公開=0`。ページもサイトマップも作らない。`MOVED` で、末尾スラッシュのありなしを残す URL へ 301 する。
-- 無糖タグに入っていた `kirin-namacha-400` は、残す `namacha-525` に差し替える。棚の本数は 84 のまま。
-- 公開数は 898 から 894。柑橘・炭酸は 131 から 128、茶・ハーブは 147 から 146。文面の型は変えていない。本数だけ、公開行から計算し直す。
-- 連続するスラッシュと `/index.html` は、middleware が 301 で canonical のパスへ畳む。クエリは残す。`?story=` と `?analytics_qa=` は消さない。
-- `index.txt` には `x-robots-tag: noindex` を付ける。`robots.txt` は `Disallow: /*index.txt$`。ブラウザの画面遷移用の取得はそのまま。
-- `scripts/check-canonical.mjs` は、サイトマップの URL に自分自身を canonical とするページが無いとき、除外していないページの canonical が自分の URL と違うとき、公開ページがサイトマップに無いとき、失敗する。除外は `/drink/shell/` と `/404/`。
+ドリンクの行は変えていない。公開数は 898 のまま。
 
-直していないもの: 容量違いの 47 組、ASIN を共有する別商品 16 ページ、静物の無い 10 ページ、クエリの除去、大文字の 404、http の 301、プレビューの noindex（Cloudflare が付ける）。
+- 連続するスラッシュと `/index.html` は、middleware が 301 で canonical のパスへ畳む。
+- クエリは消さない。本番では `/?story=autumn-afternoon` と `/ba/kaisha/?utm_source=gsc` が 200 で、canonical はクエリを除いた URL を指していた。書き出されたページの canonical もクエリを含まない。`?story=` はトップの訪問切替、`?analytics_qa=` は計測の確認なので、301 で落とすと動かなくなる。
+- `index.txt` には `x-robots-tag: noindex` を付ける。`robots.txt` は `Disallow: /*index.txt$`。ブラウザの画面遷移用の取得はそのまま。
+- `scripts/check-canonical.mjs` は、サイトマップの URL に自分自身を canonical とするページが無いとき、またはサイトマップに入ったページの canonical がその URL と違うとき、失敗する。サイトマップに入っていない `/drink/shell/` と `/404/` は、canonical が無くても失敗にしない。
+
+直していないもの: 同じ商品の 4 組、容量違いの 47 組、ASIN を共有する別商品 16 ページ、静物の無い 11 ページ、クエリの除去、大文字の 404、http の 301、プレビューの noindex（Cloudflare が付ける）。
 
 ## URL 一覧がないと確定できないこと
 

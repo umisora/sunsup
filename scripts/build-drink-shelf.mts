@@ -1,4 +1,4 @@
-// Slim shelf for /drink/. The page renders it from a client module so the public cards
+// Slim shelf for /drink/. The page renders it from a client module so the 898 cards
 // are not repeated inside the RSC flight payload. Next writes this file while loading
 // next.config, before it compiles the page that imports it.
 import { writeFileSync } from "node:fs";

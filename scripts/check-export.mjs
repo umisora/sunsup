@@ -294,11 +294,11 @@ if (drinks.length !== 932) {
 }
 const publicDrinks = drinks.filter((drink) => drink["公開"] === "1");
 const hiddenDrinks = drinks.filter((drink) => drink["公開"] === "0");
-if (publicDrinks.length !== 894) {
-  fail(`expected 894 public drink rows, found ${publicDrinks.length}`);
+if (publicDrinks.length !== 898) {
+  fail(`expected 898 public drink rows, found ${publicDrinks.length}`);
 }
-if (hiddenDrinks.length !== 38) {
-  fail(`expected 38 hidden drink rows, found ${hiddenDrinks.length}`);
+if (hiddenDrinks.length !== 34) {
+  fail(`expected 34 hidden drink rows, found ${hiddenDrinks.length}`);
 }
 
 function sizeSentences(value) {
@@ -498,8 +498,8 @@ for (const drink of publicDrinks) {
   if (!html.includes("次の飲み会に") || !html.includes("持っていく一本です。")) {
     fail(`${drink.slug} is missing the close line`);
   }
-  if (!html.includes("/ 894") || html.includes("/ 932")) {
-    fail(`${drink.slug} catalog count is not the public 894`);
+  if (!html.includes("/ 898") || html.includes("/ 932")) {
+    fail(`${drink.slug} catalog count is not the public 898`);
   }
   const stores = [
     [official, "公式サイト"],
@@ -562,14 +562,14 @@ if (!home.includes('href="/drink/"') || !office.includes('href="/drink/"')) {
   fail("home or office does not link to the drink list");
 }
 if (
-  !(home.includes("894本") || home.includes("894<!-- -->本")) ||
+  !(home.includes("898本") || home.includes("898<!-- -->本")) ||
   home.includes("932本") ||
   home.includes("932<!-- -->本")
 ) {
-  fail("home count is not the public 894");
+  fail("home count is not the public 898");
 }
-if (!list.includes("894本") || list.includes("932本")) {
-  fail("drink list count is not the public 894");
+if (!list.includes("898本") || list.includes("932本")) {
+  fail("drink list count is not the public 898");
 }
 if (shell.includes('data-store-primary="true"')) {
   fail("shell has a store CTA");

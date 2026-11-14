@@ -14,14 +14,6 @@ const NEW_ORIGIN = "https://stylish.sunsup.me";
 export const MOVED: Record<string, string> = {
   "/ba/nomanai-hito/": "/ba/okurimono/",
   "/ba/nomanai-hito": "/ba/okurimono/",
-  "/drink/sanpellegrino-limonata-pet/": "/drink/sanpellegrino-limonata/",
-  "/drink/sanpellegrino-limonata-pet": "/drink/sanpellegrino-limonata/",
-  "/drink/kirin-namacha-400/": "/drink/namacha-525/",
-  "/drink/kirin-namacha-400": "/drink/namacha-525/",
-  "/drink/pokka-kireto-155/": "/drink/pokka-kireto-lemon/",
-  "/drink/pokka-kireto-155": "/drink/pokka-kireto-lemon/",
-  "/drink/pokka-kireto-wlemon-500/": "/drink/pokka-kireto-wlemon/",
-  "/drink/pokka-kireto-wlemon-500": "/drink/pokka-kireto-wlemon/",
 };
 
 type PagesContext = {

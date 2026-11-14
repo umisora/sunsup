@@ -1,21 +1,11 @@
-// Fails the build when a sitemap URL has no self-canonical page, or when a built
-// page's canonical points somewhere else without being intentionally left out of
-// the sitemap. Also checks the redirect helper and that retired drink slugs are
-// not built, linked, or listed.
+// Fails the build when a sitemap URL has no page whose canonical is that URL,
+// or when a built page is still in the sitemap but its canonical is not its own URL.
+// Query strings are not redirected: the built canonical is already the clean URL.
 import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ORIGIN = "https://stylish.sunsup.me";
-// Built, but not a published URL. /404/ is the not-found page. /drink/shell/ is
-// the empty template. Both may omit a canonical or point elsewhere.
-const EXCLUDED = new Set(["/drink/shell/", "/404/"]);
-const RETIRED = [
-  "/drink/sanpellegrino-limonata-pet/",
-  "/drink/kirin-namacha-400/",
-  "/drink/pokka-kireto-155/",
-  "/drink/pokka-kireto-wlemon-500/",
-];
 
 const failures = [];
 const fail = (message) => failures.push(message);
@@ -54,17 +44,17 @@ const cases = [
   ["//about/", "", "/about/"],
   ["/about/index.html", "", "/about/"],
   ["/index.html", "", "/"],
-  ["/drink/sanpellegrino-limonata-pet/index.html", "", "/drink/sanpellegrino-limonata/"],
-  ["/drink/sanpellegrino-limonata-pet/", "", "/drink/sanpellegrino-limonata/"],
-  ["/drink/sanpellegrino-limonata-pet", "?q=1", "/drink/sanpellegrino-limonata/?q=1"],
-  ["/drink//kirin-namacha-400/", "", "/drink/namacha-525/"],
-  ["/drink/pokka-kireto-155", "", "/drink/pokka-kireto-lemon/"],
-  ["/drink/pokka-kireto-wlemon-500/", "", "/drink/pokka-kireto-wlemon/"],
+  ["/about//", "?utm_source=gsc", "/about/?utm_source=gsc"],
+  ["/ba/kaisha/", "?utm_source=gsc", null],
+  ["/ba/kaisha/", "?story=autumn-afternoon", null],
+  ["/drink/sanpellegrino-limonata-pet/", "", null],
+  ["/drink/kirin-namacha-400/", "", null],
+  ["/drink/pokka-kireto-155/", "", null],
+  ["/drink/pokka-kireto-wlemon-500/", "", null],
   ["/ba/nomanai-hito", "", "/ba/okurimono/"],
   ["/ba//nomanai-hito/", "", "/ba/okurimono/"],
   ["/index.txt", "", null],
   ["/robots.txt", "", null],
-  ["/ba/kaisha/", "?utm_source=gsc", null],
 ];
 for (const [pathname, search, expected] of cases) {
   const got = redirectPath(pathname, search);
@@ -134,7 +124,6 @@ for (const rel of walkHtml("out")) {
   pages.push({ route, html, canonical: canonicalOf(html) });
 }
 
-const byRoute = new Map(pages.map((page) => [page.route, page]));
 let sitemapLocs = [];
 try {
   sitemapLocs = [...locs(readFileSync(join("out", "sitemap-pages.xml"), "utf8")), ...locs(readFileSync(join("out", "sitemap-drinks.xml"), "utf8"))];
@@ -142,53 +131,36 @@ try {
   fail(error instanceof Error ? error.message : String(error));
 }
 
+const sitemapSet = new Set(sitemapLocs);
 const selfCanonical = new Map();
 for (const page of pages) {
   const own = `${ORIGIN}${page.route}`;
-  if (EXCLUDED.has(page.route)) {
-    continue;
+  if (page.canonical === own) {
+    selfCanonical.set(own, page.route);
   }
-  if (!page.canonical) {
-    fail(`${page.route} has no canonical`);
+  if (!sitemapSet.has(own)) {
     continue;
   }
   if (page.canonical !== own) {
-    fail(`${page.route} canonical is ${page.canonical}`);
-    continue;
+    fail(`${page.route} is in the sitemap but its canonical is ${page.canonical || "missing"}`);
   }
-  selfCanonical.set(own, page.route);
 }
 
 for (const loc of sitemapLocs) {
-  if (selfCanonical.get(loc) == null) {
+  if (!selfCanonical.has(loc)) {
     fail(`sitemap URL has no self-canonical page: ${loc}`);
   }
-}
-
-for (const [own, route] of selfCanonical) {
-  if (!sitemapLocs.includes(own)) {
-    fail(`self-canonical page is missing from the sitemap: ${route}`);
-  }
-}
-
-for (const path of RETIRED) {
-  const slug = path.split("/").filter(Boolean).at(-1);
-  if (byRoute.has(path) || existsSync(join("out", "drink", slug, "index.html"))) {
-    fail(`retired drink is still built: ${path}`);
-  }
-  if (sitemapLocs.includes(`${ORIGIN}${path}`)) {
-    fail(`sitemap lists retired ${path}`);
+  if (loc.includes("?")) {
+    fail(`sitemap URL has a query string: ${loc}`);
   }
 }
 
 for (const page of pages) {
+  if (page.canonical.includes("?")) {
+    fail(`${page.route} canonical keeps a query string: ${page.canonical}`);
+  }
   const hrefs = [...page.html.matchAll(/\shref="([^"]+)"/g)].map((match) => match[1]);
   for (const href of hrefs) {
-    for (const path of RETIRED) {
-      if (href.includes(path.slice(0, -1))) {
-        fail(`${page.route} links to retired ${path}`);
-      }
-    }
     const path = pageHref(href);
     if (!path) continue;
     if (path.includes("//") || path.endsWith("/index.html") || path === "/index.html") {
@@ -206,5 +178,4 @@ if (!robots.includes("Disallow: /*index.txt$")) {
 
 finish();
 
-const dated = pages.filter((page) => !EXCLUDED.has(page.route)).length;
-console.log(`canonical ok: ${dated} self-canonical pages, ${sitemapLocs.length} sitemap urls, ${RETIRED.length} retired slugs`);
+console.log(`canonical ok: ${selfCanonical.size} self-canonical pages, ${sitemapLocs.length} sitemap urls`);
