@@ -172,8 +172,9 @@ for (const page of pages) {
 }
 
 const robots = readFileSync(join("out", "robots.txt"), "utf8");
-if (!robots.includes("Disallow: /*index.txt$")) {
-  fail("robots.txt does not disallow RSC index.txt payloads");
+const disallowed = [...robots.matchAll(/^disallow:\s*(.+)$/gim)].map((match) => match[1].trim());
+if (disallowed.some((rule) => /index\.txt/i.test(rule))) {
+  fail("robots.txt disallows index.txt, so Google will not fetch the noindex header");
 }
 
 finish();

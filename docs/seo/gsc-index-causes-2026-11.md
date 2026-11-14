@@ -80,7 +80,7 @@ Amazon の ASIN が同じでも商品が違う組は、まとめない。野菜�
 
 - 連続するスラッシュと `/index.html` は、middleware が 301 で canonical のパスへ畳む。
 - クエリは消さない。本番では `/?story=autumn-afternoon` と `/ba/kaisha/?utm_source=gsc` が 200 で、canonical はクエリを除いた URL を指していた。書き出されたページの canonical もクエリを含まない。`?story=` はトップの訪問切替、`?analytics_qa=` は計測の確認なので、301 で落とすと動かなくなる。
-- `index.txt` には `x-robots-tag: noindex` を付ける。`robots.txt` は `Disallow: /*index.txt$`。ブラウザの画面遷移用の取得はそのまま。
+- `index.txt` には `x-robots-tag: noindex` を付ける。`robots.txt` では `index.txt` を Disallow しない。クロールを止めると Google が noindex を読めない。ブラウザの画面遷移用の取得はそのまま。
 - `scripts/check-canonical.mjs` は、サイトマップの URL に自分自身を canonical とするページが無いとき、またはサイトマップに入ったページの canonical がその URL と違うとき、失敗する。サイトマップに入っていない `/drink/shell/` と `/404/` は、canonical が無くても失敗にしない。
 
 直していないもの: 同じ商品の 4 組、容量違いの 47 組、ASIN を共有する別商品 16 ページ、静物の無い 11 ページ、クエリの除去、大文字の 404、http の 301、プレビューの noindex（Cloudflare が付ける）。
