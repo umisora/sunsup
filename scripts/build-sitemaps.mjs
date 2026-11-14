@@ -14,6 +14,7 @@ import { closeSync, existsSync, openSync, readFileSync, renameSync, statSync, un
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { SITE_ORIGIN, sitemapDrinkPaths, sitemapPagePaths } from "../lib/sitemap-entries.ts";
+import { MUTOU } from "../lib/tags.ts";
 
 const ZERO = "0000000000000000000000000000000000000000";
 const DAY = new Intl.DateTimeFormat("en-CA", {
@@ -259,6 +260,8 @@ const SOURCES = [
   "lib/scenes.ts",
   "lib/categories.ts",
   "lib/sitemap-entries.ts",
+  "lib/tags.ts",
+  "data/tags/mutou.csv",
   "app/about/page.tsx",
   "scripts/build-sitemaps.mjs",
 ];
@@ -348,6 +351,8 @@ const dates = skipped
       scenes: blame("lib/scenes.ts"),
       categories: blame("lib/categories.ts"),
       about: blame("app/about/page.tsx"),
+      mutou: blame("data/tags/mutou.csv"),
+      tag: blame("lib/tags.ts"),
     };
 
 // Pages whose rendered HTML changes with the build clock, or that mix every
@@ -384,6 +389,18 @@ function pageEntry(path) {
       loc,
       lastmod: lastmodOf(dates.categories, range[0], range[1]),
       source: `lib/categories.ts:${range[0]}-${range[1]}`,
+    };
+  }
+  if (path === MUTOU.path) {
+    const membership = lastmodOfFile(dates.mutou);
+    const copy = lastmodOfFile(dates.tag);
+    if (!membership || !copy) {
+      return { loc, lastmod: null, source: "data/tags/mutou.csv + lib/tags.ts" };
+    }
+    return {
+      loc,
+      lastmod: membership > copy ? membership : copy,
+      source: "data/tags/mutou.csv + lib/tags.ts",
     };
   }
   return { loc, lastmod: null, source: "no single source file" };

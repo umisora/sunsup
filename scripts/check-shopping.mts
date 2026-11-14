@@ -62,6 +62,49 @@ expect(
     "5:5+1+1=7,10:10+2+1=13,20:20+4+2=26,30:30+6+3=39",
   `bonenkai bottle table ${tableRows.map((row) => `${row.headcount}:${row.kanpai}+${row.table}+${row.meal}=${row.total}`).join()}`,
 );
+// The table's words live on the scene. Bottle numbers stay in bottleCounts; a scene must not store them.
+const countTableScenes = SCENES.flatMap((scene) => (scene.countTable ? [scene.slug] : []));
+expect(countTableScenes.join() === "bonenkai,kaisha,kansougeikai", `countTable on ${countTableScenes.join() || "none"}`);
+const countCopy: Record<string, { title: string; headingId: string; headcountLabel: string; breakdown: readonly [string, string, string]; note: string }> = {
+  bonenkai: {
+    title: "何人で何本？ ノンアルの本数早見表",
+    headingId: "bonenkai-bottle-counts",
+    headcountLabel: "ソフトドリンクで乾杯する人",
+    breakdown: ["小さな瓶", "大きな瓶", "甘さ控えめ"],
+    note: "小さな瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。",
+  },
+  kaisha: {
+    title: "定時後の乾杯、ソフトドリンクは何本？",
+    headingId: "kaisha-bottle-counts",
+    headcountLabel: "ソフトドリンクで乾杯する人",
+    breakdown: ["乾杯の瓶", "大きな瓶", "食事用"],
+    note: "乾杯の瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。STYLISH!の目安です。",
+  },
+  kansougeikai: {
+    title: "全員で乾杯するなら、何本？",
+    headingId: "kansougeikai-bottle-counts",
+    headcountLabel: "ソフトドリンクで乾杯する人",
+    breakdown: ["乾杯の瓶", "大きな瓶", "食事用"],
+    note: "乾杯の瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。主役に渡す一本は、別に足してください。STYLISH!の目安です。",
+  },
+};
+for (const [slug, copy] of Object.entries(countCopy)) {
+  const table = SCENES.find((scene) => scene.slug === slug)?.countTable;
+  const words = table ? `${table.title}\n${table.headcountLabel}\n${table.breakdown.join("|")}\n${table.note}` : "";
+  const storedNumbers = table !== undefined && ["kanpai", "table", "meal", "total", "rows"].some((key) => key in table);
+  expect(
+    table?.title === copy.title &&
+      table.headingId === copy.headingId &&
+      table.headcountLabel === copy.headcountLabel &&
+      table.breakdown.join("|") === copy.breakdown.join("|") &&
+      table.note === copy.note &&
+      !storedNumbers,
+    `${slug} countTable ${JSON.stringify(table)}`,
+  );
+  if (slug !== "bonenkai") {
+    expect(table?.breakdown[2] === "食事用" && !words.includes("甘さ控えめ") && !words.includes("砂糖なし"), `${slug} third label ${table?.breakdown[2] ?? "missing"}`);
+  }
+}
 expect(roleUnits("kanpai", 0) === 1 && roleUnits("kanpai", 999) === 200, "headcount is kept between 1 and 200");
 const card = (role: SetCard["role"], ...slugs: string[]): SetCard => ({
   role,

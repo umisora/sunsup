@@ -2,7 +2,7 @@
 // Every exported route (out/**/index.html) must parse, carry the STYLISH! Organization,
 // and carry one WebPage or CollectionPage whose isPartOf is the WebSite and whose publisher
 // is that Organization. Name and description must match the page's title and meta description.
-// Category pages and /ba/ pages, including /ba/office/, keep an ItemList of drink URLs.
+// Category, tag and /ba/ pages, including /ba/office/, keep an ItemList of drink URLs.
 // A Product must have a name, and a drink page's Product still comes only from catalog facts
 // (no price, offer, rating, review or brand).
 // Next also writes 404.html, the status-code copy of /404/. That file is not a second route.
@@ -28,7 +28,7 @@ function decode(value) {
 }
 
 function expectedKind(route) {
-  if (route === "/drink/" || route.startsWith("/category/") || route.startsWith("/ba/")) {
+  if (route === "/drink/" || route.startsWith("/category/") || route.startsWith("/ba/") || route.startsWith("/tag/")) {
     return "CollectionPage";
   }
   return "WebPage";
@@ -137,7 +137,7 @@ export function pageProblems(html, route, origin) {
     }
   }
 
-  if (route.startsWith("/category/") || route.startsWith("/ba/")) {
+  if (route.startsWith("/category/") || route.startsWith("/ba/") || route.startsWith("/tag/")) {
     const lists = items.filter((item) => item["@type"] === "ItemList");
     const entries = lists[0]?.itemListElement;
     if (lists.length !== 1 || !Array.isArray(entries) || entries.length < 1) {
@@ -234,6 +234,23 @@ function selfTest() {
   );
   if (!category.some((message) => message.includes("ItemList"))) {
     throw new Error("self-test: a category page without an ItemList was accepted");
+  }
+
+  const tag = pageProblems(
+    `<title>無糖のドリンク｜STYLISH!</title><meta name="description" content="desc"/><link rel="canonical" href="${origin}/tag/mutou/"/>${script(organization)}${script({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      url: `${origin}/tag/mutou/`,
+      name: "無糖のドリンク｜STYLISH!",
+      description: "desc",
+      isPartOf: { "@id": `${origin}/#website` },
+      publisher: { "@id": `${origin}/#organization` },
+    })}`,
+    "/tag/mutou/",
+    origin,
+  );
+  if (!tag.some((message) => message.includes("ItemList"))) {
+    throw new Error("self-test: a tag page without an ItemList was accepted");
   }
 
   const office = pageProblems(

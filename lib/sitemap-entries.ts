@@ -1,6 +1,7 @@
 import { CATEGORY_PAGES, categoryPagePath } from "./categories";
 import { loadDrinks, SITE_ORIGIN } from "./drinks";
 import { SCENES, scenePath } from "./scenes";
+import { MUTOU } from "./tags";
 
 export { SITE_ORIGIN };
 
@@ -9,7 +10,7 @@ export { SITE_ORIGIN };
  * /drink/shell/ is an empty template, so it is not listed.
  */
 export function sitemapPagePaths(): string[] {
-  return ["/", "/ba/office/", ...SCENES.map(scenePath), "/about/", "/drink/", ...CATEGORY_PAGES.map(categoryPagePath)];
+  return ["/", "/ba/office/", ...SCENES.map(scenePath), "/about/", "/drink/", ...CATEGORY_PAGES.map(categoryPagePath), MUTOU.path];
 }
 
 /** Public drink pages, catalog order. */
