@@ -4,7 +4,7 @@ import { onRequestPost } from "../functions/api/click.ts";
 import { getDrink } from "../lib/drinks.ts";
 import { listHeadingText } from "../lib/list-heading.ts";
 import { groupDrinks, SCENE_SETS, SCENES, sceneSet } from "../lib/scenes.ts";
-import { servingUnit } from "../lib/servings.ts";
+import { heroSpecs, servingUnit } from "../lib/servings.ts";
 import { bottleCounts, DEFAULT_HEADCOUNT, lineShareUrl, roleUnits, SET_ROLES, setLines, setText, setTotal, type SetCard } from "../lib/shopping-list.ts";
 
 const failures: string[] = [];
@@ -25,6 +25,16 @@ expect(syrup?.dilute === true && syrup.people === 0 && syrup.text === "割って
 const counted = unit("梅シロップ 500ml", "500mlの瓶です。水で割ると十人前後です。", "ビン");
 expect(counted?.dilute === true && counted.people === 10 && counted.text.startsWith("割って"), "a syrup with a catalog count keeps it, marked 割って");
 expect(unit("名前だけ", "届くのは24本です。", "ビン") === undefined, "no volume and no count gives no unit");
+const apple = getDrink("nfs-apple-720");
+expect(
+  apple?.size === "720mlの瓶です。グラスに注いで、四、五人で分けます。" && !!apple && heroSpecs(apple).join("|") === "720ml|大きな瓶|4〜5人分",
+  `nfs-apple-720 is ${apple ? heroSpecs(apple).join("|") : "missing"} from ${apple?.size}`,
+);
+const bonenkaiTable = SCENES.find((scene) => scene.slug === "bonenkai")?.countTable;
+expect(
+  bonenkaiTable?.headcountLabel === "ソフトドリンクで乾杯する人" && bonenkaiTable.breakdown.join("|") === "小さな瓶|大きな瓶|食事用",
+  `bonenkai countTable labels ${bonenkaiTable?.breakdown.join("|") ?? "missing"}`,
+);
 
 // Bottles per role: 乾杯用 one a person, テーブル用 one big bottle per 5, 食事用 one per 10.
 // Each role rounds up on its own (Math.ceil), then the three counts are summed.
@@ -70,7 +80,7 @@ const countCopy: Record<string, { title: string; headingId: string; headcountLab
     title: "何人で何本？ ノンアルの本数早見表",
     headingId: "bonenkai-bottle-counts",
     headcountLabel: "ソフトドリンクで乾杯する人",
-    breakdown: ["小さな瓶", "大きな瓶", "甘さ控えめ"],
+    breakdown: ["小さな瓶", "大きな瓶", "食事用"],
     note: "小さな瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。",
   },
   kaisha: {
