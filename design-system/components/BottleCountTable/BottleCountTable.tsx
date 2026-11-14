@@ -1,19 +1,80 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, type ReactNode } from "react";
 import type { SceneCountTable } from "@/lib/scenes";
 import { bottleCounts } from "@/lib/shopping-list";
+import { setTableOnPage, viewCountTable } from "@/lib/usage-session";
 import styles from "./BottleCountTable.module.css";
 
 /** Headcounts the early table prints. Counts come from `bottleCounts`. */
 const HEADCOUNTS = [5, 10, 20, 30] as const;
 
 /**
+ * Phrase boundaries for every scene's column labels.
+ * Longer prefixes win, so ソフトドリンク stays whole and で stays with it when the column allows.
+ */
+const PHRASE_PREFIX = ["ソフトドリンク", "乾杯する", "乾杯の", "小さな", "大きな", "で"] as const;
+
+function withBreaks(text: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  let rest = text;
+  let key = 0;
+  while (rest.length > 0) {
+    const hit = PHRASE_PREFIX.filter((word) => rest.startsWith(word)).sort((a, b) => b.length - a.length)[0];
+    if (!hit) {
+      nodes.push(rest);
+      break;
+    }
+    nodes.push(hit);
+    rest = rest.slice(hit.length);
+    if (rest.length > 0) {
+      nodes.push(<wbr key={key} />);
+      key += 1;
+    }
+  }
+  return nodes;
+}
+
+/**
  * Static headcount table above the recommended list.
  * Words come from the scene. Cells are the calculator's bottles.
+ * Half of this block on screen counts as one table view for the page.
  */
 export function BottleCountTable({ countTable }: { countTable: SceneCountTable }) {
+  const pathname = usePathname();
+  const blockRef = useRef<HTMLDivElement>(null);
   const rows = HEADCOUNTS.map((people) => bottleCounts(people));
   const [toastLabel, bigLabel, mealLabel] = countTable.breakdown;
+
+  useEffect(() => {
+    setTableOnPage(true);
+    const node = blockRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      return () => {
+        setTableOnPage(false);
+      };
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.5);
+        if (!visible) {
+          return;
+        }
+        observer.disconnect();
+        viewCountTable();
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      setTableOnPage(false);
+    };
+  }, [pathname]);
+
   return (
-    <div className={styles.block}>
+    <div className={styles.block} ref={blockRef}>
       <table className={styles.table}>
         <caption id={countTable.headingId} className={styles.caption}>
           {countTable.title}
@@ -28,19 +89,19 @@ export function BottleCountTable({ countTable }: { countTable: SceneCountTable }
         <thead>
           <tr>
             <th scope="col" className={styles.peopleHead}>
-              {countTable.headcountLabel}
+              {withBreaks(countTable.headcountLabel)}
             </th>
             <th scope="col" className={styles.totalHead}>
               合計
             </th>
             <th scope="col" className={styles.kindHead}>
-              {toastLabel}
+              {withBreaks(toastLabel)}
             </th>
             <th scope="col" className={styles.kindHead}>
-              {bigLabel}
+              {withBreaks(bigLabel)}
             </th>
             <th scope="col" className={styles.kindHead}>
-              {mealLabel}
+              {withBreaks(mealLabel)}
             </th>
           </tr>
         </thead>

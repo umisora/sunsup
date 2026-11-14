@@ -25,6 +25,7 @@ const allowed = new Set<string>(ESSENTIAL_EVENT_PROPERTIES);
 
 interface AnalyticsInit {
   init(token: string, config?: object): void;
+  capture?(event: string, properties?: Record<string, unknown>): void;
 }
 
 if (!client) {
@@ -80,6 +81,29 @@ if (!client) {
     events.every((event) => Object.keys(event.properties ?? {}).every((key) => allowed.has(key))),
     "sent properties stay on the essential list",
   );
+  const lastPageviewId = events.at(-1)?.properties?.$pageview_id;
+  expect(typeof lastPageviewId === "string" && lastPageviewId.length > 0, "a manual pageview still gets a $pageview_id");
+  client?.capture?.("outbound_click", {
+    shop: "amazon",
+    host: "www.amazon.co.jp",
+    drink_slug: "kimino-yuzu",
+    path: "/ba/bonenkai/",
+    venue: "bonenkai",
+    position: 0,
+    source: "list",
+  });
+  await wait(40);
+  const sent = requests.flatMap((request) => {
+    const payload = JSON.parse(request.body) as {
+      batch?: { event?: string; properties?: Record<string, unknown> }[];
+    };
+    return payload.batch ?? [];
+  });
+  const click = sent.find((event) => event.event === "outbound_click");
+  expect(click?.properties?.$pageview_id === lastPageviewId, "a later custom event keeps the current $pageview_id");
+  expect(typeof click?.properties?.$session_id === "string" && click.properties.$session_id.length > 0, "a custom event keeps $session_id");
+  const clickWire = JSON.stringify(click);
+  expect(!clickWire.includes("$geoip_city_name") && !clickWire.includes("$ip") && !clickWire.includes("latitude"), "a custom event is sent without city, IP, or coordinates");
 }
 
 if (failures.length > 0) {

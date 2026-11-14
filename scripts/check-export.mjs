@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { fillExportIssues, selfTestFillHtml } from "./check-fill-html.mjs";
 import { isGenericProduct } from "./generic-rule.mjs";
 // JSON-LD on drink pages has its own checker; importing runs it first.
+import "./check-drink-dupes.mjs";
 import "./check-jsonld.mjs";
 import "./check-scenes.mjs";
 import "./check-categories.mjs";
@@ -289,16 +290,16 @@ if (!existsSync(poolPath)) {
     }
   }
 }
-if (drinks.length !== 932) {
-  fail(`expected 932 drink rows, found ${drinks.length}`);
+if (drinks.length !== 931) {
+  fail(`expected 931 drink rows, found ${drinks.length}`);
 }
 const publicDrinks = drinks.filter((drink) => drink["公開"] === "1");
 const hiddenDrinks = drinks.filter((drink) => drink["公開"] === "0");
-if (publicDrinks.length !== 898) {
-  fail(`expected 898 public drink rows, found ${publicDrinks.length}`);
+if (publicDrinks.length !== 896) {
+  fail(`expected 896 public drink rows, found ${publicDrinks.length}`);
 }
-if (hiddenDrinks.length !== 34) {
-  fail(`expected 34 hidden drink rows, found ${hiddenDrinks.length}`);
+if (hiddenDrinks.length !== 35) {
+  fail(`expected 35 hidden drink rows, found ${hiddenDrinks.length}`);
 }
 
 function sizeSentences(value) {
@@ -431,6 +432,11 @@ for (const drink of publicDrinks) {
   if (!html.includes(name)) {
     fail(`${drink.slug} is missing its name`);
   }
+  if (drink.slug === "nfs-apple-720") {
+    if (!html.includes("4〜5人分") || html.includes("3〜4人分") || !html.includes("グラスに注いで、四、五人で分けます。")) {
+      fail(`${drink.slug} serving copy is not 4〜5人分`);
+    }
+  }
   const title = htmlText(drinkTitle(drink));
   const description = htmlText(drinkDescription(drink));
   if (!html.includes(`<title>${title}</title>`)) {
@@ -498,8 +504,8 @@ for (const drink of publicDrinks) {
   if (!html.includes("次の飲み会に") || !html.includes("持っていく一本です。")) {
     fail(`${drink.slug} is missing the close line`);
   }
-  if (!html.includes("/ 898") || html.includes("/ 932")) {
-    fail(`${drink.slug} catalog count is not the public 898`);
+  if (!html.includes("/ 896") || html.includes("/ 931")) {
+    fail(`${drink.slug} catalog count is not the public 896`);
   }
   const stores = [
     [official, "公式サイト"],
@@ -562,14 +568,14 @@ if (!home.includes('href="/drink/"') || !office.includes('href="/drink/"')) {
   fail("home or office does not link to the drink list");
 }
 if (
-  !(home.includes("898本") || home.includes("898<!-- -->本")) ||
-  home.includes("932本") ||
-  home.includes("932<!-- -->本")
+  !(home.includes("896本") || home.includes("896<!-- -->本")) ||
+  home.includes("931本") ||
+  home.includes("931<!-- -->本")
 ) {
-  fail("home count is not the public 898");
+  fail("home count is not the public 896");
 }
-if (!list.includes("898本") || list.includes("932本")) {
-  fail("drink list count is not the public 898");
+if (!list.includes("896本") || list.includes("931本")) {
+  fail("drink list count is not the public 896");
 }
 if (shell.includes('data-store-primary="true"')) {
   fail("shell has a store CTA");
@@ -808,12 +814,30 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
     if (text.includes("/ba/nomanai-hito") && found < 20) {
       fail(`${file} still points to /ba/nomanai-hito/; the page is /ba/okurimono/`);
     }
+    if (text.includes("/drink/sanpellegrino-limonata-pet")) {
+      fail(`${file} still points to /drink/sanpellegrino-limonata-pet/; the page is /drink/sanpellegrino-limonata/`);
+    }
+    if (text.includes("/drink/kirin-namacha-400")) {
+      fail(`${file} still points to /drink/kirin-namacha-400/; the page is /drink/namacha-525/`);
+    }
   }
   if (found > 20) {
     fail(`…and ${found - 20} more page(s) with exclusive wording`);
   }
   if (existsSync("out/ba/nomanai-hito")) {
     fail("out/ba/nomanai-hito/ is still built; the old path should only 301 to /ba/okurimono/");
+  }
+  const retiredDrinks = [
+    ["/drink/sanpellegrino-limonata-pet", "drink/sanpellegrino-limonata-pet"],
+    ["/drink/kirin-namacha-400", "drink/kirin-namacha-400"],
+  ];
+  for (const [path, dir] of retiredDrinks) {
+    if (existsSync(join("out", dir))) {
+      fail(`${path}/ is still built; it should only 301`);
+    }
+    if (sitemap.includes(path)) {
+      fail(`sitemap still lists ${path}`);
+    }
   }
   const gift = read("ba/okurimono/index.html");
   if (!gift.includes('<link rel="canonical" href="https://stylish.sunsup.me/ba/okurimono/"') || !gift.includes("ソフトドリンク好きに贈る一本")) {

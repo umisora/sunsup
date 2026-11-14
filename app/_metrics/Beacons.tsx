@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { isOutKind, OUT_LINKS_ID, type OutKind, type OutLinkMap } from "@/lib/out-links";
 import { captureOutboundClick } from "@/lib/web-analytics";
+import { flushHeadcountChange, outboundUsageProps, resetUsageSession, venueFromPath } from "@/lib/usage-session";
 
 /**
  * Counts page views and store-link clicks with navigator.sendBeacon.
@@ -69,11 +70,6 @@ function shopHost(href: string): string | null {
   }
 }
 
-function venueOf(path: string): string | undefined {
-  const match = /^\/ba\/([a-z0-9][a-z0-9-]{0,80})\/?$/.exec(path);
-  return match?.[1];
-}
-
 /** 0-based index among shop links on the page (document order). */
 function shopPosition(anchor: Element): number {
   let index = 0;
@@ -114,19 +110,26 @@ function onClick(event: MouseEvent): void {
       path: window.location.pathname,
       source: shop.source,
     });
+    flushHeadcountChange();
     const host = shopHost(shop.href);
     if (!host) {
       return;
     }
     const path = window.location.pathname;
+    const usage = outboundUsageProps(shop.source, target.closest("[data-list-role]")?.getAttribute("data-list-role"));
     captureOutboundClick({
       shop: shop.kind,
       host,
       drinkSlug: shop.slug,
       path,
-      venue: venueOf(path),
+      venue: venueFromPath(path),
       position: shopPosition(target),
       source: shop.source,
+      headcount: usage.headcount,
+      headcountChanged: usage.headcountChanged,
+      countTableViewed: usage.countTableViewed,
+      role: usage.role,
+      viewport: usage.viewport,
     });
   } catch {
     // Never get in the way of the link.
@@ -135,6 +138,11 @@ function onClick(event: MouseEvent): void {
 
 export function Beacons() {
   const pathname = usePathname();
+  // During render, before the table and list effects. This component sits after
+  // the page in the layout, so an effect here would run too late and wipe them.
+  if (pathname) {
+    resetUsageSession(pathname);
+  }
 
   useEffect(() => {
     document.addEventListener("click", onClick, true);

@@ -1,4 +1,5 @@
 import type { CaptureResult, PostHogConfig } from "posthog-js";
+import { MAX_HEADCOUNT, MIN_HEADCOUNT, SET_ROLES } from "./shopping-list";
 
 /**
  * Anonymous pageviews and shop-link clicks for https://stylish.sunsup.me only.
@@ -11,6 +12,9 @@ export const QA_QUERY_PARAM = "analytics_qa";
 export const QA_STORAGE_KEY = "analytics_qa";
 export const PAGEVIEW_EVENT = "$pageview";
 export const OUTBOUND_CLICK_EVENT = "outbound_click";
+export const COUNT_TABLE_VIEW_EVENT = "count_table_view";
+export const HEADCOUNT_CHANGE_EVENT = "headcount_change";
+export const LIST_SHARE_EVENT = "list_share";
 const DIRECT = "$direct";
 const INSTALLED_FLAG = "__stylishWebAnalytics";
 const SLUG = /^[a-z0-9][a-z0-9-]{0,80}$/;
@@ -18,6 +22,11 @@ const HOSTNAME = /^[A-Za-z0-9.-]{1,253}$/;
 const PATH = /^\/[A-Za-z0-9/_-]{0,200}$/;
 const OUT_SHOPS = new Set(["amazon", "rakuten", "direct", "other", "official"]);
 const OUT_SOURCES = new Set(["page", "list"]);
+const VIEWPORTS = new Set(["narrow", "wide"]);
+const HEADCOUNT_METHODS = new Set(["step_up", "step_down", "type", "mixed"]);
+const SHARE_METHODS = new Set(["line", "copy"]);
+const LIST_ROLES = new Set<string>(SET_ROLES);
+const MAX_CHANGE_INDEX = 999;
 
 /** Official PostHog Cloud ingestion hosts. The active host still comes from env. */
 const OFFICIAL_INGESTION_HOSTS = new Set(["https://eu.i.posthog.com", "https://us.i.posthog.com"]);
@@ -48,7 +57,10 @@ export const ESSENTIAL_EVENT_PROPERTIES = [
   "$is_identified",
 ] as const;
 
-/** Extra fields kept on an outbound_click. Shared SDK fields still come from ESSENTIAL_EVENT_PROPERTIES. */
+/**
+ * Extra fields kept on an outbound_click. Shared SDK fields still come from ESSENTIAL_EVENT_PROPERTIES.
+ * headcount is only present for a list link. City, IP, postal code, and coordinates are never listed.
+ */
 export const OUTBOUND_CLICK_PROPERTIES = [
   "shop",
   "host",
@@ -57,7 +69,30 @@ export const OUTBOUND_CLICK_PROPERTIES = [
   "venue",
   "position",
   "source",
+  "headcount",
+  "headcount_changed",
+  "count_table_viewed",
+  "role",
+  "viewport",
 ] as const;
+
+export const COUNT_TABLE_VIEW_PROPERTIES = ["venue", "viewport"] as const;
+
+export const HEADCOUNT_CHANGE_PROPERTIES = [
+  "venue",
+  "headcount_from",
+  "headcount_to",
+  "method",
+  "change_index",
+  "table_on_page",
+  "viewport",
+] as const;
+
+export const LIST_SHARE_PROPERTIES = ["venue", "method", "headcount", "headcount_changed", "viewport"] as const;
+
+export type AnalyticsViewport = "narrow" | "wide";
+export type HeadcountMethod = "step_up" | "step_down" | "type" | "mixed";
+export type ListShareMethod = "line" | "copy";
 
 export interface OutboundClickDetail {
   shop: string;
@@ -67,6 +102,35 @@ export interface OutboundClickDetail {
   venue?: string;
   position: number;
   source?: string;
+  /** Present only for a link inside the shopping list. Integer 1–200. */
+  headcount?: number;
+  headcountChanged?: boolean;
+  countTableViewed?: boolean;
+  role?: string;
+  viewport?: AnalyticsViewport;
+}
+
+export interface CountTableViewDetail {
+  venue: string;
+  viewport: AnalyticsViewport;
+}
+
+export interface HeadcountChangeDetail {
+  venue: string;
+  headcountFrom: number;
+  headcountTo: number;
+  method: HeadcountMethod;
+  changeIndex: number;
+  tableOnPage: boolean;
+  viewport: AnalyticsViewport;
+}
+
+export interface ListShareDetail {
+  venue: string;
+  method: ListShareMethod;
+  headcount: number;
+  headcountChanged: boolean;
+  viewport: AnalyticsViewport;
 }
 
 export interface IngestionEnv {
@@ -96,6 +160,10 @@ export interface AnalyticsClient {
 
 /** Set while PostHog is live on the production hostname; null everywhere else. */
 let activeClient: AnalyticsClient | null = null;
+/** True only after this document has accepted the production hostname and ingestion config. */
+let analyticsWillStart = false;
+/** One table view that happened before the SDK chunk finished loading. */
+let pendingCountTableView: { venue: string; viewport: AnalyticsViewport } | null = null;
 
 interface AnalyticsTarget extends AnalyticsScope {
   [INSTALLED_FLAG]?: boolean;
@@ -209,7 +277,112 @@ export function sanitizeCapturedOutboundClick(
       }
       next.source = source;
     }
+    const headcount = readOptionalHeadcount(properties.headcount);
+    const headcountChanged = readOptionalBool(properties.headcount_changed);
+    const countTableViewed = readOptionalBool(properties.count_table_viewed);
+    const role = readOptionalChoice(properties.role, LIST_ROLES);
+    const viewport = readOptionalChoice(properties.viewport, VIEWPORTS);
+    if (headcount === null || headcountChanged === null || countTableViewed === null || role === null || viewport === null) {
+      return null;
+    }
+    if (headcount !== undefined) {
+      if (next.source !== "list") {
+        return null;
+      }
+      next.headcount = headcount;
+    }
+    if (headcountChanged !== undefined) {
+      next.headcount_changed = headcountChanged;
+    }
+    if (countTableViewed !== undefined) {
+      next.count_table_viewed = countTableViewed;
+    }
+    if (role !== undefined) {
+      next.role = role;
+    }
+    if (viewport !== undefined) {
+      next.viewport = viewport;
+    }
     return next;
+  });
+}
+
+function sanitizeCapturedCountTableView(
+  event: CaptureResult,
+  context: { search: string; storage: QaStorage },
+): CaptureResult | null {
+  if (event.event !== COUNT_TABLE_VIEW_EVENT || !event.properties) {
+    return null;
+  }
+  return sanitizeAnonymousEvent(event, context, (properties, qa) => {
+    const venue = readVenue(properties.venue);
+    const viewport = readRequiredChoice(properties.viewport, VIEWPORTS);
+    if (!venue || !viewport) {
+      return null;
+    }
+    return { venue, viewport, analytics_qa: qa, $process_person_profile: false, $is_identified: false };
+  });
+}
+
+function sanitizeCapturedHeadcountChange(
+  event: CaptureResult,
+  context: { search: string; storage: QaStorage },
+): CaptureResult | null {
+  if (event.event !== HEADCOUNT_CHANGE_EVENT || !event.properties) {
+    return null;
+  }
+  return sanitizeAnonymousEvent(event, context, (properties, qa) => {
+    const venue = readVenue(properties.venue);
+    const from = readRequiredHeadcount(properties.headcount_from);
+    const to = readRequiredHeadcount(properties.headcount_to);
+    const method = readRequiredChoice(properties.method, HEADCOUNT_METHODS);
+    const changeIndex = readChangeIndex(properties.change_index);
+    const tableOnPage = readRequiredBool(properties.table_on_page);
+    const viewport = readRequiredChoice(properties.viewport, VIEWPORTS);
+    if (!venue || from === null || to === null || from === to || !method || changeIndex === null || tableOnPage === null || !viewport) {
+      return null;
+    }
+    return {
+      venue,
+      headcount_from: from,
+      headcount_to: to,
+      method,
+      change_index: changeIndex,
+      table_on_page: tableOnPage,
+      viewport,
+      analytics_qa: qa,
+      $process_person_profile: false,
+      $is_identified: false,
+    };
+  });
+}
+
+function sanitizeCapturedListShare(
+  event: CaptureResult,
+  context: { search: string; storage: QaStorage },
+): CaptureResult | null {
+  if (event.event !== LIST_SHARE_EVENT || !event.properties) {
+    return null;
+  }
+  return sanitizeAnonymousEvent(event, context, (properties, qa) => {
+    const venue = readVenue(properties.venue);
+    const method = readRequiredChoice(properties.method, SHARE_METHODS);
+    const headcount = readRequiredHeadcount(properties.headcount);
+    const headcountChanged = readRequiredBool(properties.headcount_changed);
+    const viewport = readRequiredChoice(properties.viewport, VIEWPORTS);
+    if (!venue || !method || headcount === null || headcountChanged === null || !viewport) {
+      return null;
+    }
+    return {
+      venue,
+      method,
+      headcount,
+      headcount_changed: headcountChanged,
+      viewport,
+      analytics_qa: qa,
+      $process_person_profile: false,
+      $is_identified: false,
+    };
   });
 }
 
@@ -223,6 +396,15 @@ export function sanitizeCapturedEvent(
   }
   if (event.event === OUTBOUND_CLICK_EVENT) {
     return sanitizeCapturedOutboundClick(event, context);
+  }
+  if (event.event === COUNT_TABLE_VIEW_EVENT) {
+    return sanitizeCapturedCountTableView(event, context);
+  }
+  if (event.event === HEADCOUNT_CHANGE_EVENT) {
+    return sanitizeCapturedHeadcountChange(event, context);
+  }
+  if (event.event === LIST_SHARE_EVENT) {
+    return sanitizeCapturedListShare(event, context);
   }
   return null;
 }
@@ -286,12 +468,17 @@ export function beginWebAnalytics(
 ): { init(client: AnalyticsClient): void } | null {
   try {
     if (!shouldCaptureHostname(target.location?.hostname ?? "")) {
+      analyticsWillStart = false;
+      pendingCountTableView = null;
       return null;
     }
     const config = resolveIngestionConfig(env);
     if (!config) {
+      analyticsWillStart = false;
+      pendingCountTableView = null;
       return null;
     }
+    analyticsWillStart = true;
     const scope = target as AnalyticsTarget;
     const storage = createQaStore(target.sessionStorage);
     rememberAnalyticsQa(target.location.search ?? "", storage);
@@ -354,6 +541,17 @@ export function beginWebAnalytics(
             // A failed send must not affect navigation.
           }
         });
+        // A table view can fire before this chunk arrives. Send it after the
+        // pageviews so it keeps the current $pageview_id.
+        const queuedTable = pendingCountTableView;
+        pendingCountTableView = null;
+        if (queuedTable) {
+          try {
+            client.capture(COUNT_TABLE_VIEW_EVENT, queuedTable);
+          } catch {
+            // Counting is best effort.
+          }
+        }
       },
     };
   } catch {
@@ -383,7 +581,74 @@ export function captureOutboundClick(detail: OutboundClickDetail): void {
     if (detail.source) {
       props.source = detail.source;
     }
+    if (typeof detail.headcount === "number") {
+      props.headcount = detail.headcount;
+    }
+    if (typeof detail.headcountChanged === "boolean") {
+      props.headcount_changed = detail.headcountChanged;
+    }
+    if (typeof detail.countTableViewed === "boolean") {
+      props.count_table_viewed = detail.countTableViewed;
+    }
+    if (detail.role) {
+      props.role = detail.role;
+    }
+    if (detail.viewport) {
+      props.viewport = detail.viewport;
+    }
     activeClient.capture(OUTBOUND_CLICK_EVENT, props);
+  } catch {
+    // Counting is best effort.
+  }
+}
+
+export function captureCountTableView(detail: CountTableViewDetail): void {
+  try {
+    const props = { venue: detail.venue, viewport: detail.viewport };
+    if (!activeClient) {
+      if (analyticsWillStart) {
+        pendingCountTableView = props;
+      }
+      return;
+    }
+    pendingCountTableView = null;
+    activeClient.capture(COUNT_TABLE_VIEW_EVENT, props);
+  } catch {
+    // Counting is best effort.
+  }
+}
+
+export function captureHeadcountChange(detail: HeadcountChangeDetail): void {
+  try {
+    if (!activeClient) {
+      return;
+    }
+    activeClient.capture(HEADCOUNT_CHANGE_EVENT, {
+      venue: detail.venue,
+      headcount_from: detail.headcountFrom,
+      headcount_to: detail.headcountTo,
+      method: detail.method,
+      change_index: detail.changeIndex,
+      table_on_page: detail.tableOnPage,
+      viewport: detail.viewport,
+    });
+  } catch {
+    // Counting is best effort.
+  }
+}
+
+export function captureListShare(detail: ListShareDetail): void {
+  try {
+    if (!activeClient) {
+      return;
+    }
+    activeClient.capture(LIST_SHARE_EVENT, {
+      venue: detail.venue,
+      method: detail.method,
+      headcount: detail.headcount,
+      headcount_changed: detail.headcountChanged,
+      viewport: detail.viewport,
+    });
   } catch {
     // Counting is best effort.
   }
@@ -490,6 +755,74 @@ function createQaStore(storage: QaStorage | undefined): QaStorage {
       }
     },
   };
+}
+
+function readVenue(value: unknown): string | null {
+  if (typeof value !== "string" || !SLUG.test(value)) {
+    return null;
+  }
+  return value;
+}
+
+function readOptionalChoice(value: unknown, allowed: ReadonlySet<string>): string | undefined | null {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (typeof value === "string" && allowed.has(value)) {
+    return value;
+  }
+  return null;
+}
+
+function readRequiredChoice(value: unknown, allowed: ReadonlySet<string>): string | null {
+  const choice = readOptionalChoice(value, allowed);
+  if (choice === undefined || choice === null) {
+    return null;
+  }
+  return choice;
+}
+
+function readOptionalHeadcount(value: unknown): number | undefined | null {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (typeof value === "number" && Number.isInteger(value) && value >= MIN_HEADCOUNT && value <= MAX_HEADCOUNT) {
+    return value;
+  }
+  return null;
+}
+
+function readRequiredHeadcount(value: unknown): number | null {
+  const headcount = readOptionalHeadcount(value);
+  if (headcount === undefined || headcount === null) {
+    return null;
+  }
+  return headcount;
+}
+
+function readOptionalBool(value: unknown): boolean | undefined | null {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (typeof value === "boolean") {
+    return value;
+  }
+  return null;
+}
+
+function readRequiredBool(value: unknown): boolean | null {
+  const flag = readOptionalBool(value);
+  if (flag === undefined || flag === null) {
+    return null;
+  }
+  return flag;
+}
+
+function readChangeIndex(value: unknown): number | null {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 1 || value > MAX_CHANGE_INDEX) {
+    return null;
+  }
+  return value;
 }
 
 function isAnonymousId(value: unknown): value is string {
