@@ -171,6 +171,72 @@ function checkBonenkaiCopy(html, path) {
     fail(`${path} count table rows: ${rows.join() || "missing"}`);
   }
 }
+
+// Company party and farewell use the same bottle rows as bonenkai. Words differ; numbers do not.
+const ADDED_COUNT_TABLES = {
+  kaisha: {
+    title: "定時後の乾杯、ソフトドリンクは何本？",
+    headingId: "kaisha-bottle-counts",
+    note: "乾杯の瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。STYLISH!の目安です。",
+  },
+  kansougeikai: {
+    title: "全員で乾杯するなら、何本？",
+    headingId: "kansougeikai-bottle-counts",
+    note: "乾杯の瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。主役に渡す一本は、別に足してください。STYLISH!の目安です。",
+  },
+};
+function checkAddedCountTable(html, path, slug) {
+  const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+  const copy = ADDED_COUNT_TABLES[slug];
+  const tableMatch = /<table\b[\s\S]*?<\/table>/.exec(visible);
+  if (!tableMatch || (visible.match(/<table\b/g) ?? []).length !== 1) {
+    fail(`${path} count table: ${(visible.match(/<table\b/g) ?? []).length} table(s)`);
+    return;
+  }
+  const table = tableMatch[0];
+  if (/<a\b/i.test(table)) {
+    fail(`${path} count table contains a link`);
+  }
+  const caption = /<caption\b([^>]*)>([\s\S]*?)<\/caption>/.exec(table);
+  const captionId = caption ? attr(`<caption${caption[1]}>`, "id") : undefined;
+  if (!caption || strip(caption[2]) !== copy.title || captionId !== copy.headingId) {
+    fail(`${path} count table caption: ${caption ? `${captionId ?? ""} ${strip(caption[2])}` : "missing"}`);
+  }
+  const headers = [...table.matchAll(/<th\b[^>]*\bscope="col"[^>]*>([\s\S]*?)<\/th>/g)].map((cell) => strip(cell[1]));
+  if (headers.join("|") !== "ソフトドリンクで乾杯する人|合計|乾杯の瓶|大きな瓶|食事用") {
+    fail(`${path} count table headers: ${headers.join("|") || "missing"}`);
+  }
+  if (headers[4] !== "食事用") {
+    fail(`${path} third breakdown label is ${headers[4] ?? "missing"}, not 食事用`);
+  }
+  const tableEnd = visible.indexOf(table) + table.length;
+  const noteEnd = visible.indexOf("</p>", tableEnd);
+  const block = noteEnd < 0 ? table : visible.slice(visible.indexOf(table), noteEnd + 4);
+  if (block.includes("甘さ控えめ") || block.includes("砂糖なし")) {
+    fail(`${path} count table contains 甘さ控えめ or 砂糖なし`);
+  }
+  const rows = [...table.matchAll(/<tr>([\s\S]*?)<\/tr>/g)]
+    .slice(1)
+    .map((row) => [...row[1].matchAll(/<(?:th|td)\b[^>]*>([\s\S]*?)<\/(?:th|td)>/g)].map((cell) => strip(cell[1])).join("|"));
+  const expectedRows = ["5人|7本|5|1|1", "10人|13本|10|2|1", "20人|26本|20|4|2", "30人|39本|30|6|3"];
+  if (rows.join() !== expectedRows.join()) {
+    fail(`${path} count table rows: ${rows.join() || "missing"}`);
+  }
+  const note = /<p\b[^>]*>([\s\S]*?)<\/p>/.exec(visible.slice(tableEnd));
+  if (!note || strip(note[1]) !== copy.note) {
+    fail(`${path} count table note: ${note ? strip(note[1]) : "missing"}`);
+  }
+  const tableAt = visible.indexOf(table);
+  const sectionClose = visible.indexOf("</section>", tableAt);
+  const nextSection = visible.indexOf("<section", sectionClose);
+  const listSection = visible.indexOf('<section id="list"');
+  if (sectionClose < 0 || nextSection !== listSection || visible.indexOf('data-shopping-list=""') < tableAt) {
+    fail(`${path} count table is not directly above the recommended list`);
+  }
+  if (!visible.includes(`aria-labelledby="${copy.headingId}"`)) {
+    fail(`${path} count table section is not labelled by ${copy.headingId}`);
+  }
+}
 const ROLES = [
   ["kanpai", "乾杯用", 4],
   ["table", "テーブル用", 1],
@@ -206,8 +272,10 @@ for (const slug of scenes) {
   }
   if (slug === "bonenkai") {
     checkBonenkaiCopy(html, path);
-  } else if (html.includes("<caption")) {
-    fail(`${path} has a count table; only bonenkai does`);
+  } else if (slug === "kaisha" || slug === "kansougeikai") {
+    checkAddedCountTable(html, path, slug);
+  } else if (html.includes("<caption") || /<table\b/.test(html)) {
+    fail(`${path} has a count table; only bonenkai, kaisha, and kansougeikai do`);
   }
   if (!part.includes(">ソフトドリンクで乾杯する人</span>")) {
     fail(`${path} set has no ソフトドリンクで乾杯する人 headcount`);

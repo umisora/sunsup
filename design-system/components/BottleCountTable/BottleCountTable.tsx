@@ -1,22 +1,22 @@
+import type { SceneCountTable } from "@/lib/scenes";
 import { bottleCounts } from "@/lib/shopping-list";
 import styles from "./BottleCountTable.module.css";
 
-/** People the bonenkai early table prints. Counts come from `bottleCounts`. */
+/** Headcounts the early table prints. Counts come from `bottleCounts`. */
 const HEADCOUNTS = [5, 10, 20, 30] as const;
 
-export const BOTTLE_COUNT_CAPTION_ID = "bonenkai-bottle-counts";
-
 /**
- * Static headcount table for the bonenkai page, above the recommended list.
- * Cells are the calculator's bottles, not a second set of numbers.
+ * Static headcount table above the recommended list.
+ * Words come from the scene. Cells are the calculator's bottles.
  */
-export function BottleCountTable() {
+export function BottleCountTable({ countTable }: { countTable: SceneCountTable }) {
   const rows = HEADCOUNTS.map((people) => bottleCounts(people));
+  const [toastLabel, bigLabel, mealLabel] = countTable.breakdown;
   return (
     <div className={styles.block}>
       <table className={styles.table}>
-        <caption id={BOTTLE_COUNT_CAPTION_ID} className={styles.caption}>
-          何人で何本？ ノンアルの本数早見表
+        <caption id={countTable.headingId} className={styles.caption}>
+          {countTable.title}
         </caption>
         <colgroup>
           <col className={styles.colPeople} />
@@ -28,19 +28,19 @@ export function BottleCountTable() {
         <thead>
           <tr>
             <th scope="col" className={styles.peopleHead}>
-              ソフトドリンクで乾杯する人
+              {countTable.headcountLabel}
             </th>
             <th scope="col" className={styles.totalHead}>
               合計
             </th>
             <th scope="col" className={styles.kindHead}>
-              小さな瓶
+              {toastLabel}
             </th>
             <th scope="col" className={styles.kindHead}>
-              大きな瓶
+              {bigLabel}
             </th>
             <th scope="col" className={styles.kindHead}>
-              甘さ控えめ
+              {mealLabel}
             </th>
           </tr>
         </thead>
@@ -58,9 +58,7 @@ export function BottleCountTable() {
           ))}
         </tbody>
       </table>
-      <p className={styles.note}>
-        小さな瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。
-      </p>
+      <p className={styles.note}>{countTable.note}</p>
     </div>
   );
 }

@@ -20,6 +20,19 @@ export type SceneGroup = {
   slugs: readonly string[];
 };
 
+/** Words for the early bottle table. Counts are not stored here; the table reads bottleCounts. */
+export type SceneCountTable = {
+  /** Caption. The section is labelled by headingId on this caption. */
+  title: string;
+  /** id of the caption. Unique on the page. */
+  headingId: string;
+  /** First column. */
+  headcountLabel: string;
+  /** Labels for 乾杯用, テーブル用, 食事用, in that order. */
+  breakdown: readonly [string, string, string];
+  note: string;
+};
+
 export type Scene = {
   slug: string;
   /** Small label over the title, and the step name for the prose block. */
@@ -49,6 +62,11 @@ export type Scene = {
    * 「乾杯のソフトドリンクは、このN種類で」, and no lead under it.
    */
   listHeading?: ListHeading;
+  /**
+   * Bottle-count table directly above the recommended list.
+   * Absent: the page has no table.
+   */
+  countTable?: SceneCountTable;
 };
 
 export const SCENES: readonly Scene[] = [
@@ -65,6 +83,13 @@ export const SCENES: readonly Scene[] = [
       "忘年会のノンアルコールは、10人なら13本が目安です。乾杯用に小さな瓶をひとり1本、あとはテーブルで注ぎ分ける大きな瓶と、料理に合う甘さ控えめの瓶をそろえます。人数ごとの本数表つきで、買い出しリストはそのままLINEで送れます。",
     lead: "乾杯は小さな瓶でひとり1本。テーブルには大きな瓶を置いて注ぎ分け、料理が進んだら甘さ控えめの瓶を開けます。ソフトドリンクで乾杯する人が10人なら、あわせて13本が目安です。",
     listHeading: { lines: ["人数を入れて、飲み物の量と買うものを決める"] },
+    countTable: {
+      title: "何人で何本？ ノンアルの本数早見表",
+      headingId: "bonenkai-bottle-counts",
+      headcountLabel: "ソフトドリンクで乾杯する人",
+      breakdown: ["小さな瓶", "大きな瓶", "甘さ控えめ"],
+      note: "小さな瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。",
+    },
     prose:
       "12月の忘年会と1月の新年会は、ふだんの飲み会より人が多く、乾杯から始まります。ソフトドリンクで乾杯したい人も、車で来た人も、翌朝が早い人も、同じタイミングでグラスを上げられるように、テーブルで見栄えのする瓶を用意しておくと安心です。お店に持ち込むときは、先にお店へ確認しておきましょう。",
     criteria: [
@@ -118,6 +143,13 @@ export const SCENES: readonly Scene[] = [
     description:
       "ふだんの会社の飲み会向けです。乾杯で持てる瓶、ひとりで飲み切れる缶、食事に合うソフトドリンクを分けて紹介しています。",
     lead: "ふだんの会社の飲み会で、ソフトドリンクを用意するページです。",
+    countTable: {
+      title: "定時後の乾杯、ソフトドリンクは何本？",
+      headingId: "kaisha-bottle-counts",
+      headcountLabel: "ソフトドリンクで乾杯する人",
+      breakdown: ["乾杯の瓶", "大きな瓶", "食事用"],
+      note: "乾杯の瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。STYLISH!の目安です。",
+    },
     prose:
       "会社の飲み会は、乾杯のあとに食事と話が続きます。ソフトドリンクを選んだ人も、乾杯で同じように瓶を持てて、食事のあいだも手元に飲みものがあれば、気をつかわずにいられます。社内で開くなら人数分を買っておけます。お店で開くときは、持ち込めるかどうかを先に確かめておきましょう。",
     criteria: [
@@ -171,6 +203,13 @@ export const SCENES: readonly Scene[] = [
     description:
       "歓迎会や送別会の幹事向けです。桃やいちごの色の瓶で乾杯をそろえ、大きな瓶と甘さ控えめの一本も一緒に選べます。",
     lead: "3月と4月の歓迎会や送別会で、乾杯のソフトドリンクを選ぶページです。",
+    countTable: {
+      title: "全員で乾杯するなら、何本？",
+      headingId: "kansougeikai-bottle-counts",
+      headcountLabel: "ソフトドリンクで乾杯する人",
+      breakdown: ["乾杯の瓶", "大きな瓶", "食事用"],
+      note: "乾杯の瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。主役に渡す一本は、別に足してください。STYLISH!の目安です。",
+    },
     prose:
       "歓送迎会は、異動や入社で顔ぶれが変わる3月と4月に集まります。来たばかりの人や送られる人が、ソフトドリンクで乾杯したいこともあります。乾杯の瓶を全員でそろえておけば、主役も同じタイミングで瓶を持てます。会の終わりに、主役へ一本渡すのもいい方法です。",
     criteria: [
