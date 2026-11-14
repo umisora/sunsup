@@ -254,14 +254,21 @@ for (const [from, to] of [
   ["https://stylish.sunsup.me/ba/nomanai-hito/", "https://stylish.sunsup.me/ba/okurimono/"],
   ["https://stylish.sunsup.me/ba/nomanai-hito?a=1", "https://stylish.sunsup.me/ba/okurimono/?a=1"],
   ["https://still-batch-next.sunsup-dv4.pages.dev/ba/nomanai-hito/", "https://still-batch-next.sunsup-dv4.pages.dev/ba/okurimono/"],
+  ["https://stylish.sunsup.me/drink/sanpellegrino-limonata-pet/", "https://stylish.sunsup.me/drink/sanpellegrino-limonata/"],
+  ["https://stylish.sunsup.me/drink/sanpellegrino-limonata-pet?a=1", "https://stylish.sunsup.me/drink/sanpellegrino-limonata/?a=1"],
+  ["https://still-batch-next.sunsup-dv4.pages.dev/drink/sanpellegrino-limonata-pet/", "https://still-batch-next.sunsup-dv4.pages.dev/drink/sanpellegrino-limonata/"],
+  ["https://stylish.sunsup.me/drink/kirin-namacha-400/", "https://stylish.sunsup.me/drink/namacha-525/"],
+  ["https://stylish.sunsup.me/drink/kirin-namacha-400?a=1", "https://stylish.sunsup.me/drink/namacha-525/?a=1"],
 ]) {
   const response = await middleware({ request: new Request(from), next: async () => passed });
   expect(response.status === 301 && response.headers.get("location") === to, `${from} moves to ${to}, got ${response.status} ${response.headers.get("location")}`);
 }
 expect((await middleware({ request: new Request("https://stylish.sunsup.me/ba/okurimono/"), next: async () => passed })) === passed, "/ba/okurimono/ is served as is");
+expect((await middleware({ request: new Request("https://stylish.sunsup.me/drink/sanpellegrino-limonata/"), next: async () => passed })) === passed, "/drink/sanpellegrino-limonata/ is served as is");
+expect((await middleware({ request: new Request("https://stylish.sunsup.me/drink/namacha-525/"), next: async () => passed })) === passed, "/drink/namacha-525/ is served as is");
 
 if (failures.length > 0) {
   console.error(failures.map((message) => `shopping: ${message}`).join("\n"));
   process.exit(1);
 }
-console.log(`shopping ok: ${SCENES.length} scene list(s), servings, role bottles, bonenkai table, swaps, LINE text, bonenkai-only list heading, click source and the okurimono 301`);
+console.log(`shopping ok: ${SCENES.length} scene list(s), servings, role bottles, bonenkai table, swaps, LINE text, bonenkai-only list heading, click source and the moved-page 301s`);
