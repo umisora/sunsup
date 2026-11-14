@@ -134,6 +134,8 @@ function checkBonenkaiCopy(html, path) {
   const caption = "何人で何本？ ノンアルの本数早見表";
   const note =
     "小さな瓶はひとり1本、大きな瓶は5人に1本、食事用は10人に1本（端数は切り上げ）。水やお茶は数に入れていない、STYLISH!の目安です。";
+  const sizeLine = "720〜780mlの大きな瓶は、5人のテーブルに1本が目安です。";
+  const tableReason = "780mlの大きな瓶。テーブルの真ん中に置いて、みんなで注ぎ分けます。";
   if (!html.includes(`<title>${metaTitle}｜STYLISH!</title>`)) {
     fail(`${path} title is not the approved meta title`);
   }
@@ -149,6 +151,8 @@ function checkBonenkaiCopy(html, path) {
   once("list heading", "人数を入れて、飲み物の量と買うものを決める");
   once("table caption", caption);
   once("table note", note);
+  once("size criterion", sizeLine);
+  once("table-bottle reason", tableReason);
   const dry = visible.indexOf('id="group-dry"');
   const tableAt = visible.indexOf(caption);
   const listAt = visible.indexOf('id="list"');
@@ -160,7 +164,7 @@ function checkBonenkaiCopy(html, path) {
     fail(`${path} count table is inside the shopping list or only after it`);
   }
   const headers = [...visible.matchAll(/<th\b[^>]*\bscope="col"[^>]*>([\s\S]*?)<\/th>/g)].map((cell) => strip(cell[1]));
-  if (headers.join("|") !== "ソフトドリンクで乾杯する人|合計|小さな瓶|大きな瓶|甘さ控えめ") {
+  if (headers.join("|") !== "ソフトドリンクで乾杯する人|合計|小さな瓶|大きな瓶|食事用") {
     fail(`${path} count table headers: ${headers.join("|") || "missing"}`);
   }
   const rows = [...visible.matchAll(/<tr>([\s\S]*?)<\/tr>/g)]

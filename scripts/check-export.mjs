@@ -431,6 +431,11 @@ for (const drink of publicDrinks) {
   if (!html.includes(name)) {
     fail(`${drink.slug} is missing its name`);
   }
+  if (drink.slug === "nfs-apple-720") {
+    if (!html.includes("4〜5人分") || html.includes("3〜4人分") || !html.includes("グラスに注いで、四、五人で分けます。")) {
+      fail(`${drink.slug} serving copy is not 4〜5人分`);
+    }
+  }
   const title = htmlText(drinkTitle(drink));
   const description = htmlText(drinkDescription(drink));
   if (!html.includes(`<title>${title}</title>`)) {
