@@ -12,6 +12,7 @@ import "./check-html-size.mjs";
 import "./check-shop-links.mjs";
 import "./check-meta.mjs";
 import "./check-tags.mjs";
+import "./check-canonical.mjs";
 
 const failures = [];
 
