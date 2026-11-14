@@ -209,12 +209,22 @@ function drinkTitle(drink) {
   return `${stem}｜STYLISH!`;
 }
 
-function firstSentence(value) {
-  const trimmed = value.trim();
-  if (!trimmed) return "";
-  const end = trimmed.indexOf("。");
-  if (end === -1) return trimmed;
-  return trimmed.slice(0, end + 1);
+const DESCRIPTION_FLOOR = 80;
+const DESCRIPTION_MAX = 120;
+const CONTAINERS = ["ペットボトル", "紙パック", "ガラス瓶", "ビー玉瓶", "ボトル缶", "紙カップ", "カップ", "ボトル", "缶", "瓶"];
+const INTENSIFIERS = ["すっぽり", "ぴったり", "ちょうど"];
+
+function sentenceAt(value, index) {
+  let rest = value.trim();
+  for (let cursor = 0; cursor < index; cursor += 1) {
+    const end = rest.indexOf("。");
+    if (end === -1) return "";
+    rest = rest.slice(end + 1).trim();
+  }
+  if (!rest) return "";
+  const end = rest.indexOf("。");
+  if (end === -1) return rest;
+  return rest.slice(0, end + 1);
 }
 
 function clipAtSentence(value, max) {
@@ -229,22 +239,213 @@ function clipAtSentence(value, max) {
   return chars.slice(0, end + 1).join("");
 }
 
-function drinkDescription(drink) {
-  let text = `${drink["品名"]}。${drink["場"]}`;
-  if (textLength(text) < 80) {
-    const size = firstSentence(drink["サイズ"]);
-    if (size) text += size;
-  }
-  if (textLength(text) < 80) {
-    const look = firstSentence(drink["見た目"]);
-    if (look) text += look;
-  }
-  return clipAtSentence(text, 120);
+function volumesIn(value) {
+  return value.match(/\d+(?:\.\d+)?(?:ml|mL|ML|kg|g|L)/g) ?? [];
 }
+
+function hasVolume(description, volume) {
+  const escaped = volume.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(?:^|[^0-9])${escaped}`).test(description);
+}
+
+function containerTokens(value) {
+  const found = [];
+  let rest = value;
+  for (const word of CONTAINERS) {
+    if (!rest.includes(word)) continue;
+    found.push(word);
+    rest = rest.split(word).join("");
+  }
+  return found;
+}
+
+function foldSizeWords(value) {
+  return value.replace(/小ぶりな|小ぶり|小さな|小さい|小さめ|大きな|大きい|大きめ|低め|低い|高め|高い/g, (word) => {
+    if (word.startsWith("小")) return "小";
+    if (word.startsWith("大")) return "大";
+    if (word.startsWith("低")) return "低";
+    if (word.startsWith("高")) return "高";
+    return word;
+  });
+}
+
+function normalizeSentence(value) {
+  return foldSizeWords(value.replace(/[。、\s]/g, ""));
+}
+
+/** Same rules as repeatsDescribedPoint in lib/drinks.ts. */
+function repeatsDescribedPoint(sentence, description) {
+  const normalized = normalizeSentence(sentence);
+  if (!normalized) return true;
+  const existing = description
+    .split("。")
+    .map((part) => normalizeSentence(part))
+    .filter((part) => part !== "");
+  if (existing.some((part) => part === normalized)) return true;
+
+  const stripped = sentence.replace(/。$/, "").replace(/(?:の文字|の表記)?(?:です|ます)$/, "");
+  if (!stripped.includes("、") && [...stripped].length >= 4 && containsPiece(description, stripped)) return true;
+
+  if (onlyKnownSizeOrContainer(sentence, description)) return true;
+  return clausesAlreadySaid(sentence, description);
+}
+
+function containsPiece(description, piece) {
+  if (/^\d+(?:\.\d+)?(?:ml|mL|ML|kg|g|L)$/.test(piece)) return hasVolume(description, piece);
+  return description.includes(piece);
+}
+
+function onlyKnownSizeOrContainer(sentence, description) {
+  const volumes = volumesIn(sentence);
+  const containers = containerTokens(sentence);
+  const known = volumes.some((volume) => hasVolume(description, volume)) || containers.some((word) => description.includes(word));
+  if (!known) return false;
+  let rest = sentence;
+  for (const token of [...volumes, ...CONTAINERS]) rest = rest.split(token).join("");
+  rest = rest.replace(/小ぶりな|小ぶり|小さな|小さい|小さめ|大きな|大きい|大きめ|低め|低い|高め|高い/g, "");
+  rest = rest.replace(/です|ます|ません|でした|ました/g, "");
+  rest = rest.replace(/[。、\sのをにはがともへやで]/g, "");
+  return [...rest].length <= 2;
+}
+
+function clausesAlreadySaid(sentence, description) {
+  const clauses = sentence
+    .split("、")
+    .map((clause) => clause.trim())
+    .filter((clause) => clause !== "");
+  if (clauses.length === 0) return false;
+  return clauses.every((clause) => clauseAlreadySaid(clause, description));
+}
+
+function clauseAlreadySaid(clause, description) {
+  const volumes = volumesIn(clause);
+  if (volumes.some((volume) => !hasVolume(description, volume))) return false;
+  let rest = clause.replace(/。$/, "");
+  for (const token of [...volumes, ...INTENSIFIERS]) rest = rest.split(token).join("");
+  rest = rest.replace(/\s/g, "");
+  const substance = rest.replace(/(?:です|ます)$/, "").replace(/[のをにはがともへやで]/g, "");
+  if ([...substance].length === 0) return volumes.length > 0;
+  if ([...substance].length < 4) return false;
+  return description.includes(rest);
+}
+
+function baseDescription(name, place, size, look) {
+  let text = `${name}。${place}`;
+  if (textLength(text) < DESCRIPTION_FLOOR) {
+    const sizeSentence = sentenceAt(size, 0);
+    if (sizeSentence) text += sizeSentence;
+  }
+  if (textLength(text) < DESCRIPTION_FLOOR) {
+    const lookSentence = sentenceAt(look, 0);
+    if (lookSentence) text += lookSentence;
+  }
+  return clipAtSentence(text, DESCRIPTION_MAX);
+}
+
+function describeDrink(drink) {
+  const base = baseDescription(drink["品名"], drink["場"], drink["サイズ"], drink["見た目"]);
+  const added = [];
+  let description = base;
+  if (textLength(description) < DESCRIPTION_FLOOR) {
+    for (const sentence of [sentenceAt(drink["サイズ"], 1), sentenceAt(drink["見た目"], 1)]) {
+      if (textLength(description) >= DESCRIPTION_FLOOR) break;
+      if (!sentence || sentence.includes("ノンアルです") || repeatsDescribedPoint(sentence, description)) continue;
+      if (textLength(description + sentence) > DESCRIPTION_MAX) continue;
+      added.push(sentence);
+      description += sentence;
+    }
+  }
+  return { description, base, added };
+}
+
+function drinkDescription(drink) {
+  return describeDrink(drink).description;
+}
+
+function selfTestDrinkDescription() {
+  const expectRepeat = (sentence, description, expected) => {
+    const got = repeatsDescribedPoint(sentence, description);
+    if (got !== expected) throw new Error(`repeat expected ${expected} for 「${sentence}」 in 「${description}」`);
+  };
+  expectRepeat("190gの小さな缶です。", "カゴメ。赤い缶です。190gの小さな缶です。", true);
+  expectRepeat("160gの小ぶりな缶です。", "名前。場です。160gの小さな缶です。", true);
+  expectRepeat("240mlです。", "名前。場です。240mlの瓶です。", true);
+  expectRepeat("500mlです。", "名前。1500mlの瓶です。", false);
+  expectRepeat("にっぽん烏龍の文字です。", "ポッカサッポロ にっぽん烏龍。緑のボトルです。", true);
+  expectRepeat("330mlで、手にすっぽり収まります。", "名前。場です。330mlの缶で、手に収まります。", true);
+  expectRepeat("1Lで、肩から首が細くなっています。", "名前。場です。1Lの瓶です。", false);
+  expectRepeat("キャップを開けると、じゃばらの香りが立ちます。", "名前。小さな瓶を置きます。250mlの瓶です。", false);
+  expectRepeat("ひとりに一本渡せば足ります。", "名前。場です。340gの缶です。", false);
+  expectRepeat("500mlの透明ペットボトルです。", "名前。透明なボトルを出せます。500mlです。", true);
+  expectRepeat("1000mlの表記です。", "名前。出せます。1000mlです。", true);
+  expectRepeat("200mlで、パインらしい黄色です。", "名前。場です。200mlの紙パックです。黄色い紙パックです。", false);
+
+  const longPlace = `${"あ".repeat(90)}`;
+  const long = describeDrink({ 品名: "名", 場: longPlace, サイズ: "一文。二文です。", 見た目: "見。次です。" });
+  if (long.description !== `名。${longPlace}` || long.added.length !== 0) {
+    throw new Error("a description of 80 or more characters was changed");
+  }
+
+  const extended = describeDrink({
+    品名: "名前",
+    場: `${"あ".repeat(60)}。`,
+    サイズ: "瓶です。ひとりに一本渡せば足ります。",
+    見た目: "緑です。青い色が目に入ります。",
+  });
+  if (!extended.description.endsWith("ひとりに一本渡せば足ります。")) throw new Error("size sentence was not appended first");
+  if (extended.description.includes("青い色が目に入ります。")) throw new Error("look sentence was appended after the description reached 80");
+  if (extended.added.length !== 1) throw new Error(`expected one added sentence, got ${extended.added.length}`);
+
+  const banned = describeDrink({
+    品名: "名",
+    場: "場です。",
+    サイズ: "瓶です。ノンアルです。",
+    見た目: "緑です。香りがします。",
+  });
+  if (banned.description.includes("ノンアルです")) throw new Error("appended 「ノンアルです」");
+  if (!banned.description.includes("香りがします。")) throw new Error("a later sentence was skipped with the banned one");
+
+  const duplicate = describeDrink({
+    品名: "名",
+    場: "場です。",
+    サイズ: "240mlの瓶です。240mlです。",
+    見た目: "緑の瓶です。キャップを開けると香ります。",
+  });
+  if (duplicate.added.some((sentence) => sentence.startsWith("240mlです"))) throw new Error("duplicate size sentence was added");
+  if (!duplicate.description.includes("キャップを開けると香ります。")) throw new Error("look sentence was not added");
+
+  const tooLong = describeDrink({
+    品名: "名",
+    場: "場です。",
+    サイズ: `一文。${"あ".repeat(130)}`,
+    見た目: "二文目はこちらです。短い追加です。",
+  });
+  if (tooLong.description.includes("あ".repeat(40))) throw new Error("a sentence past 120 characters was added");
+  if (!tooLong.description.includes("短い追加です。")) throw new Error("a shorter second sentence was skipped");
+  if (textLength(tooLong.description) > 120) throw new Error("description passed 120");
+}
+
+selfTestDrinkDescription();
 
 /** React escapes `&` in text and attributes. The catalog copy itself stays unchanged. */
 function htmlText(value) {
   return value.replaceAll("&", "&amp;");
+}
+
+/** Visible copy: the body, without scripts, so JSON-LD descriptions are not the page text. */
+function visibleText(html) {
+  const start = html.indexOf("<body");
+  const body = start === -1 ? "" : html.slice(start);
+  const stripped = body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "");
+  const text = stripped.replace(/<[^>]+>/g, "");
+  return text
+    .replace(/&#(\d+);/g, (_, digits) => String.fromCodePoint(Number(digits)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, digits) => String.fromCodePoint(parseInt(digits, 16)))
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&amp;/g, "&");
 }
 
 const table = parseCsv(readFileSync(join("data", "drinks.csv"), "utf8"));
@@ -438,7 +639,8 @@ for (const drink of publicDrinks) {
     }
   }
   const title = htmlText(drinkTitle(drink));
-  const description = htmlText(drinkDescription(drink));
+  const described = describeDrink(drink);
+  const description = htmlText(described.description);
   if (!html.includes(`<title>${title}</title>`)) {
     fail(`${drink.slug} is missing its title`);
   }
@@ -450,6 +652,31 @@ for (const drink of publicDrinks) {
   }
   if (!html.includes(`<meta property="og:description" content="${description}"/>`)) {
     fail(`${drink.slug} is missing its Open Graph description`);
+  }
+  if (!html.includes(`<meta name="twitter:description" content="${description}"/>`)) {
+    fail(`${drink.slug} is missing its Twitter description`);
+  }
+  if (textLength(described.description) > DESCRIPTION_MAX) {
+    fail(`${drink.slug} description is ${textLength(described.description)} characters`);
+  }
+  if (described.description.includes("ノンアルです")) {
+    fail(`${drink.slug} description contains 「ノンアルです」`);
+  }
+  if (textLength(described.base) >= DESCRIPTION_FLOOR && described.description !== described.base) {
+    fail(`${drink.slug} description changed a drink that was already 80 characters`);
+  }
+  if (!described.description.startsWith(described.base)) {
+    fail(`${drink.slug} description dropped existing text`);
+  }
+  const pageText = visibleText(html);
+  const ownCopy = `${drink["サイズ"]}\n${drink["見た目"]}`;
+  for (const sentence of described.added) {
+    if (!pageText.includes(sentence)) {
+      fail(`${drink.slug} added description text is not on the page: ${sentence}`);
+    }
+    if (!ownCopy.includes(sentence)) {
+      fail(`${drink.slug} added description text is not from サイズ or 見た目: ${sentence}`);
+    }
   }
   if (html.includes("drinkup") || html.includes("Drinkup")) {
     fail(`${drink.slug} renames the site`);
