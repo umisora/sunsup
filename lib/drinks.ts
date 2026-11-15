@@ -607,12 +607,22 @@ export function categoryId(drink: Drink): string {
   return CATEGORY_IDS[categoryKey(drink.category)] ?? "";
 }
 
-export function relatedDrinks(drink: Drink): Drink[] {
-  const group = drinkGroups().find((item) => categoryKey(item.category) === categoryKey(drink.category));
-  if (!group) {
+/** The next `count` drinks after `slug` in `order`, wrapping at the end. Skips `slug`. */
+export function relatedWindow(order: readonly Drink[], slug: string, count: number): Drink[] {
+  const at = order.findIndex((item) => item.slug === slug);
+  if (at < 0 || count < 1) {
     return [];
   }
-  return group.drinks.filter((item) => item.slug !== drink.slug);
+  const size = order.length;
+  const shown = Math.min(count, size - 1);
+  const picked: Drink[] = [];
+  for (let step = 1; step <= shown; step += 1) {
+    const drink = order[(at + step) % size];
+    if (drink) {
+      picked.push(drink);
+    }
+  }
+  return picked;
 }
 
 /** Position in the list, 1-based: the drink's number in the collection. */

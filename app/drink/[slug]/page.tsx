@@ -33,9 +33,11 @@ import {
   SITE_ORIGIN,
   drinkDescription,
   drinkTitle,
+  categoryKey,
+  drinkGroups,
   getDrink,
   loadDrinks,
-  relatedDrinks,
+  relatedWindow,
   shareImage,
   shelfNeighbours,
   storeRows,
@@ -100,7 +102,9 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
 
   const rows = storeRows(drink);
   const [primary] = rows;
-  const related = relatedDrinks(drink);
+  const order =
+    drinkGroups().find((group) => categoryKey(group.category) === categoryKey(drink.category))?.drinks ?? [];
+  const related = relatedWindow(order, drink.slug, RELATED_SHOWN);
   const neighbours = shelfNeighbours(drink);
   const shelf = categoryHref(categoryId(drink));
   const folio = `No. ${String(catalogNumber(drink)).padStart(3, "0")} / ${loadDrinks().length}`;
@@ -179,10 +183,10 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         <Section space="md" labelledBy="related-title">
           <SectionHead id="related-title" eyebrow={drink.category} title={<Phrase>同じカテゴリ</Phrase>} />
           <Stack gap={7} align="stretch">
-            <DrinkShowcase label="同じカテゴリ" columns={4} drinks={related.slice(0, RELATED_SHOWN)} />
+            <DrinkShowcase label="同じカテゴリ" columns={4} drinks={related} />
             <div>
               <Button variant="secondary" href={shelf}>
-                {drink.category}をすべて見る（{related.length + 1}本）
+                {drink.category}をすべて見る（{order.length}本）
               </Button>
             </div>
           </Stack>

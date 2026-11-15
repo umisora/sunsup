@@ -13,6 +13,7 @@ import "./check-shop-links.mjs";
 import "./check-meta.mjs";
 import "./check-tags.mjs";
 import "./check-canonical.mjs";
+import "./check-related-links.mjs";
 
 const failures = [];
 
