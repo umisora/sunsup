@@ -4,6 +4,7 @@
   bottom: var(--space-5);
   z-index: var(--z-dock);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-4);
   max-width: min(560px, 100% - 2 * var(--layout-gutter));
@@ -67,6 +68,10 @@
 .action svg {
   width: 11px;
   height: 11px;
+}
+
+.disclosure {
+  flex: 1 0 100%;
 }
 
 @media (max-width: 767px) {

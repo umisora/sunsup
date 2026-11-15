@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { demoteReasons, isDemoted } from "./demote";
+import { rakutenAffiliateUrl } from "./rakuten-affiliate";
 
 const COLUMNS = [
   "slug",
@@ -716,19 +717,19 @@ export function seasonalPicks(season: Season, count: number): { label: string; l
 export function storeRows(drink: Drink): StoreRow[] {
   const rows: StoreRow[] = [];
   if (drink.amazonUrl) {
-    rows.push({ label: "Amazon", href: drink.amazonUrl, text: "Amazon" });
+    rows.push({ label: "Amazon", href: rakutenAffiliateUrl(drink.amazonUrl), text: "Amazon" });
   }
   if (drink.rakutenUrl) {
-    rows.push({ label: "楽天", href: drink.rakutenUrl, text: "楽天" });
+    rows.push({ label: "楽天", href: rakutenAffiliateUrl(drink.rakutenUrl), text: "楽天" });
   }
   if (drink.directUrl) {
-    rows.push({ label: "公式ショップ", href: drink.directUrl, text: "公式ショップ" });
+    rows.push({ label: "公式ショップ", href: rakutenAffiliateUrl(drink.directUrl), text: "公式ショップ" });
   }
   if (drink.otherUrl) {
-    rows.push({ label: "その他の通販", href: drink.otherUrl, text: otherStoreText(drink.otherUrl) });
+    rows.push({ label: "その他の通販", href: rakutenAffiliateUrl(drink.otherUrl), text: otherStoreText(drink.otherUrl) });
   }
   if (drink.officialUrl) {
-    rows.push({ label: "公式", href: drink.officialUrl, text: "公式サイト" });
+    rows.push({ label: "公式", href: rakutenAffiliateUrl(drink.officialUrl), text: "公式サイト" });
   }
   return rows;
 }

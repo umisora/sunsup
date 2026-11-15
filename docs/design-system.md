@@ -80,7 +80,7 @@ design-system/
 | `StoreDock` | Store link that appears once the page's own store button has scrolled away. Floating pill wide, bottom bar narrow. | `href`, `action`, `anchorId` |
 | `ShareRow` | LINE, X, copy link. Plain intent URLs, nothing counted. | `url`, `text`, `tone` |
 | `TableToggle` / `TableShelf` | わたしの卓 (saved) and 最近見た一杯 (recent), kept in localStorage only. Shelf renders nothing on a first visit. | `drink` · `exclude` |
-| `StoreSlot` | One primary store button, then any further product links. Shell keeps the hidden empty 手に入れる / 近く / 読む structure. No affiliate IDs, no search URLs. | `rows` (`label`, `href`, `text`). Omit `rows` on the shell |
+| `StoreSlot` | One primary store button, then any further product links. Shell keeps the hidden empty 手に入れる / 近く / 読む structure. Rakuten destinations are wrapped in lib/rakuten-affiliate.ts. No Amazon tag, no search URLs. | `rows` (`label`, `href`, `text`). Omit `rows` on the shell |
 | `Motion` | Wrap each page once. | — |
 
 ## Motion contract

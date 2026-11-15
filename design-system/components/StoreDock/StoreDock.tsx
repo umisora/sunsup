@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { isRetailerHref, SHOP_LINK_REL, SHOP_LINK_TARGET } from "@/lib/out-links";
+import { AdDisclosure } from "../AdDisclosure/AdDisclosure";
 import styles from "./StoreDock.module.css";
 
 type StoreDockProps = {
@@ -53,6 +54,7 @@ export function StoreDock({ name, href, action, anchorId, sponsored = false }: S
           <path d="M1 11 11 1M3 1h8v8" fill="none" stroke="currentColor" strokeWidth="1.4" />
         </svg>
       </a>
+      <AdDisclosure className={styles.disclosure} />
     </div>
   );
 }

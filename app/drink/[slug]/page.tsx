@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
+  AdDisclosure,
   Button,
   DrinkShowcase,
   DrinkTrail,
@@ -164,9 +165,12 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
           media={still(false)}
           actions={
             primary ? (
-              <Button variant="inverse" icon="external" href={primary.href} sponsored={isShopRow(primary, rows)}>
-                {storeAction(primary)}
-              </Button>
+              <>
+                <AdDisclosure tone="inverse" />
+                <Button variant="inverse" icon="external" href={primary.href} sponsored={isShopRow(primary, rows)}>
+                  {storeAction(primary)}
+                </Button>
+              </>
             ) : null
           }
           share={<ShareRow tone="inverse" url={`${SITE_ORIGIN}/drink/${drink.slug}/`} text={`${drink.name}｜次の飲み会に。${SITE_NAME}`} />}

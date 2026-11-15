@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DISCLOSURE_FOOTER } from "@/lib/disclosure";
 import { SITE_NAME } from "../../brand";
 import type { CategoryLink } from "../CategoryNav/CategoryNav";
 import { Phrase } from "../Text/Text";
@@ -52,7 +53,10 @@ export function SiteFooter({ categories }: { categories: readonly CategoryLink[]
           </div>
         </nav>
       </div>
-      <p className={styles.note}>紹介文の一部は企画のためのフィクションです。</p>
+      <div className={styles.notes}>
+        <p className={styles.note}>{DISCLOSURE_FOOTER}</p>
+        <p className={styles.note}>紹介文の一部は企画のためのフィクションです。</p>
+      </div>
       <p className={styles.giant} aria-hidden="true">
         {SITE_NAME}
       </p>

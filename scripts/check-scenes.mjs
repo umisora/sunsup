@@ -89,8 +89,9 @@ if (existsSync(fidelityPath)) {
 // STYLISH!'s recommended set, first painted for 4 people toasting with a soft drink: the tag and the
 // shared heading 「乾杯のソフトドリンクは、この3種類で」 (bonenkai alone sets its own listHeading),
 // three role cards (乾杯用 4本, テーブル用 1本, 食事用 1本 = 6本)
-// each with a reason, the drink page's own store links (same URL, same kind) tagged source=list with no
-// affiliate parameters and swap buttons for the other drinks of the role, then 「全部で6本」 and the LINE link.
+// each with a reason, the drink page's own store links (same URL, same kind) tagged source=list.
+// Amazon-style affiliate query keys stay out. Rakuten destinations use the hb.afl wrapper.
+// Swap buttons for the other drinks of the role, then 「全部で6本」 and the LINE link.
 const AFFILIATE = /[?&](tag|ascsubtag|linkCode|aff(iliate)?(_?id)?|scid|a8|afid)=/i;
 const unescape = (text) => text.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 const attr = (tag, name) => {

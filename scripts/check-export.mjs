@@ -1,5 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { DISCLOSURE_ABOUT, DISCLOSURE_FOOTER, DISCLOSURE_LABEL, DISCLOSURE_NEAR_BUTTON } from "../lib/disclosure.ts";
+import { rakutenAffiliateUrl } from "../lib/rakuten-affiliate.ts";
 import { fillExportIssues, selfTestFillHtml } from "./check-fill-html.mjs";
 import { isGenericProduct } from "./generic-rule.mjs";
 // JSON-LD on drink pages has its own checker; importing runs it first.
@@ -413,11 +415,12 @@ function publishedAmazon(url) {
 }
 
 function publishedRakuten(url) {
-  return url && isRakutenProduct(url) ? url : "";
+  return url && isRakutenProduct(url) ? rakutenAffiliateUrl(url) : "";
 }
 
 function publishedHttp(url) {
-  return url && isHttp(url) ? url : "";
+  const href = url && isHttp(url) ? url : "";
+  return href ? rakutenAffiliateUrl(href) : "";
 }
 
 function hasHref(html, url) {
@@ -524,10 +527,17 @@ for (const drink of publicDrinks) {
       fail(`${drink.slug} renders an empty ${emptyMarker}`);
     }
   }
-  // Query-string affiliate ids stay out. rel=sponsored on buy links is required
-  // and checked in scripts/check-shop-links.mjs, including product URLs with no tag yet.
+  // Amazon query-string tags stay out. Rakuten uses the hb.afl wrapper from
+  // lib/rakuten-affiliate.ts, which does not use tag=. rel=sponsored is checked
+  // in scripts/check-shop-links.mjs.
   if (html.includes("tag=")) {
     fail(`${drink.slug} includes an affiliate marker`);
+  }
+  if (!html.includes(DISCLOSURE_FOOTER)) {
+    fail(`${drink.slug} is missing the footer disclosure`);
+  }
+  if ((amazon || rakuten || direct || other || official) && (!html.includes(DISCLOSURE_LABEL) || !html.includes(DISCLOSURE_NEAR_BUTTON))) {
+    fail(`${drink.slug} store links are missing the ad disclosure`);
   }
   if (amazon || rakuten || direct || other || official) {
     if (!html.includes('target="_blank"')) {
@@ -870,6 +880,32 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
 selfTestFillHtml();
 for (const message of fillExportIssues("out")) {
   fail(message);
+}
+
+const about = read("about/index.html");
+if (!about.includes(DISCLOSURE_ABOUT)) {
+  fail("about is missing the disclosure paragraph");
+}
+if (about.includes("アフィリエイトではなく")) {
+  fail("about still says the site is not an affiliate");
+}
+if (!about.includes(DISCLOSURE_FOOTER) || !home.includes(DISCLOSURE_FOOTER) || !office.includes(DISCLOSURE_FOOTER)) {
+  fail("home, about, or office is missing the footer disclosure");
+}
+const baDir = join("out", "ba");
+if (existsSync(baDir)) {
+  for (const entry of readdirSync(baDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const page = read(`ba/${entry.name}/index.html`);
+    if (!page.includes(DISCLOSURE_FOOTER)) {
+      fail(`/ba/${entry.name}/ is missing the footer disclosure`);
+    }
+    if (page.includes("data-out-source=") && (!page.includes(DISCLOSURE_LABEL) || !page.includes(DISCLOSURE_NEAR_BUTTON))) {
+      fail(`/ba/${entry.name}/ store links are missing the ad disclosure`);
+    }
+  }
 }
 
 if (failures.length > 0) {

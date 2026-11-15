@@ -1,0 +1,32 @@
+.note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--step--2);
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+}
+
+.mark {
+  flex: none;
+  padding: 2px 7px 1px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  color: var(--text-accent);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  line-height: 1.4;
+}
+
+.inverse {
+  color: var(--text-inverse-muted);
+}
+
+.inverse .mark {
+  border-color: color-mix(in srgb, var(--palette-linen) 35%, transparent);
+  color: var(--palette-brass-soft);
+}
