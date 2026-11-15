@@ -50,7 +50,7 @@ export default function AboutPage() {
             <TextLink href="/drink/">ドリンク一覧</TextLink>から、カテゴリごとに一本選べます。
           </InfoRow>
           <InfoRow title="購入リンク">
-            買うページへのリンクだけ載せています。{DISCLOSURE_ABOUT}。安い順でも並べていません。
+            買うページへのリンクだけ載せています。{DISCLOSURE_ABOUT}安い順でも並べていません。
           </InfoRow>
           <InfoRow title="アクセスの記録">
             {CLARITY_ID

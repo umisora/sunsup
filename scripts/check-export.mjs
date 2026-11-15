@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { DISCLOSURE_ABOUT, DISCLOSURE_FOOTER, DISCLOSURE_LABEL, DISCLOSURE_NEAR_BUTTON } from "../lib/disclosure.ts";
+import { DISCLOSURE_ABOUT, DISCLOSURE_FOOTER } from "../lib/disclosure.ts";
 import { rakutenAffiliateUrl } from "../lib/rakuten-affiliate.ts";
 import { fillExportIssues, selfTestFillHtml } from "./check-fill-html.mjs";
 import { isGenericProduct } from "./generic-rule.mjs";
@@ -523,7 +523,7 @@ for (const drink of publicDrinks) {
       if (!hasHref(html, url)) {
         fail(`${drink.slug} is missing ${url}`);
       }
-    } else if (emptyMarker && html.includes(emptyMarker)) {
+    } else if (emptyMarker && html.replaceAll(DISCLOSURE_FOOTER, "").includes(emptyMarker)) {
       fail(`${drink.slug} renders an empty ${emptyMarker}`);
     }
   }
@@ -533,11 +533,12 @@ for (const drink of publicDrinks) {
   if (html.includes("tag=")) {
     fail(`${drink.slug} includes an affiliate marker`);
   }
-  if (!html.includes(DISCLOSURE_FOOTER)) {
-    fail(`${drink.slug} is missing the footer disclosure`);
+  const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+  if ((visible.split(DISCLOSURE_FOOTER).length - 1) !== 1) {
+    fail(`${drink.slug} footer disclosure should appear once`);
   }
-  if ((amazon || rakuten || direct || other || official) && (!html.includes(DISCLOSURE_LABEL) || !html.includes(DISCLOSURE_NEAR_BUTTON))) {
-    fail(`${drink.slug} store links are missing the ad disclosure`);
+  if (visible.includes("data-ad-disclosure") || visible.includes("TODO_DISCLOSURE")) {
+    fail(`${drink.slug} has a disclosure mark in the page`);
   }
   if (amazon || rakuten || direct || other || official) {
     if (!html.includes('target="_blank"')) {
@@ -882,15 +883,21 @@ for (const message of fillExportIssues("out")) {
   fail(message);
 }
 
-const about = read("about/index.html");
-if (!about.includes(DISCLOSURE_ABOUT)) {
-  fail("about is missing the disclosure paragraph");
+const visibleHtml = (html) => html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+const about = visibleHtml(read("about/index.html"));
+if ((about.split(DISCLOSURE_FOOTER).length - 1) !== 2 || !about.includes(DISCLOSURE_ABOUT)) {
+  fail("about should carry the disclosure paragraph and the footer note");
 }
-if (about.includes("アフィリエイトではなく")) {
-  fail("about still says the site is not an affiliate");
+if (about.includes("アフィリエイトではなく") || about.includes("data-ad-disclosure")) {
+  fail("about still says the site is not an affiliate or has a page mark");
 }
-if (!about.includes(DISCLOSURE_FOOTER) || !home.includes(DISCLOSURE_FOOTER) || !office.includes(DISCLOSURE_FOOTER)) {
-  fail("home, about, or office is missing the footer disclosure");
+const homeVisible = visibleHtml(home);
+const officeVisible = visibleHtml(office);
+if ((homeVisible.split(DISCLOSURE_FOOTER).length - 1) !== 1 || homeVisible.includes("data-ad-disclosure")) {
+  fail("home footer disclosure should appear once, with no page mark");
+}
+if ((officeVisible.split(DISCLOSURE_FOOTER).length - 1) !== 1 || officeVisible.includes("data-ad-disclosure")) {
+  fail("office footer disclosure should appear once, with no page mark");
 }
 const baDir = join("out", "ba");
 if (existsSync(baDir)) {
@@ -898,12 +905,12 @@ if (existsSync(baDir)) {
     if (!entry.isDirectory()) {
       continue;
     }
-    const page = read(`ba/${entry.name}/index.html`);
-    if (!page.includes(DISCLOSURE_FOOTER)) {
-      fail(`/ba/${entry.name}/ is missing the footer disclosure`);
+    const page = visibleHtml(read(`ba/${entry.name}/index.html`));
+    if ((page.split(DISCLOSURE_FOOTER).length - 1) !== 1) {
+      fail(`/ba/${entry.name}/ footer disclosure should appear once`);
     }
-    if (page.includes("data-out-source=") && (!page.includes(DISCLOSURE_LABEL) || !page.includes(DISCLOSURE_NEAR_BUTTON))) {
-      fail(`/ba/${entry.name}/ store links are missing the ad disclosure`);
+    if (page.includes("data-ad-disclosure") || page.includes("TODO_DISCLOSURE")) {
+      fail(`/ba/${entry.name}/ has a disclosure mark in the page`);
     }
   }
 }

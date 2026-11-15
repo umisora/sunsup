@@ -10,7 +10,6 @@ export { TableShelf, TableToggle, type TableDrink } from "./components/MyTable/M
 export { ShareRow } from "./components/ShareRow/ShareRow";
 export { TableCard } from "./components/TableCard/TableCard";
 export { FactList, ProductHero } from "./components/ProductHero/ProductHero";
-export { AdDisclosure } from "./components/AdDisclosure/AdDisclosure";
 export { StoreDock } from "./components/StoreDock/StoreDock";
 export { FeatureCard } from "./components/FeatureCard/FeatureCard";
 export { LogoTitle } from "./components/Logo/Logo";

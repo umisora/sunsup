@@ -1,5 +1,6 @@
 // Rakuten affiliate wrapping. Amazon and other stores stay as written.
 // An already-wrapped hb.afl.rakuten.co.jp URL is returned unchanged.
+import { DISCLOSURE_ABOUT, DISCLOSURE_FOOTER } from "../lib/disclosure.ts";
 import { storeRows, type Drink } from "../lib/drinks.ts";
 import { outLinkMap } from "../lib/out-links.ts";
 import {
@@ -28,6 +29,11 @@ function wrapped(original: string): string {
   return `https://hb.afl.rakuten.co.jp/ichiba/${RAKUTEN_AFFILIATE_ID}/${RAKUTEN_MEASUREMENT_ID}?pc=${encodeURIComponent(original)}&link_type=hybrid_url`;
 }
 
+expect(DISCLOSURE_FOOTER === "楽天のリンクは広告です。", "footer disclosure copy");
+expect(
+  DISCLOSURE_ABOUT === "楽天のリンクは広告です。リンクから商品が売れると、STYLISH!に紹介料が入ることがあります。",
+  "about disclosure copy",
+);
 expect(RAKUTEN_AFFILIATE_ID === "09c4c923.474b7a2d.09c4c924.410ae089", "affiliate id is the owner's ichiba id");
 expect(RAKUTEN_MEASUREMENT_ID === "_RTLink156674", "measurement id is the owner's 計測ID");
 

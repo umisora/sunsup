@@ -19,7 +19,6 @@ import {
 } from "@/lib/shopping-list";
 import { flushHeadcountChange, noteHeadcount, shareList } from "@/lib/usage-session";
 import { cx } from "../../cx";
-import { AdDisclosure } from "../AdDisclosure/AdDisclosure";
 import { ExternalPhoto, StillLife } from "../StillLife/StillLife";
 import styles from "./ShoppingList.module.css";
 
@@ -174,7 +173,6 @@ export function ShoppingList({ headingId, title, cards, url, emphasizeStores = f
                   <span className={styles.times}>本</span>
                 </p>
               </div>
-              <AdDisclosure />
               <ul className={styles.stores} aria-label={`${line.item.name}を買えるお店`}>
                 {line.item.stores.map((store) => (
                   <li key={store.href}>
