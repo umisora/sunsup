@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Eyebrow, Grid, InfoRow, LogoTitle, Motion, Photo, Section, SITE_NAME, Stack, StillLife, Text, TextLink } from "@/design-system";
 import { ABOUT_DESCRIPTION } from "@/design-system/brand";
+import { DISCLOSURE_ABOUT } from "@/lib/disclosure";
 import { CLARITY_ID } from "../_metrics/Clarity";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
@@ -49,7 +50,7 @@ export default function AboutPage() {
             <TextLink href="/drink/">ドリンク一覧</TextLink>から、カテゴリごとに一本選べます。
           </InfoRow>
           <InfoRow title="購入リンク">
-            買うページへのリンクだけ載せています。アフィリエイトではなく、安い順でも並べていません。
+            買うページへのリンクだけ載せています。{DISCLOSURE_ABOUT}安い順でも並べていません。
           </InfoRow>
           <InfoRow title="アクセスの記録">
             {CLARITY_ID

@@ -81,9 +81,16 @@
   font-style: italic;
 }
 
-.note {
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
   width: min(var(--layout-wrap), 100% - 2 * var(--layout-gutter));
   margin: var(--space-8) auto 0;
+}
+
+.note {
+  margin: 0;
   color: var(--text-inverse-muted);
   font-size: var(--step--2);
   letter-spacing: 0.06em;

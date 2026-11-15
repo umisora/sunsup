@@ -1,5 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { DISCLOSURE_ABOUT, DISCLOSURE_FOOTER } from "../lib/disclosure.ts";
+import { rakutenAffiliateUrl } from "../lib/rakuten-affiliate.ts";
 import { fillExportIssues, selfTestFillHtml } from "./check-fill-html.mjs";
 import { isGenericProduct } from "./generic-rule.mjs";
 // JSON-LD on drink pages has its own checker; importing runs it first.
@@ -413,11 +415,12 @@ function publishedAmazon(url) {
 }
 
 function publishedRakuten(url) {
-  return url && isRakutenProduct(url) ? url : "";
+  return url && isRakutenProduct(url) ? rakutenAffiliateUrl(url) : "";
 }
 
 function publishedHttp(url) {
-  return url && isHttp(url) ? url : "";
+  const href = url && isHttp(url) ? url : "";
+  return href ? rakutenAffiliateUrl(href) : "";
 }
 
 function hasHref(html, url) {
@@ -520,14 +523,22 @@ for (const drink of publicDrinks) {
       if (!hasHref(html, url)) {
         fail(`${drink.slug} is missing ${url}`);
       }
-    } else if (emptyMarker && html.includes(emptyMarker)) {
+    } else if (emptyMarker && html.replaceAll(DISCLOSURE_FOOTER, "").includes(emptyMarker)) {
       fail(`${drink.slug} renders an empty ${emptyMarker}`);
     }
   }
-  // Query-string affiliate ids stay out. rel=sponsored on buy links is required
-  // and checked in scripts/check-shop-links.mjs, including product URLs with no tag yet.
+  // Amazon query-string tags stay out. Rakuten uses the hb.afl wrapper from
+  // lib/rakuten-affiliate.ts, which does not use tag=. rel=sponsored is checked
+  // in scripts/check-shop-links.mjs.
   if (html.includes("tag=")) {
     fail(`${drink.slug} includes an affiliate marker`);
+  }
+  const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+  if ((visible.split(DISCLOSURE_FOOTER).length - 1) !== 1) {
+    fail(`${drink.slug} footer disclosure should appear once`);
+  }
+  if (visible.includes("data-ad-disclosure") || visible.includes("TODO_DISCLOSURE")) {
+    fail(`${drink.slug} has a disclosure mark in the page`);
   }
   if (amazon || rakuten || direct || other || official) {
     if (!html.includes('target="_blank"')) {
@@ -870,6 +881,38 @@ if (!homeHtml.includes('<meta property="og:url" content="https://stylish.sunsup.
 selfTestFillHtml();
 for (const message of fillExportIssues("out")) {
   fail(message);
+}
+
+const visibleHtml = (html) => html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+const about = visibleHtml(read("about/index.html"));
+if ((about.split(DISCLOSURE_FOOTER).length - 1) !== 2 || !about.includes(DISCLOSURE_ABOUT)) {
+  fail("about should carry the disclosure paragraph and the footer note");
+}
+if (about.includes("アフィリエイトではなく") || about.includes("data-ad-disclosure")) {
+  fail("about still says the site is not an affiliate or has a page mark");
+}
+const homeVisible = visibleHtml(home);
+const officeVisible = visibleHtml(office);
+if ((homeVisible.split(DISCLOSURE_FOOTER).length - 1) !== 1 || homeVisible.includes("data-ad-disclosure")) {
+  fail("home footer disclosure should appear once, with no page mark");
+}
+if ((officeVisible.split(DISCLOSURE_FOOTER).length - 1) !== 1 || officeVisible.includes("data-ad-disclosure")) {
+  fail("office footer disclosure should appear once, with no page mark");
+}
+const baDir = join("out", "ba");
+if (existsSync(baDir)) {
+  for (const entry of readdirSync(baDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const page = visibleHtml(read(`ba/${entry.name}/index.html`));
+    if ((page.split(DISCLOSURE_FOOTER).length - 1) !== 1) {
+      fail(`/ba/${entry.name}/ footer disclosure should appear once`);
+    }
+    if (page.includes("data-ad-disclosure") || page.includes("TODO_DISCLOSURE")) {
+      fail(`/ba/${entry.name}/ has a disclosure mark in the page`);
+    }
+  }
 }
 
 if (failures.length > 0) {

@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { isOutKind, OUT_LINKS_ID, type OutKind, type OutLinkMap } from "@/lib/out-links";
+import { rakutenDestinationUrl } from "@/lib/rakuten-affiliate";
 import { captureOutboundClick } from "@/lib/web-analytics";
 import { flushHeadcountChange, outboundUsageProps, resetUsageSession, venueFromPath } from "@/lib/usage-session";
 
@@ -62,9 +63,10 @@ function resolveShop(anchor: Element, href: string): ResolvedShop | null {
   return { slug: map.slug, kind, source: "page", href };
 }
 
+/** Shop hostname. A Rakuten affiliate hop is counted as the original store host. */
 function shopHost(href: string): string | null {
   try {
-    return new URL(href, window.location.href).hostname;
+    return new URL(rakutenDestinationUrl(href), window.location.href).hostname;
   } catch {
     return null;
   }
