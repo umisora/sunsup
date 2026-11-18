@@ -1,4 +1,5 @@
-// Lengths are reported. The build fails for banned wording, duplicate titles, or an empty description.
+// Lengths are reported. The build fails for banned wording, duplicate titles, an empty description,
+// or a drink description over 120 characters. A drink description under 80 is counted and still passes.
 // `out/404.html` is Next's copy of `/404/` and is not a second page.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -68,7 +69,10 @@ export function metaFindings(pages) {
     if (isDrinkPage(page.route)) {
       const length = textLength(description);
       if (length < 80) shortDrinkDescriptions += 1;
-      if (length > 120) longDrinkDescriptions += 1;
+      if (length > 120) {
+        longDrinkDescriptions += 1;
+        failures.push(`${page.route} description is over 120 characters`);
+      }
     }
   }
   for (const [title, routes] of titles) {
@@ -103,7 +107,9 @@ export function selfTestMeta() {
     { route: "/drink/short/", title: "短い｜STYLISH!", description: "あ".repeat(79) },
     { route: "/ba/office/", title: "場面｜STYLISH!", description: "短い説明です。" },
   ]);
-  if (reported.failures.length !== 0) throw new Error(`self-test: length reports failed the build: ${reported.failures.join("; ")}`);
+  if (reported.failures.length !== 1 || !reported.failures[0].includes("/drink/long/") || !reported.failures[0].includes("over 120")) {
+    throw new Error(`self-test: a drink description over 120 must fail the build: ${reported.failures.join("; ")}`);
+  }
   if (reported.longTitles !== 1 || reported.shortDrinkDescriptions !== 1 || reported.longDrinkDescriptions !== 1) {
     throw new Error(`self-test: length counts were ${reported.longTitles}, ${reported.shortDrinkDescriptions}, ${reported.longDrinkDescriptions}`);
   }
