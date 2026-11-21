@@ -130,7 +130,23 @@ for (const rel of walkHtml("out")) {
 
 let sitemapLocs = [];
 try {
-  sitemapLocs = [...locs(readFileSync(join("out", "sitemap-pages.xml"), "utf8")), ...locs(readFileSync(join("out", "sitemap-drinks.xml"), "utf8"))];
+  const indexXml = readFileSync(join("out", "sitemap.xml"), "utf8");
+  const children = locs(indexXml).filter((loc) => loc.endsWith(".xml"));
+  if (children.length === 0) {
+    fail("sitemap index has no child sitemaps");
+  }
+  for (const loc of children) {
+    if (!loc.startsWith(`${ORIGIN}/`)) {
+      fail(`sitemap index loc is not on ${ORIGIN}: ${loc}`);
+      continue;
+    }
+    const name = loc.slice(ORIGIN.length + 1);
+    if (name.includes("/") || name.includes("..")) {
+      fail(`sitemap index loc is not a site-root file: ${loc}`);
+      continue;
+    }
+    sitemapLocs.push(...locs(readFileSync(join("out", name), "utf8")));
+  }
 } catch (error) {
   fail(error instanceof Error ? error.message : String(error));
 }

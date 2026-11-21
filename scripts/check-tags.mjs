@@ -245,9 +245,9 @@ for (const slug of listed) {
 if (!html.includes(`<link rel="canonical" href="${URL}"/>`)) {
   fail("canonical is not the tag page");
 }
-const sitemap = existsSync(join("out", "sitemap-pages.xml")) ? readFileSync(join("out", "sitemap-pages.xml"), "utf8") : "";
+const sitemap = existsSync(join("out", "sitemap-categories.xml")) ? readFileSync(join("out", "sitemap-categories.xml"), "utf8") : "";
 if (!sitemap.includes(`<loc>${URL}</loc>`)) {
-  fail("sitemap-pages.xml is missing the tag page");
+  fail("sitemap-categories.xml is missing the tag page");
 }
 for (const key of ["og:title", "og:description", "twitter:title", "twitter:description"]) {
   const content = metaContent(html, key);

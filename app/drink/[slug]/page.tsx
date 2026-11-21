@@ -47,6 +47,7 @@ import { drinkJsonLd, jsonLdText } from "@/lib/jsonld";
 import { scenePath, scenesFor } from "@/lib/scenes";
 import { heroSpecs } from "@/lib/servings";
 import { hasSeasonStills } from "@/lib/still-seasons";
+import { tagsForDrink } from "@/lib/tags";
 import { seasonOf } from "@/lib/visit";
 
 type DrinkPageProps = {
@@ -107,6 +108,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
   const related = relatedWindow(order, drink.slug, RELATED_SHOWN);
   const neighbours = shelfNeighbours(drink);
   const shelf = categoryHref(categoryId(drink));
+  const tags = tagsForDrink(drink.slug).map((tag) => ({ href: tag.path, label: tag.title }));
   const folio = `No. ${String(catalogNumber(drink)).padStart(3, "0")} / ${loadDrinks().length}`;
   const still = (priority: boolean) =>
     drink.stillUrl ? (
@@ -142,6 +144,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         title={drink.name}
         meta={drink.size}
         specs={heroSpecs(drink)}
+        tags={tags}
         media={hero}
         extra={<TableToggle drink={{ slug: drink.slug, name: drink.name, stillUrl: drink.stillUrl, category: drink.category }} />}
       >

@@ -1,5 +1,5 @@
-// Writes public/sitemap.xml (index), sitemap-pages.xml and sitemap-drinks.xml
-// before `next build` copies public/ into the static export.
+// Writes public/sitemap.xml (index), sitemap-scenes.xml, sitemap-categories.xml
+// and sitemap-drinks.xml before `next build` copies public/ into the static export.
 //
 // lastmod is the Asia/Tokyo calendar date of the latest git commit that touched
 // the source that owns that URL. It is omitted when that date would be wrong:
@@ -13,7 +13,7 @@ import { createHash } from "node:crypto";
 import { closeSync, existsSync, openSync, readFileSync, renameSync, statSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { SITE_ORIGIN, sitemapDrinkPaths, sitemapPagePaths } from "../lib/sitemap-entries.ts";
+import { SITE_ORIGIN, sitemapCategoryPaths, sitemapDrinkPaths, sitemapScenePaths } from "../lib/sitemap-entries.ts";
 import { MUTOU } from "../lib/tags.ts";
 
 const ZERO = "0000000000000000000000000000000000000000";
@@ -252,7 +252,8 @@ function publish(path, body) {
   renameSync(temp, path);
 }
 
-const OUTPUTS = ["public/sitemap.xml", "public/sitemap-pages.xml", "public/sitemap-drinks.xml"];
+const OUTPUTS = ["public/sitemap.xml", "public/sitemap-scenes.xml", "public/sitemap-categories.xml", "public/sitemap-drinks.xml"];
+const RETIRED = ["public/sitemap-pages.xml"];
 const SOURCES = [
   "data/drinks.csv",
   "data/still-seasons.json",
@@ -326,16 +327,32 @@ function acquireOrSkip() {
   }
 }
 
+function retireStale() {
+  for (const path of RETIRED) {
+    if (existsSync(path)) {
+      unlinkSync(path);
+    }
+  }
+}
+
 if (!acquireOrSkip()) {
+  retireStale();
   process.exit(0);
 }
 
 ensurePagesGitHistory();
 
-const pagePaths = sitemapPagePaths();
+const scenePaths = sitemapScenePaths();
+const categoryPaths = sitemapCategoryPaths();
 const drinkPaths = sitemapDrinkPaths();
+const pagePaths = [...scenePaths, ...categoryPaths];
 const overlap = pagePaths.filter((path) => drinkPaths.includes(path));
-if (overlap.length > 0 || new Set(pagePaths).size !== pagePaths.length || new Set(drinkPaths).size !== drinkPaths.length) {
+const repeated =
+  new Set(scenePaths).size !== scenePaths.length ||
+  new Set(categoryPaths).size !== categoryPaths.length ||
+  new Set(drinkPaths).size !== drinkPaths.length ||
+  scenePaths.some((path) => categoryPaths.includes(path));
+if (overlap.length > 0 || repeated) {
   throw new Error(`sitemap paths overlap or repeat: ${overlap.join(", ")}`);
 }
 
@@ -422,20 +439,30 @@ function drinkEntry(path) {
   return { loc, lastmod: lastmodOf(dates.csv, line, line), source: `data/drinks.csv:${line}` };
 }
 
-const pages = pagePaths.map(pageEntry);
+const scenes = scenePaths.map(pageEntry);
+const categories = categoryPaths.map(pageEntry);
 const drinks = drinkPaths.map(drinkEntry);
-const entries = [...pages, ...drinks];
+const entries = [...scenes, ...categories, ...drinks];
 const withLastmod = entries.filter((entry) => entry.lastmod);
 
-publish("public/sitemap-pages.xml", urlset(pages));
+publish("public/sitemap-scenes.xml", urlset(scenes));
+publish("public/sitemap-categories.xml", urlset(categories));
 publish("public/sitemap-drinks.xml", urlset(drinks));
-publish("public/sitemap.xml", index([`${SITE_ORIGIN}/sitemap-pages.xml`, `${SITE_ORIGIN}/sitemap-drinks.xml`]));
+publish(
+  "public/sitemap.xml",
+  index([
+    `${SITE_ORIGIN}/sitemap-scenes.xml`,
+    `${SITE_ORIGIN}/sitemap-categories.xml`,
+    `${SITE_ORIGIN}/sitemap-drinks.xml`,
+  ]),
+);
+retireStale();
 
 const dated = drinks.filter((entry) => entry.lastmod).sort((a, b) => a.lastmod.localeCompare(b.lastmod) || a.loc.localeCompare(b.loc));
 const drinkSamples = [dated[0], dated[Math.floor(dated.length / 2)], dated.at(-1)].filter(Boolean);
-const pageSamples = pages.filter((entry) => entry.lastmod);
+const pageSamples = [...scenes, ...categories].filter((entry) => entry.lastmod);
 console.log(
-  `[sitemaps] ${pages.length} pages + ${drinks.length} drinks = ${entries.length} urls; lastmod on ${withLastmod.length}; ${skipped ? `omitted all lastmod (${skipped})` : "full git history"}`,
+  `[sitemaps] ${scenes.length} scenes + ${categories.length} categories + ${drinks.length} drinks = ${entries.length} urls; lastmod on ${withLastmod.length}; ${skipped ? `omitted all lastmod (${skipped})` : "full git history"}`,
 );
 for (const entry of [...pageSamples, ...drinkSamples]) {
   console.log(`[sitemaps] ${entry.loc} lastmod ${entry.lastmod} from ${entry.source}`);

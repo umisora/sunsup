@@ -22,6 +22,17 @@ export const MUTOU = {
     "甘いサイダーの隣に、無糖を置く。お茶、炭酸水、ブラックコーヒーの{n}本です。テーブルに似合う一本を見た目で選んで、Amazonや楽天のページからそのまま頼めます。",
 } as const;
 
+export type PublishedTag = {
+  id: string;
+  path: string;
+  title: string;
+};
+
+/** Tag pages that are generated and should be linked from the catalog. */
+export function publishedTags(): readonly PublishedTag[] {
+  return [{ id: MUTOU.id, path: MUTOU.path, title: MUTOU.title }];
+}
+
 export type TagSkipReason = "missing" | "unpublished";
 
 export type TagSkip = {
@@ -123,6 +134,23 @@ export function resolveMutouTag(): ResolvedTag {
   console.log(`[tags] mutou: ${drinks.length} published drinks${skipped.length > 0 ? `, skipped ${skipped.length}` : ""}`);
   resolved = { drinks, skipped };
   return resolved;
+}
+
+let mutouMemberSlugs: ReadonlySet<string> | null = null;
+
+function mutouMembers(): ReadonlySet<string> {
+  if (!mutouMemberSlugs) {
+    mutouMemberSlugs = new Set(resolveMutouTag().drinks.map((drink) => drink.slug));
+  }
+  return mutouMemberSlugs;
+}
+
+/** Published tags this drink belongs to, in tag-page order. Labels are the tag titles already in the data. */
+export function tagsForDrink(slug: string): PublishedTag[] {
+  if (!mutouMembers().has(slug)) {
+    return [];
+  }
+  return publishedTags().filter((tag) => tag.id === MUTOU.id);
 }
 
 /**

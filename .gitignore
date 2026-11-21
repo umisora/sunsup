@@ -11,8 +11,12 @@ __pycache__/
 /data/drink-shelf.json
 # Written by scripts/build-sitemaps.mjs during next build, then copied to out/.
 /public/sitemap.xml
-/public/sitemap-pages.xml
+/public/sitemap-scenes.xml
+/public/sitemap-categories.xml
 /public/sitemap-drinks.xml
+/public/sitemap-pages.xml
 /public/sitemap.xml.*.tmp
-/public/sitemap-pages.xml.*.tmp
+/public/sitemap-scenes.xml.*.tmp
+/public/sitemap-categories.xml.*.tmp
 /public/sitemap-drinks.xml.*.tmp
+/public/sitemap-pages.xml.*.tmp
