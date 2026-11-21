@@ -15,6 +15,8 @@ type ProductHeroProps = {
   meta?: ReactNode;
   /** Short facts set as tags under the name, e.g. ["250ml", "瓶", "ひとり分"]. */
   specs?: readonly string[];
+  /** Published tag pages this drink belongs to. The label is the tag's existing title. */
+  tags?: readonly { href: string; label: string }[];
   /** Collection number, set in the corner like a catalog plate. */
   folio?: string;
   /** The drink's own still in a plinth <StillLife>. Omitted when the drink has none: the hero is type only. */
@@ -26,7 +28,7 @@ type ProductHeroProps = {
 };
 
 /** Top of a drink page: the still on its plinth beside the name and the way to the store. */
-export function ProductHero({ id, crumbs, title, meta, specs, folio, media, children, extra }: ProductHeroProps) {
+export function ProductHero({ id, crumbs, title, meta, specs, tags, folio, media, children, extra }: ProductHeroProps) {
   return (
     <section className={cx(layout.wrap, styles.hero, !media && styles.textOnly)} aria-labelledby={id}>
       {media ? <div className={styles.media}>{media}</div> : null}
@@ -53,6 +55,17 @@ export function ProductHero({ id, crumbs, title, meta, specs, folio, media, chil
             {specs.map((spec) => (
               <li key={spec} className={styles.spec}>
                 {spec}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {tags && tags.length > 0 ? (
+          <ul className={styles.specs}>
+            {tags.map((tag) => (
+              <li key={tag.href}>
+                <a className={styles.spec} href={tag.href}>
+                  {tag.label}
+                </a>
               </li>
             ))}
           </ul>

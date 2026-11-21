@@ -125,6 +125,15 @@
   white-space: nowrap;
 }
 
+a.spec:any-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+a.spec:hover {
+  color: var(--text-link);
+}
+
 /* facts */
 
 .facts {

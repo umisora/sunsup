@@ -1,16 +1,26 @@
 import { CATEGORY_PAGES, categoryPagePath } from "./categories";
 import { loadDrinks, SITE_ORIGIN } from "./drinks";
 import { SCENES, scenePath } from "./scenes";
-import { MUTOU } from "./tags";
+import { publishedTags } from "./tags";
 
 export { SITE_ORIGIN };
+
+/** Home, about, the drink index, and /ba/ scene pages. */
+export function sitemapScenePaths(): string[] {
+  return ["/", "/ba/office/", ...SCENES.map(scenePath), "/about/", "/drink/"];
+}
+
+/** Category pages and published tag pages. */
+export function sitemapCategoryPaths(): string[] {
+  return [...CATEGORY_PAGES.map(categoryPagePath), ...publishedTags().map((tag) => tag.path)];
+}
 
 /**
  * Trailing-slash paths in the same order as the old single sitemap.
  * /drink/shell/ is an empty template, so it is not listed.
  */
 export function sitemapPagePaths(): string[] {
-  return ["/", "/ba/office/", ...SCENES.map(scenePath), "/about/", "/drink/", ...CATEGORY_PAGES.map(categoryPagePath), MUTOU.path];
+  return [...sitemapScenePaths(), ...sitemapCategoryPaths()];
 }
 
 /** Public drink pages, catalog order. */

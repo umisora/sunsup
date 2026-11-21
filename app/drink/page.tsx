@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CategoryNav, Motion, PageIntro, Phrase, Photo, Section, ShelfHead, SITE_NAME, Stack, TableShelf, Text, TextLink, VenueLink } from "@/design-system";
 import { categoryHref, drinkGroups } from "@/lib/drinks";
 import { SCENES, scenePath } from "@/lib/scenes";
+import { publishedTags } from "@/lib/tags";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 import { DrinkIndexShelf } from "./DrinkIndexShelf";
 
@@ -38,7 +39,17 @@ export default function DrinkIndexPage() {
         eyebrow="ドリンク"
         title={["ドリンク一覧"]}
         lead="次の飲み会に持っていく一本を、カテゴリから選べます。"
-        sublead={`全${total}本を、6つのカテゴリに分けています。`}
+        sublead={
+          <>
+            {`全${total}本を、6つのカテゴリに分けています。`}
+            {publishedTags().map((tag) => (
+              <span key={tag.path}>
+                <br />
+                <TextLink href={tag.path}>{tag.title}</TextLink>
+              </span>
+            ))}
+          </>
+        }
       />
       <CategoryNav categories={categories} total={total} />
       <Section space="md" label="飲み会">

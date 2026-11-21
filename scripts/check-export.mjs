@@ -16,6 +16,7 @@ import "./check-meta.mjs";
 import "./check-tags.mjs";
 import "./check-canonical.mjs";
 import "./check-related-links.mjs";
+import "./check-internal-links.mjs";
 
 const failures = [];
 
@@ -593,7 +594,7 @@ if (shell.includes('data-store-primary="true"')) {
   fail("shell has a store CTA");
 }
 
-const sitemap = `${read("sitemap-pages.xml")}\n${read("sitemap-drinks.xml")}`;
+const sitemap = `${read("sitemap-scenes.xml")}\n${read("sitemap-categories.xml")}\n${read("sitemap-drinks.xml")}`;
 const robots = read("robots.txt");
 if (!robots.includes("Sitemap: https://stylish.sunsup.me/sitemap.xml")) {
   fail("robots.txt is missing the sitemap");
