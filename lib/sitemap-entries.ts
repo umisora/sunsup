@@ -1,5 +1,6 @@
 import { CATEGORY_PAGES, categoryPagePath } from "./categories";
 import { loadDrinks, SITE_ORIGIN } from "./drinks";
+import { OFFICE_PATH } from "./office-page";
 import { SCENES, scenePath } from "./scenes";
 import { publishedTags } from "./tags";
 
@@ -7,7 +8,7 @@ export { SITE_ORIGIN };
 
 /** Home, about, the drink index, and /ba/ scene pages. */
 export function sitemapScenePaths(): string[] {
-  return ["/", "/ba/office/", ...SCENES.map(scenePath), "/about/", "/drink/"];
+  return ["/", OFFICE_PATH, ...SCENES.map(scenePath), "/about/", "/drink/"];
 }
 
 /** Category pages and published tag pages. */

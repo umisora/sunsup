@@ -7,6 +7,9 @@ export const SITE_DESCRIPTION = "オフィスの飲み会を任された人が�
 /** Document title for `/`. Absolute: the layout template must not append another `｜STYLISH!`. */
 export const HOME_TITLE = "飲み会のノンアル、おしゃれに選ぶ｜STYLISH!";
 
+/** Document title for `/about/`. The visible heading is the logo. */
+export const ABOUT_TITLE = "このサイトについて";
+
 /** Meta description for `/about/`. The top page keeps SITE_DESCRIPTION. */
 export const ABOUT_DESCRIPTION =
   "STYLISH!は、飲み会でもおしゃれに美味しく飲めるノンアルを紹介するサイトです。場・見た目・サイズ・味の四つから、幹事が次の一本を選べます。店へのリンクだけ載せています。";

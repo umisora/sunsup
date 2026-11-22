@@ -47,9 +47,20 @@ export function redirectPath(pathname: string, search = ""): string | null {
   return `${target}${search}`;
 }
 
-/** RSC flight payload written next to each exported page. Not /robots.txt. */
+/** RSC flight payload written next to each exported page. Not /robots.txt or /llms.txt. */
 export function isRscPayload(pathname: string): boolean {
   return pathname === "/index.txt" || pathname.endsWith("/index.txt");
+}
+
+/**
+ * `/llms.txt` is served through this middleware (`_routes.json` includes `/*`),
+ * so `public/_headers` does not apply. A 200 is the generated text file.
+ */
+export function llmsContentType(pathname: string, status: number): string | null {
+  if (pathname !== "/llms.txt" || status !== 200) {
+    return null;
+  }
+  return "text/plain; charset=utf-8";
 }
 
 export async function onRequest(context: PagesContext): Promise<Response> {
@@ -69,6 +80,12 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     });
   }
   const response = await context.next();
+  const llmsType = llmsContentType(url.pathname, response.status);
+  if (llmsType) {
+    const headers = new Headers(response.headers);
+    headers.set("content-type", llmsType);
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  }
   if (!isRscPayload(url.pathname)) {
     return response;
   }
