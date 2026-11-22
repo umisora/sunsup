@@ -10,6 +10,7 @@ import "./check-jsonld.mjs";
 import "./check-scenes.mjs";
 import "./check-categories.mjs";
 import "./check-sitemaps.mjs";
+import "./check-llms.mjs";
 import "./check-html-size.mjs";
 import "./check-shop-links.mjs";
 import "./check-meta.mjs";

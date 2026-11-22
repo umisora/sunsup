@@ -20,3 +20,6 @@ __pycache__/
 /public/sitemap-categories.xml.*.tmp
 /public/sitemap-drinks.xml.*.tmp
 /public/sitemap-pages.xml.*.tmp
+# Written by scripts/build-llms.mjs during next build, then copied to out/.
+/public/llms.txt
+/public/llms.txt.*.tmp

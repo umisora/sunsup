@@ -1,35 +1,35 @@
 import type { Metadata } from "next";
 import { Eyebrow, Grid, InfoRow, LogoTitle, Motion, Photo, Section, SITE_NAME, Stack, StillLife, Text, TextLink } from "@/design-system";
-import { ABOUT_DESCRIPTION } from "@/design-system/brand";
+import { ABOUT_DESCRIPTION, ABOUT_TITLE } from "@/design-system/brand";
 import { DISCLOSURE_ABOUT } from "@/lib/disclosure";
 import { CLARITY_ID } from "../_metrics/Clarity";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
-  title: "このサイトについて",
+  title: ABOUT_TITLE,
   description: ABOUT_DESCRIPTION,
   alternates: { canonical: "/about/" },
   openGraph: {
-    title: `このサイトについて｜${SITE_NAME}`,
+    title: `${ABOUT_TITLE}｜${SITE_NAME}`,
     description: "オフィスの飲み会を任されたあなたが、定時後に出すノンアルコールを選ぶサイトです。",
     url: "/about/",
     siteName: SITE_NAME,
     locale: "ja_JP",
     type: "website",
-    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} このサイトについて` }],
+    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} ${ABOUT_TITLE}` }],
   },
 };
 
 export default function AboutPage() {
   return (
     <Motion>
-      {pageJsonLd("/about/", "このサイトについて", ABOUT_DESCRIPTION).map((data, index) => (
+      {pageJsonLd("/about/", ABOUT_TITLE, ABOUT_DESCRIPTION).map((data, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
       <Section space="md" labelledBy="about-title">
         <Grid columns="splitWide" align="center">
           <Stack gap={5}>
-            <Eyebrow intro>このサイトについて</Eyebrow>
+            <Eyebrow intro>{ABOUT_TITLE}</Eyebrow>
             <LogoTitle id="about-title" />
             <Text variant="lead" intro>
               オフィスの飲み会を任されたあなたのためのサイトです。定時後に出すノンアルコールを、場面と見た目、サイズ、味から選べます。

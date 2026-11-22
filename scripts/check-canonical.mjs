@@ -67,7 +67,7 @@ for (const [pathname, search, expected] of cases) {
     process.exit(1);
   }
 }
-if (!isRscPayload("/index.txt") || !isRscPayload("/drink/kimino-yuzu/index.txt") || isRscPayload("/robots.txt")) {
+if (!isRscPayload("/index.txt") || !isRscPayload("/drink/kimino-yuzu/index.txt") || isRscPayload("/robots.txt") || isRscPayload("/llms.txt")) {
   console.error("RSC payload detection mismatched");
   process.exit(1);
 }

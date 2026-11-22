@@ -22,9 +22,10 @@ import {
 } from "@/design-system";
 import { officeEntries, seasonalPicks, seasonOf, SITE_ORIGIN } from "@/lib/drinks";
 import { drinkItemList, jsonLdText, pageJsonLd } from "@/lib/jsonld";
+import { OFFICE_PAGE } from "@/lib/office-page";
 
-const title = "オフィスのオープンな飲み会";
-const description = "定時後のオフィスで、会議室のテーブルを囲む立ち飲みです。お酒以外も楽しみたい人に渡せる缶と瓶を紹介しています。";
+const title = OFFICE_PAGE.title;
+const description = OFFICE_PAGE.description;
 
 export const metadata: Metadata = {
   title,

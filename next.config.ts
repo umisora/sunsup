@@ -21,9 +21,10 @@ export default function nextConfig(phase: string): NextConfig {
   // Client shelf data. Dev and build both compile app/drink/DrinkIndexShelf.tsx, which imports it.
   runNodeScript("scripts/build-drink-shelf.mts");
   if (phase === PHASE_PRODUCTION_BUILD) {
-    // `output: "export"` cannot serve a sitemap route. Write the XML into public/
-    // before Next copies public/ into out/.
+    // `output: "export"` cannot serve a sitemap or llms.txt route. Write them
+    // into public/ before Next copies public/ into out/.
     runNodeScript("scripts/build-sitemaps.mjs");
+    runNodeScript("scripts/build-llms.mjs");
   }
   return {
     output: "export",

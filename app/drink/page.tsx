@@ -1,25 +1,23 @@
 import type { Metadata } from "next";
 import { CategoryNav, Motion, PageIntro, Phrase, Photo, Section, ShelfHead, SITE_NAME, Stack, TableShelf, Text, TextLink, VenueLink } from "@/design-system";
-import { categoryHref, drinkGroups } from "@/lib/drinks";
+import { categoryHref, DRINK_INDEX_DESCRIPTION, DRINK_INDEX_TITLE, drinkGroups } from "@/lib/drinks";
 import { SCENES, scenePath } from "@/lib/scenes";
 import { publishedTags } from "@/lib/tags";
 import { jsonLdText, pageJsonLd } from "@/lib/jsonld";
 import { DrinkIndexShelf } from "./DrinkIndexShelf";
 
-const description = "次の飲み会に持っていく一本を、カテゴリから選べます。";
-
 export const metadata: Metadata = {
-  title: "ドリンク一覧",
-  description,
+  title: DRINK_INDEX_TITLE,
+  description: DRINK_INDEX_DESCRIPTION,
   alternates: { canonical: "/drink/" },
   openGraph: {
-    title: `ドリンク一覧｜${SITE_NAME}`,
-    description,
+    title: `${DRINK_INDEX_TITLE}｜${SITE_NAME}`,
+    description: DRINK_INDEX_DESCRIPTION,
     url: "/drink/",
     siteName: SITE_NAME,
     locale: "ja_JP",
     type: "website",
-    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} ドリンク一覧` }],
+    images: [{ url: "/og/stylish.jpg", width: 1200, height: 630, alt: `${SITE_NAME} ${DRINK_INDEX_TITLE}` }],
   },
 };
 
@@ -30,15 +28,15 @@ export default function DrinkIndexPage() {
 
   return (
     <Motion>
-      {pageJsonLd("/drink/", "ドリンク一覧", description).map((data, index) => (
+      {pageJsonLd("/drink/", DRINK_INDEX_TITLE, DRINK_INDEX_DESCRIPTION).map((data, index) => (
         <script key={index} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(data) }} />
       ))}
       <PageIntro
         id="list-title"
         compact
         eyebrow="ドリンク"
-        title={["ドリンク一覧"]}
-        lead="次の飲み会に持っていく一本を、カテゴリから選べます。"
+        title={[DRINK_INDEX_TITLE]}
+        lead={DRINK_INDEX_DESCRIPTION}
         sublead={
           <>
             {`全${total}本を、6つのカテゴリに分けています。`}

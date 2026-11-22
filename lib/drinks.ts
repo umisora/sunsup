@@ -135,6 +135,10 @@ const AMAZON_PRODUCT = /^\/(?:dp|gp\/product|gp\/aw\/d)\/[A-Za-z0-9]{10}(?:\/|$)
 
 export const SITE_ORIGIN = "https://stylish.sunsup.me";
 
+/** Document title and meta description for `/drink/`. The index page renders both. */
+export const DRINK_INDEX_TITLE = "ドリンク一覧";
+export const DRINK_INDEX_DESCRIPTION = "次の飲み会に持っていく一本を、カテゴリから選べます。";
+
 export function hasRealStill(drink: Drink): boolean {
   return drink.stillUrl !== "" && !FALLBACK_STILL.test(drink.stillUrl);
 }
