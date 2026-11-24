@@ -9,6 +9,7 @@ export { DrinkTrail, VenueLink } from "./components/DrinkTrail/DrinkTrail";
 export { TableShelf, TableToggle, type TableDrink } from "./components/MyTable/MyTable";
 export { ShareRow } from "./components/ShareRow/ShareRow";
 export { TableCard } from "./components/TableCard/TableCard";
+export { SimilarDrinksTable } from "./components/SimilarDrinksTable/SimilarDrinksTable";
 export { FactList, ProductHero } from "./components/ProductHero/ProductHero";
 export { StoreDock } from "./components/StoreDock/StoreDock";
 export { FeatureCard } from "./components/FeatureCard/FeatureCard";

@@ -1,0 +1,94 @@
+/*
+  Drink comparison table. Ink and hairline rules, no fill.
+  The name takes the widest column; volume stays short, ちがい takes the rest.
+*/
+.block {
+  container-type: inline-size;
+  max-inline-size: 40rem;
+  margin-inline: auto;
+  color: var(--text-primary);
+}
+
+.table {
+  width: 100%;
+  max-inline-size: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: inherit;
+  background: none;
+}
+
+.nameHead {
+  width: 46%;
+}
+
+.numHead {
+  width: 18%;
+}
+
+.diffHead {
+  width: 36%;
+}
+
+.table :is(th, td) {
+  border-block-end: 1px solid currentColor;
+  background: none;
+  padding-block: 0.55em;
+  padding-inline: 0.3em;
+  color: inherit;
+  vertical-align: top;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.45;
+  line-break: strict;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.table thead :is(th, td) {
+  border-block-start: 1px solid currentColor;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.table :is(th, td):first-child {
+  padding-inline-start: 0;
+  text-align: start;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.nameCell {
+  font-weight: 500;
+  text-align: start;
+}
+
+.numCell {
+  text-align: start;
+}
+
+.diffCell {
+  text-align: start;
+}
+
+@container (max-width: 22rem) {
+  .table :is(th, td) {
+    font-size: 0.8125rem;
+    padding-inline: 0.15em;
+  }
+
+  .nameHead {
+    width: 42%;
+  }
+
+  .numHead {
+    width: 16%;
+  }
+
+  .diffHead {
+    width: 42%;
+  }
+}
