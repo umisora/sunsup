@@ -21,6 +21,7 @@ import {
   StoreDock,
   StoreSlot,
   storeAction,
+  SimilarDrinksTable,
   TableCard,
   TableShelf,
   TableToggle,
@@ -42,6 +43,7 @@ import {
   shelfNeighbours,
   storeRows,
 } from "@/lib/drinks";
+import { SIMILAR_HEADING, similarDrinks } from "@/lib/similar-drinks";
 import { isShopRow, OUT_LINKS_ID, outLinkMap } from "@/lib/out-links";
 import { drinkJsonLd, jsonLdText } from "@/lib/jsonld";
 import { scenePath, scenesFor } from "@/lib/scenes";
@@ -106,6 +108,7 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
   const order =
     drinkGroups().find((group) => categoryKey(group.category) === categoryKey(drink.category))?.drinks ?? [];
   const related = relatedWindow(order, drink.slug, RELATED_SHOWN);
+  const similar = similarDrinks(drink, loadDrinks());
   const neighbours = shelfNeighbours(drink);
   const shelf = categoryHref(categoryId(drink));
   const tags = tagsForDrink(drink.slug).map((tag) => ({ href: tag.path, label: tag.title }));
@@ -158,23 +161,12 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
         />
       </Section>
 
-      <Section space="md" label="このドリンクの紹介">
-        <TableCard
-          id="close-title"
-          folio={folio}
-          category={drink.category}
-          name={drink.name}
-          media={still(false)}
-          actions={
-            primary ? (
-              <Button variant="inverse" icon="external" href={primary.href} sponsored={isShopRow(primary, rows)}>
-                {storeAction(primary)}
-              </Button>
-            ) : null
-          }
-          share={<ShareRow tone="inverse" url={`${SITE_ORIGIN}/drink/${drink.slug}/`} text={`${drink.name}｜次の飲み会に。${SITE_NAME}`} />}
-        />
-      </Section>
+      {similar.length > 0 ? (
+        <Section space="md" labelledBy="similar-title">
+          <SectionHead id="similar-title" eyebrow={drink.category} title={<Phrase>{SIMILAR_HEADING}</Phrase>} />
+          <SimilarDrinksTable rows={similar} />
+        </Section>
+      ) : null}
 
       {neighbours ? (
         <Section space="md" label="前後のドリンク">
@@ -207,6 +199,24 @@ export default async function DrinkPage({ params }: DrinkPageProps) {
           />
         </Section>
       ))}
+
+      <Section space="md" label="このドリンクの紹介">
+        <TableCard
+          id="close-title"
+          folio={folio}
+          category={drink.category}
+          name={drink.name}
+          media={still(false)}
+          actions={
+            primary ? (
+              <Button variant="inverse" icon="external" href={primary.href} sponsored={isShopRow(primary, rows)}>
+                {storeAction(primary)}
+              </Button>
+            ) : null
+          }
+          share={<ShareRow tone="inverse" url={`${SITE_ORIGIN}/drink/${drink.slug}/`} text={`${drink.name}｜次の飲み会に。${SITE_NAME}`} />}
+        />
+      </Section>
 
       <Section space="md" label="オフィスの飲み会">
         <VenueLink

@@ -126,12 +126,17 @@ export function servingsText(ml: number, vessel = "", size = "", name = ""): str
   return `約${Math.max(2, Math.round(ml / SHARE_ML))}人分`;
 }
 
+/** Everyday label for a catalog 容器, e.g. ビン → 瓶. Empty when the vessel is unknown. */
+export function vesselLabel(vessel: string): string | undefined {
+  return VESSEL[vessel.trim()];
+}
+
 /** e.g. ["250ml", "瓶", "ひとり分"] or ["720ml", "大きな瓶", "約4人分"]. Empty when the volume is unknown. */
 export function heroSpecs(drink: Pick<Drink, "name" | "size" | "vessel">): string[] {
   const volume = volumeMl(drink);
   if (!volume) {
     return [];
   }
-  const vessel = VESSEL[drink.vessel.trim()];
+  const vessel = vesselLabel(drink.vessel);
   return [volume.label, ...(vessel ? [vessel] : []), servingsText(volume.ml, drink.vessel.trim(), drink.size, drink.name)];
 }
