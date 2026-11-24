@@ -2,11 +2,29 @@
 // same size, and same container. Size is the measured volume (name first, then
 // the サイズ line), read the same way as lib/servings.ts volumeMl, so two
 // wordings of "330ml" still match. A row with no volume keeps its サイズ text.
-// Unpublished rows are ignored.
+// Unpublished rows are ignored for duplicates.
+// Also fails when drink copy still has leftover research-memo wording
+// (notes about the source page or missing labels) or the typo 合わせましたです.
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const VOLUME = /(\d+(?:\.\d+)?)\s*(ml|l|g)(?![a-z])/i;
+
+// Notes about the source page or the research process, left in published copy.
+const RESEARCH_MEMO_PATTERNS = [
+  "商品ページには",
+  "製品ページには",
+  "とページにあります",
+  "ページに書いて",
+  "ページには",
+  "表示がありません",
+  "表がありません",
+  "表が読み取れません",
+  "規格欄には",
+  "合わせましたです",
+];
+
+const COPY_COLUMNS = ["場", "見た目", "サイズ", "味", "品名", "titleName"];
 
 function normalizeName(name) {
   return name.normalize("NFKC").replace(/\s+/g, " ").trim();
@@ -51,6 +69,23 @@ export function duplicateDrinkGroups(drinks) {
   return duplicates;
 }
 
+/**
+ * @param {{ slug: string, field: string, text: string }[]} entries
+ * @returns {{ slug: string, field: string, pattern: string }[]}
+ */
+export function researchMemoHits(entries) {
+  const hits = [];
+  for (const entry of entries) {
+    for (const pattern of RESEARCH_MEMO_PATTERNS) {
+      if (entry.text.includes(pattern)) {
+        hits.push({ slug: entry.slug, field: entry.field, pattern });
+        break;
+      }
+    }
+  }
+  return hits;
+}
+
 function selfTest() {
   const pair = duplicateDrinkGroups([
     { slug: "can-a", name: "サンペレグリノ リモナータ", size: "330mlの缶です。", vessel: "缶", published: true },
@@ -67,6 +102,21 @@ function selfTest() {
   }
   if (pair.some((group) => group.slugs.includes("mini") || group.slugs.includes("hidden") || group.slugs.includes("pet"))) {
     throw new Error("self-test: a different size, container, or unpublished row was treated as a duplicate");
+  }
+
+  const memos = researchMemoHits([
+    { slug: "memo-size", field: "サイズ", text: "瓶です。この商品ページには容量の数字がありません。" },
+    { slug: "memo-quote", field: "サイズ", text: "隠し味はレモングラス、とページにあります。" },
+    { slug: "memo-written", field: "見た目", text: "ページには、青い瓶で届くこともあると書いてあります。" },
+    { slug: "memo-missing", field: "味", text: "この商品ページには原材料の表示がありません。" },
+    { slug: "memo-typo", field: "味", text: "無脂肪のミルクと甘さを合わせましたです。" },
+    { slug: "ok-other-page", field: "サイズ", text: "通常の190g缶とは別ページの長期保存用です。" },
+    { slug: "ok-label", field: "見た目", text: "SPARKLING WATERと書いてあります。" },
+    { slug: "ok-official", field: "サイズ", text: "ノンカフェイン、と公式にあります。" },
+  ]);
+  const memoSlugs = memos.map((hit) => hit.slug).sort().join(",");
+  if (memoSlugs !== "memo-missing,memo-quote,memo-size,memo-typo,memo-written") {
+    throw new Error(`self-test: research memo hits were ${memoSlugs}`);
   }
 }
 
@@ -123,7 +173,8 @@ function checkDrinks() {
   const table = parseCsv(readFileSync(join("data", "drinks.csv"), "utf8"));
   const header = table[0] ?? [];
   const index = Object.fromEntries(header.map((column, columnIndex) => [column.trim(), columnIndex]));
-  for (const column of ["slug", "品名", "サイズ", "容器", "公開"]) {
+  const required = ["slug", "品名", "サイズ", "容器", "公開", ...COPY_COLUMNS];
+  for (const column of required) {
     if (index[column] === undefined) {
       console.error(`drinks.csv is missing ${column}`);
       process.exit(1);
@@ -144,8 +195,24 @@ function checkDrinks() {
     }
     process.exit(1);
   }
+
+  const entries = [];
+  for (const row of table.slice(1)) {
+    const slug = cell(row, "slug");
+    for (const field of COPY_COLUMNS) {
+      entries.push({ slug, field, text: cell(row, field) });
+    }
+  }
+  const memos = researchMemoHits(entries);
+  if (memos.length > 0) {
+    for (const hit of memos) {
+      console.error(`research memo in ${hit.slug} ${hit.field}: ${hit.pattern}`);
+    }
+    process.exit(1);
+  }
+
   const published = drinks.filter((drink) => drink.published).length;
-  console.log(`drink dupes ok: ${published} published drinks, no shared name + size + container`);
+  console.log(`drink dupes ok: ${published} published drinks, no shared name + size + container, no research memos`);
 }
 
 checkDrinks();
