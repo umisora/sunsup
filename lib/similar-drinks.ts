@@ -1,8 +1,9 @@
 /**
  * Nearby drinks for the comparison table on a drink page.
  * Rows are chosen from published, non-demoted drinks: same flavor in the name,
- * then the same category or tag, then a close volume. The ちがい line is built
- * from those data differences only; nothing is written by hand for a drink.
+ * then the same category or tag, then a close volume. The ちがい line is always
+ * relative to the current page's drink; shared attributes are left unsaid.
+ * Neighbours with no real difference are skipped.
  */
 import type { Drink } from "./drinks";
 import { categoryKey } from "./drinks";
@@ -13,7 +14,6 @@ import { tagsForDrink } from "./tags";
 export const SIMILAR_HEADING = "似ているドリンク";
 export const COLUMN_NAME = "品名";
 export const COLUMN_VOLUME = "容量";
-export const COLUMN_SERVINGS = "何人分";
 export const COLUMN_DIFFERENCE = "ちがい";
 
 export const SIMILAR_MAX = 3;
@@ -102,8 +102,25 @@ const FLAVORS_BY_LENGTH = [...FLAVORS].sort((a, b) => b.match.length - a.match.l
 export type SimilarDrinkRow = {
   drink: Drink;
   volume: string;
-  servings: string;
   difference: string;
+};
+
+export type DifferenceFact = {
+  kind:
+    | "flavor"
+    | "brand"
+    | "word"
+    | "unsweetened"
+    | "sweetened"
+    | "fizz"
+    | "still"
+    | "dilute"
+    | "ready"
+    | "vessel"
+    | "size"
+    | "servings"
+    | "series";
+  text: string;
 };
 
 export function flavorLabels(name: string): string[] {
@@ -197,97 +214,331 @@ function scoreSimilar(current: Drink, other: Drink): number {
   return score;
 }
 
-function servingsDisplay(drink: Drink): string {
-  return servingUnit(drink)?.text ?? "";
+const CAN_VESSELS = new Set(["缶", "小さな缶", "ボトル缶"]);
+const BOTTLE_VESSELS = new Set(["瓶", "大きな瓶"]);
+
+const FIZZ_TOKENS = [
+  "サイダー",
+  "ラムネ",
+  "コーラ",
+  "炭酸水",
+  "炭酸",
+  "タンサン",
+  "ソーダ",
+  "スパークリング",
+  "スカッシュ",
+  "トニック",
+  "ジンジャーエール",
+  "ジンジャエール",
+] as const;
+
+const FIZZ_BRANDS = [
+  "サンペレグリノ",
+  "ペリエ",
+  "ウィルキンソン",
+  "カナダドライ",
+  "ファンタ",
+  "スプライト",
+  "メッツ",
+  "三ツ矢",
+  "C.C.レモン",
+  "CCレモン",
+  "Ｃ．Ｃ．レモン",
+  "キレートレモン",
+  "ナポリン",
+] as const;
+
+const FIZZ_FLAVOR_LABELS = new Set(["サイダー", "ラムネ", "コーラ", "炭酸水", "炭酸", "ソーダ", "スパークリング"]);
+
+const GENERIC_WORDS = [
+  "ジュース",
+  "ネクター",
+  "飲料",
+  "ドリンク",
+  "ミックス",
+  "ラテ",
+  "オレ",
+  "ストレート",
+  "プレミアム",
+  "仕立て",
+  "ティー",
+  "フルーツ",
+  "果実",
+  "果汁",
+];
+
+const VOLUME_RE = /\d+(?:\.\d+)?(?:ml|mL|ML|ｍｌ|L|ℓ|g)\b/gi;
+
+const SIZE_MIN = 50;
+const SIZE_LARGE = 300;
+
+function sameVesselFamily(left: string, right: string): boolean {
+  if (left === right) {
+    return true;
+  }
+  return (CAN_VESSELS.has(left) && CAN_VESSELS.has(right)) || (BOTTLE_VESSELS.has(left) && BOTTLE_VESSELS.has(right));
 }
 
-function servingsPhrase(text: string): string {
-  if (text === "割って飲む") {
-    return "割って飲みます。";
-  }
-  return `${text}です。`;
+export function isFizzy(name: string): boolean {
+  return FIZZ_TOKENS.some((token) => name.includes(token)) || FIZZ_BRANDS.some((brand) => name.includes(brand));
 }
+
+function brandOf(name: string): string | undefined {
+  if (!/\s/.test(name)) {
+    return undefined;
+  }
+  const first = firstToken(name);
+  if (first.length < 2) {
+    return undefined;
+  }
+  if (FLAVORS.some((flavor) => first.includes(flavor.match) || first === flavor.label)) {
+    return undefined;
+  }
+  return first;
+}
+
+const VESSEL_WORDS = new Set(["瓶", "ビン", "缶", "カップ", "紙パック", "ペットボトル", "パウチ", "ボトル", "パック"]);
+
+function isPlaceOrMakerToken(token: string): boolean {
+  if (token.length < 2 || token.length > 8) {
+    return false;
+  }
+  if (VESSEL_WORDS.has(token)) {
+    return false;
+  }
+  const hiragana = (token.match(/[ぁ-ゟ]/g) ?? []).length;
+  if (hiragana > token.length / 2) {
+    return false;
+  }
+  return /[\u4E00-\u9FFFァ-ヶーA-Za-z]/.test(token);
+}
+
+/** Fold script and spelling so BLACK and ブラック, or 無糖, are not treated as a difference. */
+function foldedName(value: string): string {
+  return value
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/無糖/g, " ")
+    .replace(/ブラック/g, "black")
+    .replace(/ホワイト/g, "white")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function distinctiveWord(current: Drink, other: Drink): string | undefined {
+  let rest = other.name.replace(VOLUME_RE, " ");
+  for (const flavor of FLAVORS_BY_LENGTH) {
+    rest = rest.split(flavor.match).join(" ");
+  }
+  for (const word of GENERIC_WORDS) {
+    rest = rest.split(word).join(" ");
+  }
+  rest = rest.replace(/無糖/g, " ");
+  rest = rest.replace(/[0-9０-９.%％&＋+]/g, " ").replace(/\s+/g, " ").trim();
+  const otherBrand = brandOf(other.name);
+  const currentBrand = brandOf(current.name);
+  const currentFolded = foldedName(current.name);
+  return rest
+    .split(/\s+/)
+    .find(
+      (token) =>
+        isPlaceOrMakerToken(token) &&
+        token !== otherBrand &&
+        token !== currentBrand &&
+        !currentFolded.includes(foldedName(token)),
+    );
+}
+
+/** Labels that name the drink type, not a difference, when the current name already implies them. */
+const TYPE_FLAVOR_HINTS: Record<string, RegExp> = {
+  コーヒー: /コーヒー|珈琲|カフェ|ブラック|black|ラテ/i,
+  シロップ: /シロップ/,
+};
 
 function uniqueFlavor(current: Drink, other: Drink): string | undefined {
   const currentLabels = flavorFamily(flavorLabels(current.name));
-  return flavorLabels(other.name).find((label) => !currentLabels.has(label));
+  return flavorLabels(other.name).find((label) => {
+    if (currentLabels.has(label)) {
+      return false;
+    }
+    const hint = TYPE_FLAVOR_HINTS[label];
+    return !hint || !hint.test(current.name);
+  });
+}
+
+function peopleReady(drink: Drink): number | undefined {
+  const unit = servingUnit(drink);
+  if (!unit || unit.dilute) {
+    return undefined;
+  }
+  return unit.people;
+}
+
+function sizePhrase(current: Drink, other: Drink): string | undefined {
+  const left = volumeMl(current);
+  const right = volumeMl(other);
+  if (!left || !right || !sameVolumeUnit(left, right)) {
+    return undefined;
+  }
+  const delta = right.ml - left.ml;
+  const abs = Math.abs(delta);
+  if (abs < SIZE_MIN) {
+    return undefined;
+  }
+  const large = abs >= SIZE_LARGE || right.ml >= left.ml * 2 || left.ml >= right.ml * 2;
+  if (delta > 0) {
+    return large ? "かなり大きい。" : "少し大きい。";
+  }
+  return large ? "かなり小さい。" : "少し小さい。";
+}
+
+export function differenceFacts(current: Drink, other: Drink): DifferenceFact[] {
+  const facts: DifferenceFact[] = [];
+  const currentFizz = isFizzy(current.name);
+  const otherFizz = isFizzy(other.name);
+  const flavor = uniqueFlavor(current, other);
+  if (flavor && !(FIZZ_FLAVOR_LABELS.has(flavor) && currentFizz !== otherFizz)) {
+    facts.push({ kind: "flavor", text: `こちらは${flavor}。` });
+  } else {
+    const word = distinctiveWord(current, other);
+    const otherBrand = brandOf(other.name);
+    const currentBrand = brandOf(current.name);
+    if (word) {
+      facts.push({ kind: "word", text: `こちらは${word}。` });
+    } else if (otherBrand && otherBrand !== currentBrand) {
+      facts.push({ kind: "brand", text: `こちらは${otherBrand}。` });
+    }
+  }
+
+  const currentMutou = tagIds(current.slug).includes("mutou");
+  const otherMutou = tagIds(other.slug).includes("mutou");
+  if (otherMutou && !currentMutou) {
+    facts.push({ kind: "unsweetened", text: "無糖。" });
+  } else if (currentMutou && !otherMutou) {
+    facts.push({ kind: "sweetened", text: "無糖ではない。" });
+  }
+
+  if (otherFizz && !currentFizz) {
+    facts.push({ kind: "fizz", text: "炭酸。" });
+  } else if (currentFizz && !otherFizz) {
+    facts.push({ kind: "still", text: "炭酸なし。" });
+  }
+
+  const currentServing = servingUnit(current);
+  const otherServing = servingUnit(other);
+  if (currentServing?.dilute !== true && otherServing?.dilute === true) {
+    facts.push({ kind: "dilute", text: "割って飲む。" });
+  } else if (currentServing?.dilute === true && otherServing?.dilute !== true) {
+    facts.push({ kind: "ready", text: "そのまま飲める。" });
+  }
+
+  const currentPeople = peopleReady(current);
+  const otherPeople = peopleReady(other);
+  if (currentPeople === 1 && otherPeople !== undefined && otherPeople >= 2) {
+    facts.push({ kind: "servings", text: "何人かで分けられる。" });
+  } else if (currentPeople !== undefined && currentPeople >= 2 && otherPeople === 1) {
+    facts.push({ kind: "servings", text: "ひとりで飲みきれる。" });
+  }
+
+  const currentVessel = vesselLabel(current.vessel);
+  const otherVessel = vesselLabel(other.vessel);
+  if (currentVessel && otherVessel && !sameVesselFamily(currentVessel, otherVessel)) {
+    facts.push({ kind: "vessel", text: `${otherVessel}。` });
+  }
+
+  const size = sizePhrase(current, other);
+  if (size) {
+    facts.push({ kind: "size", text: size });
+  }
+
+  if (facts.length === 0) {
+    const brand = brandOf(current.name);
+    const otherBrand = brandOf(other.name);
+    if (brand && brand === otherBrand) {
+      facts.push({ kind: "series", text: `同じ${brand}の別の一本。` });
+    }
+  }
+
+  return facts;
 }
 
 export function differenceText(current: Drink, other: Drink): string {
+  return differenceFacts(current, other)
+    .slice(0, 2)
+    .map((fact) => fact.text)
+    .join("");
+}
+
+function hasClause(text: string, clause: string): boolean {
+  return text === clause || text.startsWith(clause) || text.includes(`。${clause}`);
+}
+
+const ABSOLUTE_LEAK = /容量は|同じカテゴリ|の缶です|の瓶です|のペットボトルです|のカップです|の紙パックです|飲みます|飲めます/;
+
+/** Phrases that restate something true of both drinks, or an absolute size. */
+export function sameAttributeMentions(current: Drink, other: Drink, text: string): string[] {
+  const leaks: string[] = [];
+  if (!text.trim()) {
+    return ["empty"];
+  }
+  if (ABSOLUTE_LEAK.test(text)) {
+    leaks.push("absolute-phrase");
+  }
+
   const currentVolume = volumeMl(current);
   const otherVolume = volumeMl(other);
+  const sizeIsReal = Boolean(
+    currentVolume && otherVolume && sameVolumeUnit(currentVolume, otherVolume) && Math.abs(currentVolume.ml - otherVolume.ml) >= SIZE_MIN,
+  );
+  if (otherVolume && text.includes(otherVolume.label) && !sizeIsReal) {
+    leaks.push(`volume:${otherVolume.label}`);
+  }
+  const mentionsSizeWord = /少し大き[いく]|少し小さ[いく]|かなり大き[いく]|かなり小さ[いく]/.test(text);
+  if (mentionsSizeWord && !sizeIsReal) {
+    leaks.push("size-not-meaningful");
+  }
+
   const currentVessel = vesselLabel(current.vessel);
   const otherVessel = vesselLabel(other.vessel);
-  const currentServing = servingUnit(current);
-  const otherServing = servingUnit(other);
-  const otherUnsweetened = tagIds(other.slug).includes("mutou") && !tagIds(current.slug).includes("mutou");
-  const flavor = uniqueFlavor(current, other);
-  const categoryDiffers = categoryKey(current.category) !== categoryKey(other.category);
-
-  const parts: string[] = [];
-  let volumeUsed = false;
-
-  if (currentServing?.dilute !== true && otherServing?.dilute === true) {
-    parts.push("割って飲みます。");
-  } else if (currentServing?.dilute === true && otherServing?.dilute !== true) {
-    parts.push("そのまま飲めます。");
-  }
-
-  if (otherUnsweetened) {
-    parts.push("無糖です。");
-  }
-
-  const vesselDiffers = Boolean(currentVessel && otherVessel && currentVessel !== otherVessel);
-  const volumeDiffers = Boolean(
-    otherVolume && (!currentVolume || currentVolume.label !== otherVolume.label),
-  );
-  const sameUnitMl =
-    currentVolume && otherVolume && !currentVolume.label.endsWith("g") && !otherVolume.label.endsWith("g");
-  const delta = sameUnitMl ? otherVolume!.ml - currentVolume!.ml : 0;
-  const absDelta = Math.abs(delta);
-  const largeJump = absDelta >= 300 || (currentVolume && otherVolume && (otherVolume.ml >= currentVolume.ml * 2 || currentVolume.ml >= otherVolume.ml * 2));
-
-  if (vesselDiffers && otherVolume && volumeDiffers) {
-    parts.push(`${otherVolume.label}の${otherVessel}です。`);
-    volumeUsed = true;
-  } else if (vesselDiffers) {
-    parts.push(`${otherVessel}です。`);
-  }
-
-  if (flavor) {
-    parts.push(`${flavor}です。`);
-  }
-
-  if (!volumeUsed && otherVolume && volumeDiffers) {
-    if (sameUnitMl && absDelta >= 50 && !largeJump) {
-      parts.push(delta > 0 ? `容量が${absDelta}ml多いです。` : `容量が${absDelta}ml少ないです。`);
-    } else {
-      parts.push(`容量は${otherVolume.label}です。`);
+  if (currentVessel && otherVessel && sameVesselFamily(currentVessel, otherVessel)) {
+    if (hasClause(text, `${otherVessel}。`) || hasClause(text, `${currentVessel}。`)) {
+      leaks.push("vessel");
     }
-    volumeUsed = true;
   }
 
-  if (categoryDiffers) {
-    parts.push(`${other.category}です。`);
+  const currentMutou = tagIds(current.slug).includes("mutou");
+  const otherMutou = tagIds(other.slug).includes("mutou");
+  if (currentMutou === otherMutou && text.includes("無糖")) {
+    leaks.push("unsweetened");
   }
 
-  if (
-    parts.length === 0 &&
-    otherServing &&
-    currentServing &&
-    otherServing.text !== currentServing.text
-  ) {
-    parts.push(servingsPhrase(otherServing.text));
+  if (isFizzy(current.name) === isFizzy(other.name) && (text.includes("炭酸。") || text.includes("炭酸なし"))) {
+    leaks.push("fizz");
   }
 
-  if (parts.length === 0) {
-    if (currentVolume && otherVolume && currentVolume.label === otherVolume.label) {
-      return "容量は同じです。";
+  const currentDilute = servingUnit(current)?.dilute === true;
+  const otherDilute = servingUnit(other)?.dilute === true;
+  if (currentDilute === otherDilute && (text.includes("割って飲む") || text.includes("そのまま飲める"))) {
+    leaks.push("dilute");
+  }
+
+  const currentPeople = peopleReady(current);
+  const otherPeople = peopleReady(other);
+  const servingsDiffer =
+    (currentPeople === 1 && otherPeople !== undefined && otherPeople >= 2) ||
+    (currentPeople !== undefined && currentPeople >= 2 && otherPeople === 1);
+  if (!servingsDiffer && (text.includes("何人かで分けられる") || text.includes("ひとりで飲みきれる"))) {
+    leaks.push("servings");
+  }
+
+  const sharedFlavors = flavorFamily(flavorLabels(current.name));
+  for (const label of flavorLabels(other.name)) {
+    if (sharedFlavors.has(label) && text.includes(`こちらは${label}。`)) {
+      leaks.push(`flavor:${label}`);
     }
-    return "同じカテゴリです。";
   }
 
-  return parts.slice(0, 2).join("");
+  return leaks;
 }
 
 export function similarDrinks(current: Drink, catalog: readonly Drink[]): SimilarDrinkRow[] {
@@ -297,7 +548,9 @@ export function similarDrinks(current: Drink, catalog: readonly Drink[]): Simila
       drink,
       index,
       score: scoreSimilar(current, drink),
-      flavors: [...flavorFamily(flavorLabels(current.name))].filter((label) => flavorFamily(flavorLabels(drink.name)).has(label)).length,
+      flavors: [...flavorFamily(flavorLabels(current.name))].filter((label) =>
+        flavorFamily(flavorLabels(drink.name)).has(label),
+      ).length,
       sameCategory: categoryKey(current.category) === categoryKey(drink.category) ? 1 : 0,
       volumeGap: (() => {
         const left = volumeMl(current);
@@ -317,14 +570,12 @@ export function similarDrinks(current: Drink, catalog: readonly Drink[]): Simila
         a.index - b.index,
     );
 
-  const picked = ranked.filter((item) => item.score > 0).slice(0, SIMILAR_MAX);
-  const rows = (picked.length >= SIMILAR_MIN ? picked : ranked.slice(0, Math.min(SIMILAR_MAX, ranked.length))).map(
-    (item) => ({
+  return ranked
+    .filter((item) => item.score > 0 && differenceFacts(current, item.drink).length > 0)
+    .slice(0, SIMILAR_MAX)
+    .map((item) => ({
       drink: item.drink,
       volume: volumeMl(item.drink)?.label ?? "",
-      servings: servingsDisplay(item.drink),
       difference: differenceText(current, item.drink),
-    }),
-  );
-  return rows;
+    }));
 }

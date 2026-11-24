@@ -1,5 +1,5 @@
 import type { SimilarDrinkRow } from "@/lib/similar-drinks";
-import { COLUMN_DIFFERENCE, COLUMN_NAME, COLUMN_SERVINGS, COLUMN_VOLUME } from "@/lib/similar-drinks";
+import { COLUMN_DIFFERENCE, COLUMN_NAME, COLUMN_VOLUME } from "@/lib/similar-drinks";
 import { SoftBreak, TextLink } from "../Text/Text";
 import styles from "./SimilarDrinksTable.module.css";
 
@@ -24,9 +24,6 @@ export function SimilarDrinksTable({ rows }: SimilarDrinksTableProps) {
             <th scope="col" className={styles.numHead}>
               {COLUMN_VOLUME}
             </th>
-            <th scope="col" className={styles.numHead}>
-              {COLUMN_SERVINGS}
-            </th>
             <th scope="col" className={styles.diffHead}>
               {COLUMN_DIFFERENCE}
             </th>
@@ -41,7 +38,6 @@ export function SimilarDrinksTable({ rows }: SimilarDrinksTableProps) {
                 </TextLink>
               </th>
               <td className={styles.numCell}>{row.volume}</td>
-              <td className={styles.numCell}>{row.servings}</td>
               <td className={styles.diffCell}>{row.difference}</td>
             </tr>
           ))}

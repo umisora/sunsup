@@ -7,13 +7,12 @@ import { getDrink, loadDrinks, type Drink } from "../lib/drinks.ts";
 import {
   COLUMN_DIFFERENCE,
   COLUMN_NAME,
-  COLUMN_SERVINGS,
   COLUMN_VOLUME,
   SIMILAR_HEADING,
   SIMILAR_MAX,
-  SIMILAR_MIN,
   differenceText,
   flavorLabels,
+  sameAttributeMentions,
   similarDrinks,
 } from "../lib/similar-drinks.ts";
 
@@ -161,33 +160,46 @@ expect(
   forPomp[0]?.drink.slug === "pomp-330",
   `200ml pompelmo should lead with the 330ml can, got ${forPomp.map((row) => row.drink.slug).join(",")}`,
 );
-expect(differenceText(pompelmo200, pompelmo330) === "330mlの缶です。", `pompelmo ちがい was ${differenceText(pompelmo200, pompelmo330)}`);
+expect(differenceText(pompelmo200, pompelmo330) === "少し大きい。", `pompelmo ちがい was ${differenceText(pompelmo200, pompelmo330)}`);
+expect(differenceText(pompelmo330, pompelmo200) === "少し小さい。", `mini can ちがい was ${differenceText(pompelmo330, pompelmo200)}`);
 
-expect(differenceText(matchaThick, hojicha) === "ほうじ茶です。", `hojicha ちがい was ${differenceText(matchaThick, hojicha)}`);
-expect(differenceText(matchaThick, matchaPlain) === "容量が10ml少ないです。" || differenceText(matchaThick, matchaPlain).includes("200ml"), `plain matcha ちがい was ${differenceText(matchaThick, matchaPlain)}`);
-// 10ml is under the 50ml relative threshold, so it should fall through...
-// 200 vs 210, absDelta 10 < 50, not large jump, volumeDiffers true, so it uses 容量は200mlです。
-expect(differenceText(matchaThick, matchaPlain) === "容量は200mlです。", `plain matcha ちがい was ${differenceText(matchaThick, matchaPlain)}`);
+expect(differenceText(matchaThick, hojicha) === "こちらはほうじ茶。", `hojicha ちがい was ${differenceText(matchaThick, hojicha)}`);
+expect(differenceText(matchaThick, matchaPlain) === "同じ辻利の別の一本。", `plain matcha ちがい was ${differenceText(matchaThick, matchaPlain)}`);
+expect(differenceText(matchaThick, soy) === "こちらは豆乳。", `soy ちがい was ${differenceText(matchaThick, soy)}`);
 
-expect(differenceText(syrup, readyGinger) === "そのまま飲めます。小さな缶です。" || differenceText(syrup, readyGinger).includes("そのまま飲めます。"), `ready ginger ちがい was ${differenceText(syrup, readyGinger)}`);
-expect(differenceText(ciderA, ciderB) === "容量は240mlです。" || differenceText(ciderA, ciderB).includes("240ml"), `cider B ちがい was ${differenceText(ciderA, ciderB)}`);
+expect(
+  differenceText(syrup, readyGinger).includes("そのまま飲める。"),
+  `ready ginger ちがい was ${differenceText(syrup, readyGinger)}`,
+);
+expect(differenceText(ciderA, ciderB) === "こちらは静岡。", `cider B ちがい was ${differenceText(ciderA, ciderB)}`);
+expect(differenceText(ciderA, ciderC) === "こちらはあまおう。", `cider C ちがい was ${differenceText(ciderA, ciderC)}`);
 
-expect(differenceText(pompelmo330, pompelmo200) === "200mlの小さな缶です。", `mini can ちがい was ${differenceText(pompelmo330, pompelmo200)}`);
+const leakedOld = sameAttributeMentions(ciderA, ciderB, "容量は240mlです。");
+expect(leakedOld.length > 0, "absolute volume restatement should fail the shared-attribute check");
+expect(sameAttributeMentions(matchaThick, matchaPlain, "容量は200mlです。").length > 0, "tiny size restatement should fail the shared-attribute check");
+expect(sameAttributeMentions(ciderA, ciderB, "同じカテゴリです。").length > 0, "same-category fallback should fail the shared-attribute check");
+expect(sameAttributeMentions(matchaThick, matchaPlain, "少し小さい。").length > 0, "tiny size word should fail the shared-attribute check");
+expect(sameAttributeMentions(ciderA, ciderB, differenceText(ciderA, ciderB)).length === 0, `cider B leaked ${sameAttributeMentions(ciderA, ciderB, differenceText(ciderA, ciderB)).join(",")}`);
+expect(sameAttributeMentions(pompelmo200, pompelmo330, differenceText(pompelmo200, pompelmo330)).length === 0, `pompelmo leaked ${sameAttributeMentions(pompelmo200, pompelmo330, differenceText(pompelmo200, pompelmo330)).join(",")}`);
 
 const live = loadDrinks();
 for (const item of live) {
   const rows = similarDrinks(item, live);
-  expect(rows.length >= SIMILAR_MIN && rows.length <= SIMILAR_MAX, `${item.slug} has ${rows.length} similar drinks`);
+  expect(rows.length <= SIMILAR_MAX, `${item.slug} has ${rows.length} similar drinks`);
   expect(new Set(rows.map((row) => row.drink.slug)).size === rows.length, `${item.slug} repeated a similar drink`);
   expect(rows.every((row) => row.drink.slug !== item.slug), `${item.slug} listed itself`);
   expect(rows.every((row) => !isDemoted(row.drink)), `${item.slug} listed a demoted drink`);
   expect(rows.every((row) => row.difference.trim() !== ""), `${item.slug} has an empty ちがい`);
-  const text = rows.map((row) => `${row.difference}${row.volume}${row.servings}`).join("");
+  for (const row of rows) {
+    const leaks = sameAttributeMentions(item, row.drink, row.difference);
+    expect(leaks.length === 0, `${item.slug} → ${row.drink.slug} ちがい「${row.difference}」 restates a shared attribute (${leaks.join(",")})`);
+  }
+  const text = rows.map((row) => `${row.difference}${row.volume}`).join("");
   expect(!text.includes("飲まない人") && !text.includes("酒の代わり") && !text.includes("ノンアル"), `${item.slug} used a banned phrase`);
 }
 
 expect(SIMILAR_HEADING === "似ているドリンク", "heading");
-expect([COLUMN_NAME, COLUMN_VOLUME, COLUMN_SERVINGS, COLUMN_DIFFERENCE].join("|") === "品名|容量|何人分|ちがい", "column labels");
+expect([COLUMN_NAME, COLUMN_VOLUME, COLUMN_DIFFERENCE].join("|") === "品名|容量|ちがい", "column labels");
 
 function checkExport(root = "out") {
   const dir = join(root, "drink");
@@ -224,6 +236,8 @@ function checkExport(root = "out") {
       continue;
     }
     expect(headingAt !== -1, `${page.slug} is missing ${SIMILAR_HEADING}`);
+    const tableSlice = page.html.slice(headingAt, relatedAt === -1 ? closeAt : relatedAt);
+    expect(!tableSlice.includes("何人分"), `${page.slug} still shows 何人分 in the comparison table`);
     for (const row of expected) {
       expect(page.html.includes(`href="/drink/${row.drink.slug}/"`), `${page.slug} is missing a link to ${row.drink.slug}`);
       expect(page.html.includes(row.difference), `${page.slug} is missing ちがい ${row.difference}`);
@@ -253,7 +267,7 @@ if (failures.length > 0) {
 const sample = getDrink("makubetsu-ichigo-cider");
 const sampleRows = sample ? similarDrinks(sample, live) : [];
 console.log(
-  `similar drinks ok: ${live.length} published drinks, ${SIMILAR_MIN}–${SIMILAR_MAX} neighbours each${process.argv.includes("--export") ? ", export checked" : ""}`,
+  `similar drinks ok: ${live.length} published drinks, up to ${SIMILAR_MAX} neighbours each${process.argv.includes("--export") ? ", export checked" : ""}`,
 );
 if (sampleRows.length > 0) {
   console.log(`  e.g. makubetsu-ichigo-cider → ${sampleRows.map((row) => `${row.drink.slug}（${row.difference}）`).join(" / ")}`);

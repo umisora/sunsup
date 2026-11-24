@@ -1,6 +1,6 @@
 /*
   Drink comparison table. Ink and hairline rules, no fill.
-  The name takes the widest column; volume and servings stay short.
+  The name takes the widest column; volume stays short, ちがい takes the rest.
 */
 .block {
   container-type: inline-size;
@@ -19,15 +19,15 @@
 }
 
 .nameHead {
-  width: 40%;
+  width: 46%;
 }
 
 .numHead {
-  width: 16%;
+  width: 18%;
 }
 
 .diffHead {
-  width: 28%;
+  width: 36%;
 }
 
 .table :is(th, td) {
@@ -81,14 +81,14 @@
   }
 
   .nameHead {
-    width: 36%;
+    width: 42%;
   }
 
   .numHead {
-    width: 15%;
+    width: 16%;
   }
 
   .diffHead {
-    width: 34%;
+    width: 42%;
   }
 }
