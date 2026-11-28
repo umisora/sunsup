@@ -2,9 +2,11 @@
 // and sitemap-drinks.xml before `next build` copies public/ into the static export.
 //
 // lastmod is the Asia/Tokyo calendar date of the latest git commit that touched
-// the source that owns that URL. It is omitted when that date would be wrong:
-// a shallow clone (blame stamps the boundary commit), an uncommitted line,
-// a page whose HTML follows the build clock, or a drink whose hero still does.
+// the source that owns that URL. Drink rows ignore Amazon / 楽天 / 直販 / その他
+// URL-only edits, so filling store links does not bump lastmod. It is omitted
+// when that date would be wrong: a shallow clone (blame stamps the boundary
+// commit), an uncommitted content change, a page whose HTML follows the build
+// clock, or a drink whose hero still does.
 // Cloudflare Pages sets CF_PAGES=1 and clones with depth 1. This script fetches
 // the missing history before blame. If that fetch fails, lastmod is omitted and
 // the build still succeeds. Other builds do not set CF_PAGES, so they are unchanged.
@@ -15,6 +17,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { SITE_ORIGIN, sitemapCategoryPaths, sitemapDrinkPaths, sitemapScenePaths } from "../lib/sitemap-entries.ts";
 import { MUTOU } from "../lib/tags.ts";
+import { drinkContentLastmods } from "./drink-lastmod.mjs";
 
 const ZERO = "0000000000000000000000000000000000000000";
 const DAY = new Intl.DateTimeFormat("en-CA", {
@@ -265,6 +268,7 @@ const SOURCES = [
   "data/tags/mutou.csv",
   "app/about/page.tsx",
   "scripts/build-sitemaps.mjs",
+  "scripts/drink-lastmod.mjs",
 ];
 const lockPath = join(tmpdir(), `sunsup-sitemaps-${createHash("sha1").update(process.cwd()).digest("hex")}.lock`);
 
@@ -364,13 +368,13 @@ const seasonSlugs = new Set(Object.keys(JSON.parse(readFileSync("data/still-seas
 const dates = skipped
   ? null
   : {
-      csv: blame("data/drinks.csv"),
       scenes: blame("lib/scenes.ts"),
       categories: blame("lib/categories.ts"),
       about: blame("app/about/page.tsx"),
       mutou: blame("data/tags/mutou.csv"),
       tag: blame("lib/tags.ts"),
     };
+const drinkDays = skipped ? null : drinkContentLastmods(csvText);
 
 // Pages whose rendered HTML changes with the build clock, or that mix every
 // catalog row, have no single accurate date. Drink rows and scene/category
@@ -436,7 +440,14 @@ function drinkEntry(path) {
   if (line == null) {
     throw new Error(`public drink ${slug} has no row in data/drinks.csv`);
   }
-  return { loc, lastmod: lastmodOf(dates.csv, line, line), source: `data/drinks.csv:${line}` };
+  if (!drinkDays) {
+    return { loc, lastmod: null, source: `data/drinks.csv:${line}` };
+  }
+  return {
+    loc,
+    lastmod: drinkDays.get(slug) ?? null,
+    source: `data/drinks.csv:${line} (content, ignoring store URLs)`,
+  };
 }
 
 const scenes = scenePaths.map(pageEntry);

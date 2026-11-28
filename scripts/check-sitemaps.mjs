@@ -1,8 +1,10 @@
 // Fails the build when the sitemap index is not an exact split of the exported pages
 // into scene/top, category+tag, and drink files.
 // Run after `next build`. /drink/shell/ is built and stays out of the sitemap, as before.
+import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { drinkContentLastmods } from "./drink-lastmod.mjs";
 
 const ORIGIN = "https://stylish.sunsup.me";
 // The shell is an empty template. trailingSlash also writes out/404/index.html.
@@ -101,13 +103,16 @@ function entries(xml, file) {
     if (lastmod != null && (!DAY.test(lastmod) || lastmod > today)) {
       fail(`${loc} lastmod ${lastmod} is not a YYYY-MM-DD on or before ${today} (Asia/Tokyo)`);
     }
-    return loc;
+    return { loc, lastmod };
   });
 }
 
-const sceneLocs = indexXml ? entries(scenesXml, "sitemap-scenes.xml") : [];
-const categoryLocs = indexXml ? entries(categoriesXml, "sitemap-categories.xml") : [];
-const drinkLocs = indexXml ? entries(drinksXml, "sitemap-drinks.xml") : [];
+const sceneEntries = indexXml ? entries(scenesXml, "sitemap-scenes.xml") : [];
+const categoryEntries = indexXml ? entries(categoriesXml, "sitemap-categories.xml") : [];
+const drinkEntries = indexXml ? entries(drinksXml, "sitemap-drinks.xml") : [];
+const sceneLocs = sceneEntries.map((entry) => entry.loc);
+const categoryLocs = categoryEntries.map((entry) => entry.loc);
+const drinkLocs = drinkEntries.map((entry) => entry.loc);
 const seen = new Map();
 for (const loc of [...sceneLocs, ...categoryLocs, ...drinkLocs]) {
   seen.set(loc, (seen.get(loc) ?? 0) + 1);
@@ -249,6 +254,32 @@ if (actual.size !== sceneLocs.length + categoryLocs.length + drinkLocs.length) {
 }
 if ([...actual].some((loc) => loc.includes("/drink/shell"))) {
   fail("sitemap lists /drink/shell/");
+}
+
+const seasonSlugs = new Set(Object.keys(JSON.parse(readFileSync(join("data", "still-seasons.json"), "utf8")).drinks ?? {}));
+let shallow = false;
+try {
+  shallow = execFileSync("git", ["rev-parse", "--is-shallow-repository"], { encoding: "utf8" }).trim() === "true";
+} catch {
+  shallow = true;
+}
+const expectedDrinkDays = shallow ? null : drinkContentLastmods();
+if (!shallow && !expectedDrinkDays) {
+  fail("could not compute drink content lastmods from git history");
+} else if (expectedDrinkDays) {
+  for (const entry of drinkEntries) {
+    const slug = entry.loc.slice(`${ORIGIN}/drink/`.length, -1);
+    if (seasonSlugs.has(slug)) {
+      if (entry.lastmod != null) {
+        fail(`${entry.loc} has lastmod ${entry.lastmod} but its hero still follows the season`);
+      }
+      continue;
+    }
+    const expectedDay = expectedDrinkDays.get(slug) ?? null;
+    if (entry.lastmod !== expectedDay) {
+      fail(`${entry.loc} lastmod is ${entry.lastmod}, expected ${expectedDay} (content changes only; store URLs ignored)`);
+    }
+  }
 }
 
 if (failures.length > 0) {
